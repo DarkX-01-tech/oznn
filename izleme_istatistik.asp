@@ -48,7 +48,11 @@ sqlYemek = "SELECT * FROM " & hedef_tablo & " WHERE YEAR(tarih) = " & secilen_yi
 Set rsYemek = ConnYemek.Execute(sqlYemek)
 
 If rsYemek.EOF Then
-    Response.Redirect "izleme_liste.asp<% If menu_tipi = "diyet" Then %>?sekme=diyet<% End If %>"
+    If menu_tipi = "diyet" Then
+        Response.Redirect "izleme_liste.asp?sekme=diyet"
+    Else
+        Response.Redirect "izleme_liste.asp"
+    End If
 End If
 
 Dim dictOgleCorba, dictOgleAna, dictOgleYan, dictOgleTatli
