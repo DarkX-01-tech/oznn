@@ -84,19 +84,30 @@ If rsYemek.EOF Then
     End If
 End If
 
-Dim dictTumu, toplam_gun, jsonArama
+Dim dictTumu, dictOriginal, toplam_gun, jsonArama
 Set dictTumu = CreateObject("Scripting.Dictionary")
+Set dictOriginal = CreateObject("Scripting.Dictionary")
 toplam_gun = 0
 jsonArama = ""
+
+Function TrLower(s)
+    Dim r: r = LCase(s)
+    r = Replace(r, "I", "i")
+    r = Replace(r, Chr(221), Chr(253))
+    TrLower = r
+End Function
 
 Sub SayTumu(yemekAdi)
     Dim y: y = SafeStr(yemekAdi)
     If y <> "" Then
-        Dim yUpper: yUpper = UCase(y)
-        If dictTumu.Exists(yUpper) Then
-            dictTumu(yUpper) = dictTumu(yUpper) + 1
+        Dim yNorm: yNorm = TrLower(y)
+        If dictTumu.Exists(yNorm) Then
+            dictTumu(yNorm) = dictTumu(yNorm) + 1
         Else
-            dictTumu.Add yUpper, 1
+            dictTumu.Add yNorm, 1
+        End If
+        If Not dictOriginal.Exists(yNorm) Then
+            dictOriginal.Add yNorm, y
         End If
     End If
 End Sub
@@ -153,7 +164,14 @@ Dim toplam_cesit: toplam_cesit = dictTumu.Count
 Dim en_cok_yemek, en_cok_sayi, kk
 en_cok_yemek = "-": en_cok_sayi = 0
 For Each kk In dictTumu.Keys
-    If dictTumu(kk) > en_cok_sayi Then en_cok_sayi = dictTumu(kk): en_cok_yemek = kk
+    If dictTumu(kk) > en_cok_sayi Then
+        en_cok_sayi = dictTumu(kk)
+        If dictOriginal.Exists(kk) Then
+            en_cok_yemek = dictOriginal(kk)
+        Else
+            en_cok_yemek = kk
+        End If
+    End If
 Next
 Dim tek_kullanim: tek_kullanim = 0
 For Each kk In dictTumu.Keys
@@ -290,19 +308,20 @@ sKeys = GetSortedKeys(dictTumu)
     <div class="kategori-card-header"><h3><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg><%= secilen_yil %> Y&#305;l&#305; - T&#252;m Yemekler</h3><span class="badge"><%= dictTumu.Count %> &#199;e&#351;it</span></div>
     <div class="kategori-card-body">
       <% If IsArray(sKeys) And dictTumu.Count > 0 Then
-        Dim idx, pct
+        Dim idx, pct, gorunenAd
         For idx = 0 To UBound(sKeys)
           pct = 0
           If en_cok_sayi > 0 Then pct = Round((dictTumu(sKeys(idx)) / en_cok_sayi) * 100)
+          gorunenAd = dictOriginal(sKeys(idx))
       %>
       <div class="yemek-row">
         <div class="yemek-rank <%= GetRankClass(idx) %>"><%= idx + 1 %></div>
-        <div class="yemek-name" onclick="detayGoster('<%= Replace(Replace(sKeys(idx), "'", "&#39;"), """", "&quot;") %>')"><%= sKeys(idx) %></div>
+        <div class="yemek-name" onclick="detayGoster('<%= Replace(Replace(gorunenAd, "'", "&#39;"), """", "&quot;") %>')"><%= gorunenAd %></div>
         <div class="yemek-count">
           <div class="yemek-bar-wrap"><div class="yemek-bar" style="width:<%= pct %>%;"></div></div>
           <span class="yemek-count-num"><%= dictTumu(sKeys(idx)) %> Kez</span>
         </div>
-        <button class="detay-btn" onclick="detayGoster('<%= Replace(Replace(sKeys(idx), "'", "&#39;"), """", "&quot;") %>')">
+        <button class="detay-btn" onclick="detayGoster('<%= Replace(Replace(gorunenAd, "'", "&#39;"), """", "&quot;") %>')">
           <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>Detay
         </button>
       </div>
@@ -328,15 +347,19 @@ var kategoriLabels = {'ogle_corba':'\u00C7orba','ogle_ana':'Ana Yemek','ogle_yan
 
 function decodeHtml(h){var d=document.createElement('div');d.innerHTML=h;return d.textContent||d.innerText||'';}
 
+function trNormalize(s) {
+  return s.replace(/İ/g,'i').replace(/I/g,'i').replace(/Ğ/g,'ğ').replace(/Ü/g,'ü').replace(/Ş/g,'ş').replace(/Ö/g,'ö').replace(/Ç/g,'ç').toLowerCase();
+}
+
 function detayGoster(yr) {
-  var ya = decodeHtml(yr), al = ya.toUpperCase();
+  var ya = decodeHtml(yr), al = trNormalize(ya);
   var ayBazli = {}, toplamB = 0, ogunD = {};
   for (var o = 0; o < ogunKeys.length; o++) ogunD[ogunKeys[o]] = 0;
 
   for (var i = 0; i < tumVeri.length; i++) {
     var r = tumVeri[i];
     for (var k = 0; k < ogunKeys.length; k++) {
-      if (r[ogunKeys[k]] && r[ogunKeys[k]].toUpperCase() === al) {
+      if (r[ogunKeys[k]] && trNormalize(r[ogunKeys[k]]) === al) {
         toplamB++;
         ogunD[ogunKeys[k]]++;
         var ayNo = r.ay;
@@ -382,13 +405,13 @@ function detayGoster(yr) {
 }
 
 function gunDetayGoster(yemekAdi, ayNo) {
-  var al = yemekAdi.toUpperCase();
+  var al = trNormalize(yemekAdi);
   var bulunanlar = [];
   for (var i = 0; i < tumVeri.length; i++) {
     var r = tumVeri[i];
     if (r.ay !== ayNo) continue;
     for (var k = 0; k < ogunKeys.length; k++) {
-      if (r[ogunKeys[k]] && r[ogunKeys[k]].toUpperCase() === al) {
+      if (r[ogunKeys[k]] && trNormalize(r[ogunKeys[k]]) === al) {
         bulunanlar.push({ tarih: r.tarih, gun: r.gun, ogun: ogunKeys[k] });
       }
     }
@@ -418,4 +441,5 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') modal
 <%
 rsYemek.Close: Set rsYemek = Nothing
 Set dictTumu = Nothing
+Set dictOriginal = Nothing
 %>
