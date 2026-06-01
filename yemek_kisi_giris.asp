@@ -97,7 +97,7 @@ On Error GoTo 0
 Dim rsSon10, sqlSon10, son10Var
 son10Var = False
 On Error Resume Next
-sqlSon10 = "SELECT TOP 10 * FROM yemek_kisi_sayisi ORDER BY tarih ASC, menu_tipi ASC"
+sqlSon10 = "SELECT TOP 20 * FROM yemek_kisi_sayisi ORDER BY tarih DESC, menu_tipi ASC"
 Set rsSon10 = ConnYemek.Execute(sqlSon10)
 If Err.Number = 0 Then son10Var = True
 Err.Clear
@@ -122,8 +122,9 @@ On Error GoTo 0
     #header h1 { font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px; }
     #header h1 svg { width: 20px; height: 20px; opacity: 0.85; }
     .content { padding: 20px; max-width: 900px; margin: 0 auto; }
-    .alert { padding: 12px 20px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; display: flex; align-items: center; gap: 10px; animation: slideDown 0.3s; }
+    .alert { padding: 12px 20px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; display: flex; align-items: center; gap: 10px; animation: slideDown 0.3s; transition: opacity 0.5s, transform 0.5s; }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    .alert.fade-out { opacity: 0; transform: translateY(-10px); }
     .alert-success { background: #e8f5e9; color: #2e7d32; border-left: 4px solid #4caf50; }
     .alert-error { background: #ffebee; color: #c62828; border-left: 4px solid #f44336; }
     .alert svg { width: 20px; height: 20px; flex-shrink: 0; }
@@ -178,6 +179,14 @@ On Error GoTo 0
     @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } .bugun-row { grid-template-columns: 1fr; } }
   </style>
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var alerts = document.querySelectorAll('.alert');
+      alerts.forEach(function(a) {
+        setTimeout(function() { a.classList.add('fade-out'); }, 2000);
+        setTimeout(function() { a.style.display = 'none'; }, 2500);
+      });
+    });
+
     function duzenleSatir(tarih, tip, kisi) {
       document.querySelector('input[name="tarih"]').value = tarih;
       document.querySelector('select[name="menu_tipi"]').value = tip;
