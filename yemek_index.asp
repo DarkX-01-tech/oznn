@@ -190,12 +190,20 @@ ay_adi = GetMonthName(secilen_ay)
       margin: 15px 0 5px 0;
     }
 
-    .left-side,
-    .right-side {
+    .left-side {
       width: 100px;
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
+      padding-left: 10px;
+    }
+
+    .right-side {
+      width: 120px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 10px;
     }
 
     .center-title {
@@ -236,13 +244,13 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .back-button {
-      background-color: var(--secondary-color);
+      background-color: var(--primary-color);
       border: 2px solid var(--white);
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(220,53,69,0.3);
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
+      box-shadow: 0 4px 8px var(--shadow-medium);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -254,12 +262,73 @@ ay_adi = GetMonthName(secilen_ay)
 
     .back-button:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(200,35,51,0.5);
+      background-color: var(--primary-dark);
+      box-shadow: 0 6px 12px var(--shadow-heavy);
     }
 
     .back-button svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
+      fill: var(--white);
+    }
+
+    .diyet-toggle-btn {
+      background-color: #4caf50;
+      border: 2px solid var(--white);
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(76,175,80,0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-speed) ease;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--white);
+      font-family: 'Open Sans', sans-serif;
+      text-decoration: none;
+    }
+
+    .diyet-toggle-btn:hover {
+      transform: scale(1.05);
+      background-color: #388e3c;
+      box-shadow: 0 6px 12px rgba(56,142,60,0.5);
+    }
+
+    .diyet-toggle-btn svg {
+      width: 16px;
+      height: 16px;
+      fill: var(--white);
+    }
+
+    .normal-toggle-btn {
+      background-color: var(--primary-color);
+      border: 2px solid var(--white);
+      cursor: pointer;
+      box-shadow: 0 4px 8px var(--shadow-medium);
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition-speed) ease;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--white);
+      font-family: 'Open Sans', sans-serif;
+      text-decoration: none;
+    }
+
+    .normal-toggle-btn:hover {
+      transform: scale(1.05);
+      background-color: var(--primary-dark);
+      box-shadow: 0 6px 12px var(--shadow-heavy);
+    }
+
+    .normal-toggle-btn svg {
+      width: 16px;
+      height: 16px;
       fill: var(--white);
     }
 
@@ -502,6 +571,20 @@ ay_adi = GetMonthName(secilen_ay)
         container.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
+
+    function switchMenu(tip) {
+      var wrapper = document.querySelector('.takvim-wrapper');
+      if (wrapper) {
+        wrapper.style.transition = 'opacity 0.3s, transform 0.3s';
+        wrapper.style.opacity = '0';
+        wrapper.style.transform = 'translateX(-20px)';
+      }
+      setTimeout(function() {
+        var url = window.location.pathname + '?yil=<%= secilen_yil %>&ay=<%= secilen_ay %>';
+        if (tip === 'diyet') url += '&tip=diyet';
+        window.location.href = url;
+      }, 300);
+    }
   </script>
 </head>
 <body>
@@ -518,26 +601,36 @@ ay_adi = GetMonthName(secilen_ay)
         <td bgcolor="#FFFFFF" width="100%" valign="top" align="center">
 
           <div class="baslik">
-            <div class="left-side"></div>
+            <div class="left-side">
+              <% If Not izlemeModuAktif Then %>
+              <button class="back-button" onclick="window.history.back()" title="Geri">
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+              </button>
+              <% End If %>
+            </div>
             <div class="center-title">
               AYLIK <% If menu_tipi = "diyet" Then %>D&#304;YET <% End If %>YEMEK MEN&#220;S&#220; (<%= ay_adi %>)
             </div>
-            <div class="right-side"></div>
+            <div class="right-side">
+              <% If Not izlemeModuAktif Then %>
+                <% If menu_tipi = "diyet" Then %>
+                <a href="javascript:void(0);" onclick="switchMenu('normal')" class="normal-toggle-btn" title="Normal Men&#252;">
+                  <svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
+                  Normal
+                </a>
+                <% Else %>
+                <a href="javascript:void(0);" onclick="switchMenu('diyet')" class="diyet-toggle-btn" title="Diyet Men&#252;s&#252;">
+                  <svg viewBox="0 0 24 24"><path d="M17.21 9l-4.38-6.56c-.19-.28-.51-.42-.83-.42-.32 0-.64.14-.83.43L6.79 9C6.3 9.71 6 10.57 6 11.5 6 14.53 8.47 17 11.5 17h1c3.03 0 5.5-2.47 5.5-5.5 0-.93-.3-1.79-.79-2.5z"/></svg>
+                  Diyet
+                </a>
+                <% End If %>
+              <% End If %>
+            </div>
           </div>
 
           <div class="takvim-wrapper">
-
-            <% If Not izlemeModuAktif Then %>
-            <div class="takvim-header">
-              <div class="nav-left">
-                <button class="back-button" onclick="window.history.back()" title="Geri">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <% End If %>
 
             <% If Not rsYemek.EOF Then %>
             <div class="tablo-container-wrapper">
