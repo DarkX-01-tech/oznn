@@ -84,6 +84,27 @@ If rsYemek.EOF Then
     End If
 End If
 
+Dim rsKisiYillik, kisiYillikVar, toplamKisiYillik, kisiGunSayisiYillik, ortKisiYillik
+kisiYillikVar = False
+toplamKisiYillik = 0
+kisiGunSayisiYillik = 0
+ortKisiYillik = 0
+On Error Resume Next
+Set rsKisiYillik = ConnYemek.Execute("SELECT * FROM yemek_kisi_sayisi WHERE YEAR(tarih) = " & secilen_yil & " AND menu_tipi = '" & menu_tipi & "' ORDER BY tarih ASC")
+If Err.Number = 0 Then
+    kisiYillikVar = True
+    Dim rsKT
+    Set rsKT = ConnYemek.Execute("SELECT SUM(kisi_sayisi) AS toplam, COUNT(*) AS gun FROM yemek_kisi_sayisi WHERE YEAR(tarih) = " & secilen_yil & " AND menu_tipi = '" & menu_tipi & "'")
+    If Err.Number = 0 And Not rsKT.EOF Then
+        If Not IsNull(rsKT("toplam")) Then toplamKisiYillik = rsKT("toplam")
+        kisiGunSayisiYillik = rsKT("gun")
+        If kisiGunSayisiYillik > 0 Then ortKisiYillik = Round(toplamKisiYillik / kisiGunSayisiYillik)
+    End If
+    If Not rsKT Is Nothing Then rsKT.Close: Set rsKT = Nothing
+End If
+Err.Clear
+On Error GoTo 0
+
 Dim dictTumu, dictOriginal, toplam_gun, jsonArama
 Set dictTumu = CreateObject("Scripting.Dictionary")
 Set dictOriginal = CreateObject("Scripting.Dictionary")
@@ -279,6 +300,28 @@ sKeys = GetSortedKeys(dictTumu)
     .kategori-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; background: rgba(76,175,80,0.12); color: #2e7d32; }
 
     @media (max-width: 1000px) { .ozet-row { grid-template-columns: repeat(2, 1fr); } }
+    .main-layout { display: flex; gap: 20px; align-items: flex-start; }
+    .main-left { flex: 1; min-width: 0; }
+    .main-right { width: 280px; flex-shrink: 0; }
+    .kisi-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); overflow: hidden; position: sticky; top: 70px; }
+    .kisi-card-header { background: linear-gradient(135deg, var(--main), var(--dark)); color: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 8px; }
+    .kisi-card-header h3 { font-size: 13px; margin: 0; font-weight: 600; }
+    .kisi-card-header svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .kisi-card-ozet { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 10px; }
+    .kisi-ozet-item { flex: 1; text-align: center; }
+    .kisi-ozet-item .ko-sayi { font-size: 18px; font-weight: 700; color: var(--dark); }
+    .kisi-ozet-item .ko-label { font-size: 9px; color: #999; text-transform: uppercase; }
+    .kisi-card-body { max-height: 500px; overflow-y: auto; }
+    .kisi-card-body::-webkit-scrollbar { width: 4px; }
+    .kisi-card-body::-webkit-scrollbar-thumb { background: var(--main); border-radius: 10px; }
+    .kisi-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; border-bottom: 1px solid #f8f8f8; font-size: 12px; transition: background 0.2s; }
+    .kisi-row:hover { background: #f5fffe; }
+    .kisi-row:last-child { border-bottom: none; }
+    .kisi-tarih { font-weight: 600; color: #2c3e50; }
+    .kisi-sayi { background: rgba(0,0,0,0.04); padding: 3px 10px; border-radius: 8px; font-weight: 700; color: var(--dark); }
+    .kisi-empty { text-align: center; padding: 30px 16px; color: #bbb; font-size: 12px; font-style: italic; }
+
+    @media (max-width: 1000px) { .main-layout { flex-direction: column; } .main-right { width: 100%; } .kisi-card { position: static; } }
     @media (max-width: 600px) { .ozet-row { grid-template-columns: 1fr; } .modal-box { margin: 5px; } }
   </style>
 </head>
@@ -304,6 +347,8 @@ sKeys = GetSortedKeys(dictTumu)
     <div class="ozet-card"><div class="ozet-icon bg4"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><div class="ozet-info"><span>Tek Kullan&#305;m</span><strong><%= tek_kullanim %></strong><small>Yemek Sadece 1 Kez</small></div></div>
   </div>
 
+  <div class="main-layout">
+  <div class="main-left">
   <div class="kategori-card">
     <div class="kategori-card-header"><h3><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg><%= secilen_yil %> Y&#305;l&#305; - T&#252;m Yemekler</h3><span class="badge"><%= dictTumu.Count %> &#199;e&#351;it</span></div>
     <div class="kategori-card-body">
@@ -329,6 +374,36 @@ sKeys = GetSortedKeys(dictTumu)
       End If %>
     </div>
   </div>
+  </div><!-- main-left -->
+
+  <div class="main-right">
+    <div class="kisi-card">
+      <div class="kisi-card-header">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <h3>G&#252;nl&#252;k Ki&#351;i Say&#305;s&#305;</h3>
+      </div>
+      <% If kisiYillikVar And kisiGunSayisiYillik > 0 Then %>
+      <div class="kisi-card-ozet">
+        <div class="kisi-ozet-item"><div class="ko-sayi"><%= toplamKisiYillik %></div><div class="ko-label">Toplam</div></div>
+        <div class="kisi-ozet-item"><div class="ko-sayi"><%= kisiGunSayisiYillik %></div><div class="ko-label">G&#252;n</div></div>
+        <div class="kisi-ozet-item"><div class="ko-sayi"><%= ortKisiYillik %></div><div class="ko-label">Ortalama</div></div>
+      </div>
+      <div class="kisi-card-body">
+        <% rsKisiYillik.MoveFirst
+        Do While Not rsKisiYillik.EOF %>
+        <div class="kisi-row">
+          <span class="kisi-tarih"><%= Right("0" & Day(rsKisiYillik("tarih")), 2) %>.<%= Right("0" & Month(rsKisiYillik("tarih")), 2) %>.<%= Year(rsKisiYillik("tarih")) %></span>
+          <span class="kisi-sayi"><%= rsKisiYillik("kisi_sayisi") %></span>
+        </div>
+        <% rsKisiYillik.MoveNext
+        Loop %>
+      </div>
+      <% Else %>
+      <div class="kisi-empty">Ki&#351;i say&#305;s&#305; verisi girilmemi&#351;.</div>
+      <% End If %>
+    </div>
+  </div><!-- main-right -->
+  </div><!-- main-layout -->
 </div>
 
 <div class="modal-overlay" id="detayModal" onclick="if(event.target===this) modalKapat();">
@@ -440,6 +515,9 @@ document.addEventListener('keydown', function(e) { if (e.key === 'Escape') modal
 </html>
 <%
 rsYemek.Close: Set rsYemek = Nothing
+If kisiYillikVar Then
+  If Not rsKisiYillik Is Nothing Then rsKisiYillik.Close: Set rsKisiYillik = Nothing
+End If
 Set dictTumu = Nothing
 Set dictOriginal = Nothing
 %>

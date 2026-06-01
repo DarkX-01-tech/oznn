@@ -208,6 +208,25 @@ Sub RenderKategori(dict, maxVal)
 <%
     End If
 End Sub
+
+Dim rsKisi, kisiVar, toplamKisi, kisiGunSayisi
+kisiVar = False
+toplamKisi = 0
+kisiGunSayisi = 0
+On Error Resume Next
+Set rsKisi = ConnYemek.Execute("SELECT * FROM yemek_kisi_sayisi WHERE YEAR(tarih) = " & secilen_yil & " AND MONTH(tarih) = " & secilen_ay & " AND menu_tipi = '" & menu_tipi & "' ORDER BY tarih ASC")
+If Err.Number = 0 Then
+    kisiVar = True
+    Dim rsKT2
+    Set rsKT2 = ConnYemek.Execute("SELECT SUM(kisi_sayisi) AS toplam, COUNT(*) AS gun FROM yemek_kisi_sayisi WHERE YEAR(tarih) = " & secilen_yil & " AND MONTH(tarih) = " & secilen_ay & " AND menu_tipi = '" & menu_tipi & "'")
+    If Err.Number = 0 And Not rsKT2.EOF Then
+        If Not IsNull(rsKT2("toplam")) Then toplamKisi = rsKT2("toplam")
+        kisiGunSayisi = rsKT2("gun")
+    End If
+    If Not rsKT2 Is Nothing Then rsKT2.Close: Set rsKT2 = Nothing
+End If
+Err.Clear
+On Error GoTo 0
 %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -321,6 +340,28 @@ End Sub
     .kategori-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; background: rgba(76,175,80,0.12); color: #2e7d32; }
 
     @media (max-width: 1000px) { .ozet-row { grid-template-columns: repeat(2, 1fr); } }
+    .main-layout { display: flex; gap: 20px; align-items: flex-start; }
+    .main-left { flex: 1; min-width: 0; }
+    .main-right { width: 280px; flex-shrink: 0; }
+    .kisi-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); overflow: hidden; position: sticky; top: 70px; }
+    .kisi-card-header { background: linear-gradient(135deg, var(--main), var(--dark)); color: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 8px; }
+    .kisi-card-header h3 { font-size: 13px; margin: 0; font-weight: 600; }
+    .kisi-card-header svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .kisi-card-ozet { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 10px; }
+    .kisi-ozet-item { flex: 1; text-align: center; }
+    .kisi-ozet-item .ko-sayi { font-size: 18px; font-weight: 700; color: var(--dark); }
+    .kisi-ozet-item .ko-label { font-size: 9px; color: #999; text-transform: uppercase; }
+    .kisi-card-body { max-height: 400px; overflow-y: auto; }
+    .kisi-card-body::-webkit-scrollbar { width: 4px; }
+    .kisi-card-body::-webkit-scrollbar-thumb { background: var(--main); border-radius: 10px; }
+    .kisi-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; border-bottom: 1px solid #f8f8f8; font-size: 12px; }
+    .kisi-row:hover { background: #f5fffe; }
+    .kisi-row:last-child { border-bottom: none; }
+    .kisi-tarih { font-weight: 600; color: #2c3e50; }
+    .kisi-sayi { background: rgba(0,0,0,0.04); padding: 3px 10px; border-radius: 8px; font-weight: 700; color: var(--dark); }
+    .kisi-empty { text-align: center; padding: 30px 16px; color: #bbb; font-size: 12px; font-style: italic; }
+
+    @media (max-width: 1000px) { .main-layout { flex-direction: column; } .main-right { width: 100%; } .kisi-card { position: static; } }
     @media (max-width: 600px) { .ozet-row { grid-template-columns: 1fr; } .modal-box { margin: 5px; } .modal-ozet { flex-wrap: wrap; } .modal-ozet-card { min-width: 60px; } }
   </style>
 </head>
@@ -347,6 +388,8 @@ End Sub
     <div class="ozet-card"><div class="ozet-icon bg4"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><div class="ozet-info"><span>Tek Kullan&#305;m</span><strong><%= tek_kullanim %></strong><small>Yemek Sadece 1 Kez</small></div></div>
   </div>
 
+  <div class="main-layout">
+  <div class="main-left">
   <div class="filter-bar">
     <button class="filter-btn active" onclick="showTab('tumu', this)"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>T&#252;m&#252;</button>
     <button class="filter-btn" onclick="showTab('ogle_corba', this)">&#214;&#287;le &#199;orba</button>
@@ -368,6 +411,29 @@ End Sub
   <div class="kategori-section" id="sec_aksam_ana"><div class="kategori-card"><div class="kategori-card-header"><h3><svg viewBox="0 0 24 24"><path d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"/></svg>Ak&#351;am Ana Yemek</h3><span class="badge"><%= dictAksamAna.Count %> &#199;e&#351;it</span></div><div class="kategori-card-body"><% RenderKategori dictAksamAna, 0 %></div></div></div>
   <div class="kategori-section" id="sec_aksam_yan"><div class="kategori-card"><div class="kategori-card-header"><h3><svg viewBox="0 0 24 24"><path d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"/></svg>Ak&#351;am Yan &#220;r&#252;n</h3><span class="badge"><%= dictAksamYan.Count %> &#199;e&#351;it</span></div><div class="kategori-card-body"><% RenderKategori dictAksamYan, 0 %></div></div></div>
   <div class="kategori-section" id="sec_aksam_tatli"><div class="kategori-card"><div class="kategori-card-header"><h3><svg viewBox="0 0 24 24"><path d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm0-10c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"/></svg>Ak&#351;am Tatl&#305;/Meyve</h3><span class="badge"><%= dictAksamTatli.Count %> &#199;e&#351;it</span></div><div class="kategori-card-body"><% RenderKategori dictAksamTatli, 0 %></div></div></div>
+  </div><!-- main-left -->
+  <div class="main-right">
+    <div class="kisi-card">
+      <div class="kisi-card-header"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><h3>G&#252;nl&#252;k Ki&#351;i Say&#305;s&#305;</h3></div>
+      <% If kisiVar And kisiGunSayisi > 0 Then %>
+      <div class="kisi-card-ozet">
+        <div class="kisi-ozet-item"><div class="ko-sayi"><%= toplamKisi %></div><div class="ko-label">Toplam</div></div>
+        <div class="kisi-ozet-item"><div class="ko-sayi"><%= kisiGunSayisi %></div><div class="ko-label">G&#252;n</div></div>
+        <div class="kisi-ozet-item"><div class="ko-sayi"><% If kisiGunSayisi > 0 Then %><%= Round(toplamKisi / kisiGunSayisi) %><% Else %>0<% End If %></div><div class="ko-label">Ortalama</div></div>
+      </div>
+      <div class="kisi-card-body">
+        <% rsKisi.MoveFirst
+        Do While Not rsKisi.EOF %>
+        <div class="kisi-row"><span class="kisi-tarih"><%= Right("0" & Day(rsKisi("tarih")), 2) %>.<%= Right("0" & Month(rsKisi("tarih")), 2) %></span><span class="kisi-sayi"><%= rsKisi("kisi_sayisi") %></span></div>
+        <% rsKisi.MoveNext
+        Loop %>
+      </div>
+      <% Else %>
+      <div class="kisi-empty">Bu ay i&#231;in ki&#351;i say&#305;s&#305; verisi girilmemi&#351;.</div>
+      <% End If %>
+    </div>
+  </div><!-- main-right -->
+  </div><!-- main-layout -->
 </div>
 
 <div class="modal-overlay" id="detayModal" onclick="if(event.target===this) modalKapat();">
@@ -392,6 +458,9 @@ function showTab(tab,btn){var s=document.querySelectorAll('.kategori-section');f
 </html>
 <%
 rsYemek.Close: Set rsYemek = Nothing
+If kisiVar Then
+  If Not rsKisi Is Nothing Then rsKisi.Close: Set rsKisi = Nothing
+End If
 Set dictOgleCorba = Nothing: Set dictOgleAna = Nothing: Set dictOgleYan = Nothing: Set dictOgleTatli = Nothing
 Set dictAksamCorba = Nothing: Set dictAksamAna = Nothing: Set dictAksamYan = Nothing: Set dictAksamTatli = Nothing
 Set dictTumu = Nothing

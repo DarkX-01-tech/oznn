@@ -97,7 +97,7 @@ On Error GoTo 0
 Dim rsSon10, sqlSon10, son10Var
 son10Var = False
 On Error Resume Next
-sqlSon10 = "SELECT TOP 10 * FROM yemek_kisi_sayisi ORDER BY tarih DESC, menu_tipi ASC"
+sqlSon10 = "SELECT TOP 10 * FROM yemek_kisi_sayisi ORDER BY tarih ASC, menu_tipi ASC"
 Set rsSon10 = ConnYemek.Execute(sqlSon10)
 If Err.Number = 0 Then son10Var = True
 Err.Clear
