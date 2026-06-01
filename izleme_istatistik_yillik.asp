@@ -92,7 +92,12 @@ jsonArama = ""
 Sub SayTumu(yemekAdi)
     Dim y: y = SafeStr(yemekAdi)
     If y <> "" Then
-        If dictTumu.Exists(y) Then dictTumu(y) = dictTumu(y) + 1 Else dictTumu.Add y, 1
+        Dim yUpper: yUpper = UCase(y)
+        If dictTumu.Exists(yUpper) Then
+            dictTumu(yUpper) = dictTumu(yUpper) + 1
+        Else
+            dictTumu.Add yUpper, 1
+        End If
     End If
 End Sub
 
@@ -324,14 +329,14 @@ var kategoriLabels = {'ogle_corba':'\u00C7orba','ogle_ana':'Ana Yemek','ogle_yan
 function decodeHtml(h){var d=document.createElement('div');d.innerHTML=h;return d.textContent||d.innerText||'';}
 
 function detayGoster(yr) {
-  var ya = decodeHtml(yr), al = ya.toLowerCase();
+  var ya = decodeHtml(yr), al = ya.toUpperCase();
   var ayBazli = {}, toplamB = 0, ogunD = {};
   for (var o = 0; o < ogunKeys.length; o++) ogunD[ogunKeys[o]] = 0;
 
   for (var i = 0; i < tumVeri.length; i++) {
     var r = tumVeri[i];
     for (var k = 0; k < ogunKeys.length; k++) {
-      if (r[ogunKeys[k]] && r[ogunKeys[k]].toLowerCase() === al) {
+      if (r[ogunKeys[k]] && r[ogunKeys[k]].toUpperCase() === al) {
         toplamB++;
         ogunD[ogunKeys[k]]++;
         var ayNo = r.ay;
@@ -377,13 +382,13 @@ function detayGoster(yr) {
 }
 
 function gunDetayGoster(yemekAdi, ayNo) {
-  var al = yemekAdi.toLowerCase();
+  var al = yemekAdi.toUpperCase();
   var bulunanlar = [];
   for (var i = 0; i < tumVeri.length; i++) {
     var r = tumVeri[i];
     if (r.ay !== ayNo) continue;
     for (var k = 0; k < ogunKeys.length; k++) {
-      if (r[ogunKeys[k]] && r[ogunKeys[k]].toLowerCase() === al) {
+      if (r[ogunKeys[k]] && r[ogunKeys[k]].toUpperCase() === al) {
         bulunanlar.push({ tarih: r.tarih, gun: r.gun, ogun: ogunKeys[k] });
       }
     }
