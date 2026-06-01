@@ -183,11 +183,11 @@ End Function
 
     <!-- SEKME -->
     <div class="sekme-wrapper">
-      <a href="izleme_yemek_liste.asp?sekme=normal" class="sekme-btn<% If aktif_sekme = "normal" Then %> aktif-normal<% End If %>">
+      <a href="izleme_liste.asp?sekme=normal" class="sekme-btn<% If aktif_sekme = "normal" Then %> aktif-normal<% End If %>">
         <svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
         Yemek Listesi
       </a>
-      <a href="izleme_yemek_liste.asp?sekme=diyet" class="sekme-btn<% If aktif_sekme = "diyet" Then %> aktif-diyet<% End If %>">
+      <a href="izleme_liste.asp?sekme=diyet" class="sekme-btn<% If aktif_sekme = "diyet" Then %> aktif-diyet<% End If %>">
         <svg viewBox="0 0 24 24"><path d="M17.21 9l-4.38-6.56c-.19-.28-.51-.42-.83-.42-.32 0-.64.14-.83.43L6.79 9C6.3 9.71 6 10.57 6 11.5 6 14.53 8.47 17 11.5 17h1c3.03 0 5.5-2.47 5.5-5.5 0-.93-.3-1.79-.79-2.5z"/></svg>
         Diyet Yemek Listesi
       </a>
