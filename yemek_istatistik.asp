@@ -267,6 +267,31 @@ Sub RenderKategori(dict, maxVal)
 <%
     End If
 End Sub
+
+Dim rsKisi, sqlKisi, kisiVar
+kisiVar = False
+On Error Resume Next
+sqlKisi = "SELECT * FROM yemek_kisi_sayisi WHERE YEAR(tarih) = " & secilen_yil & " AND MONTH(tarih) = " & secilen_ay & " AND menu_tipi = '" & menu_tipi & "' ORDER BY tarih ASC"
+Set rsKisi = ConnYemek.Execute(sqlKisi)
+If Err.Number = 0 Then kisiVar = True
+Err.Clear
+On Error GoTo 0
+
+Dim toplamKisi, kisiGunSayisi
+toplamKisi = 0
+kisiGunSayisi = 0
+If kisiVar And Not rsKisi.EOF Then
+    Dim rsKisiToplam
+    On Error Resume Next
+    Set rsKisiToplam = ConnYemek.Execute("SELECT SUM(kisi_sayisi) AS toplam, COUNT(*) AS gun FROM yemek_kisi_sayisi WHERE YEAR(tarih) = " & secilen_yil & " AND MONTH(tarih) = " & secilen_ay & " AND menu_tipi = '" & menu_tipi & "'")
+    If Err.Number = 0 And Not rsKisiToplam.EOF Then
+        If Not IsNull(rsKisiToplam("toplam")) Then toplamKisi = rsKisiToplam("toplam")
+        kisiGunSayisi = rsKisiToplam("gun")
+    End If
+    If Not rsKisiToplam Is Nothing Then rsKisiToplam.Close: Set rsKisiToplam = Nothing
+    Err.Clear
+    On Error GoTo 0
+End If
 %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -406,7 +431,28 @@ End Sub
     .modal-tablo tbody td:first-child { color: #ccc; font-weight: 700; font-size: 11px; }
     .kategori-badge { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; background: rgba(76,175,80,0.12); color: #2e7d32; }
 
-    @media (max-width: 1000px) { .ozet-row { grid-template-columns: repeat(2, 1fr); } }
+    .main-layout { display: flex; gap: 20px; align-items: flex-start; }
+    .main-left { flex: 1; min-width: 0; }
+    .main-right { width: 280px; flex-shrink: 0; }
+    .kisi-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); overflow: hidden; position: sticky; top: 70px; }
+    .kisi-card-header { background: linear-gradient(135deg, var(--main), var(--dark)); color: #fff; padding: 14px 16px; display: flex; align-items: center; gap: 8px; }
+    .kisi-card-header h3 { font-size: 13px; margin: 0; font-weight: 600; }
+    .kisi-card-header svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .kisi-card-ozet { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 10px; }
+    .kisi-ozet-item { flex: 1; text-align: center; }
+    .kisi-ozet-item .ko-sayi { font-size: 18px; font-weight: 700; color: var(--dark); }
+    .kisi-ozet-item .ko-label { font-size: 9px; color: #999; text-transform: uppercase; }
+    .kisi-card-body { max-height: 400px; overflow-y: auto; }
+    .kisi-card-body::-webkit-scrollbar { width: 4px; }
+    .kisi-card-body::-webkit-scrollbar-thumb { background: var(--main); border-radius: 10px; }
+    .kisi-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; border-bottom: 1px solid #f8f8f8; font-size: 12px; transition: background 0.2s; }
+    .kisi-row:hover { background: #f5fffe; }
+    .kisi-row:last-child { border-bottom: none; }
+    .kisi-tarih { font-weight: 600; color: #2c3e50; }
+    .kisi-sayi { background: rgba(0,0,0,0.04); padding: 3px 10px; border-radius: 8px; font-weight: 700; color: var(--dark); }
+    .kisi-empty { text-align: center; padding: 30px 16px; color: #bbb; font-size: 12px; font-style: italic; }
+
+    @media (max-width: 1000px) { .ozet-row { grid-template-columns: repeat(2, 1fr); } .main-layout { flex-direction: column; } .main-right { width: 100%; } .kisi-card { position: static; } }
     @media (max-width: 600px) {
       .ozet-row { grid-template-columns: 1fr; }
       .modal-box { margin: 5px; }
@@ -450,6 +496,9 @@ End Sub
       <div class="ozet-info"><span>Tek Kullan&#305;m</span><strong><%= tek_kullanim %></strong><small>Yemek Sadece 1 Kez</small></div>
     </div>
   </div>
+
+  <div class="main-layout">
+  <div class="main-left">
 
   <div class="filter-bar">
     <button class="filter-btn active" onclick="showTab('tumu', this)"><svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>T&#252;m&#252;</button>
@@ -525,6 +574,38 @@ End Sub
       <div class="kategori-card-body"><% RenderKategori dictAksamTatli, 0 %></div>
     </div>
   </div>
+
+  </div><!-- main-left -->
+
+  <div class="main-right">
+    <div class="kisi-card">
+      <div class="kisi-card-header">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <h3>G&#252;nl&#252;k Ki&#351;i Say&#305;s&#305;</h3>
+      </div>
+      <% If kisiVar And kisiGunSayisi > 0 Then %>
+      <div class="kisi-card-ozet">
+        <div class="kisi-ozet-item"><div class="ko-sayi"><%= toplamKisi %></div><div class="ko-label">Toplam</div></div>
+        <div class="kisi-ozet-item"><div class="ko-sayi"><%= kisiGunSayisi %></div><div class="ko-label">G&#252;n</div></div>
+        <div class="kisi-ozet-item"><div class="ko-sayi"><% If kisiGunSayisi > 0 Then %><%= Round(toplamKisi / kisiGunSayisi) %><% Else %>0<% End If %></div><div class="ko-label">Ortalama</div></div>
+      </div>
+      <div class="kisi-card-body">
+        <% rsKisi.MoveFirst
+        Do While Not rsKisi.EOF %>
+        <div class="kisi-row">
+          <span class="kisi-tarih"><%= Right("0" & Day(rsKisi("tarih")), 2) %>.<%= Right("0" & Month(rsKisi("tarih")), 2) %></span>
+          <span class="kisi-sayi"><%= rsKisi("kisi_sayisi") %></span>
+        </div>
+        <% rsKisi.MoveNext
+        Loop %>
+      </div>
+      <% Else %>
+      <div class="kisi-empty">Bu ay i&#231;in ki&#351;i say&#305;s&#305; verisi girilmemi&#351;.</div>
+      <% End If %>
+    </div>
+  </div><!-- main-right -->
+
+  </div><!-- main-layout -->
 
 </div>
 
@@ -711,6 +792,9 @@ function showTab(tab, btn) {
 <%
 rsYemek.Close
 Set rsYemek = Nothing
+If kisiVar Then
+  If Not rsKisi Is Nothing Then rsKisi.Close: Set rsKisi = Nothing
+End If
 Set dictOgleCorba = Nothing
 Set dictOgleAna = Nothing
 Set dictOgleYan = Nothing
