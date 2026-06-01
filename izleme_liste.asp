@@ -233,7 +233,7 @@ End Function
             </div>
           </div>
           <div class="ay-kart-footer">
-            <a href="yemek_index.asp?yil=<%= rsAylar("yil") %>&ay=<%= rsAylar("ay") %>&izleme=1<% If aktif_sekme = "diyet" Then %>&tip=diyet<% End If %>" class="btn-detay">
+            <a href="javascript:void(0);" onclick="openMenu(<%= rsAylar("yil") %>, <%= rsAylar("ay") %>, '<%= aktif_sekme %>')" class="btn-detay">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>Men&#252;y&#252; G&#246;r
             </a>
             <a href="izleme_istatistik_sayfa.asp?yil=<%= rsAylar("yil") %>&ay=<%= rsAylar("ay") %><% If aktif_sekme = "diyet" Then %>&tip=diyet<% End If %>" class="btn-istatistik">
@@ -259,6 +259,59 @@ End Function
       <% End If %>
     </div>
   </div>
+
+  <!-- MENU MODAL -->
+  <div id="menuModal" class="modal-overlay" onclick="if(event.target===this) closeMenu();">
+    <div class="modal-box">
+      <div class="modal-header" id="menuModalHeader">
+        <h2><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg><span id="menuModalTitle">Yemek Men&#252;s&#252;</span></h2>
+        <button class="modal-close" onclick="closeMenu();">&times;</button>
+      </div>
+      <div class="modal-body"><iframe id="menuFrame" src=""></iframe></div>
+    </div>
+  </div>
+
+  <style>
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: #fff; border-radius: 14px; width: 900px; max-width: 95%; height: 88vh; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; animation: modalIn 0.3s ease; }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(-30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-header { background: linear-gradient(90deg, var(--main), var(--dark)); color: #fff; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
+    .modal-header.diyet-modal-header { background: linear-gradient(90deg, #4caf50, #388e3c); }
+    .modal-header h2 { font-size: 16px; margin: 0; display: flex; align-items: center; gap: 10px; font-weight: 600; }
+    .modal-header h2 svg { width: 20px; height: 20px; }
+    .modal-close { background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4); color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+    .modal-close:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg); }
+    .modal-body { height: calc(88vh - 58px); overflow: hidden; }
+    .modal-body iframe { width: 100%; height: 100%; border: none; }
+  </style>
+
+  <script>
+    function openMenu(yil, ay, tip) {
+      var modal = document.getElementById('menuModal');
+      var header = document.getElementById('menuModalHeader');
+      var ayAdlari = ['', 'Ocak', '\u015eubat', 'Mart', 'Nisan', 'May\u0131s', 'Haziran', 'Temmuz', 'A\u011fustos', 'Eyl\u00fcl', 'Ekim', 'Kas\u0131m', 'Aral\u0131k'];
+      if (tip === 'diyet') {
+        document.getElementById('menuModalTitle').textContent = ayAdlari[ay] + ' ' + yil + ' - Diyet Yemek Men\u00fcs\u00fc';
+        header.className = 'modal-header diyet-modal-header';
+      } else {
+        document.getElementById('menuModalTitle').textContent = ayAdlari[ay] + ' ' + yil + ' - Yemek Men\u00fcs\u00fc';
+        header.className = 'modal-header';
+      }
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      var url = 'yemek_index.asp?yil=' + yil + '&ay=' + ay + '&izleme=1';
+      if (tip === 'diyet') url += '&tip=diyet';
+      document.getElementById('menuFrame').src = url;
+    }
+    function closeMenu() {
+      var modal = document.getElementById('menuModal');
+      modal.classList.remove('show');
+      document.getElementById('menuFrame').src = '';
+      document.body.style.overflow = 'auto';
+    }
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeMenu(); });
+  </script>
 </body>
 </html>
 <% rsAylar.Close
