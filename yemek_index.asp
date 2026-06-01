@@ -55,11 +55,23 @@ Else
 End If
 
 '====================================
+' Menü Tipi Kontrolü
+'====================================
+Dim menu_tipi, hedef_tablo
+If Request.QueryString("tip") = "diyet" Then
+    menu_tipi = "diyet"
+    hedef_tablo = "diyet_yemek_listesi"
+Else
+    menu_tipi = "normal"
+    hedef_tablo = "yemek_listesi"
+End If
+
+'====================================
 ' Veritabanından Verileri Çek
 '====================================
 Dim rsYemek, sqlYemek
 
-sqlYemek = "SELECT * FROM yemek_listesi " & _
+sqlYemek = "SELECT * FROM " & hedef_tablo & " " & _
            "WHERE aktif = True " & _
            "AND YEAR(tarih) = " & secilen_yil & " " & _
            "AND MONTH(tarih) = " & secilen_ay & " " & _
@@ -494,7 +506,7 @@ ay_adi = GetMonthName(secilen_ay)
           <div class="baslik">
             <div class="left-side"></div>
             <div class="center-title">
-              AYLIK YEMEK MEN&#220;S&#220; (<%= ay_adi %>)
+              AYLIK <% If menu_tipi = "diyet" Then %>D&#304;YET <% End If %>YEMEK MEN&#220;S&#220; (<%= ay_adi %>)
             </div>
             <div class="right-side"></div>
           </div>
@@ -589,7 +601,7 @@ ay_adi = GetMonthName(secilen_ay)
             </div>
             <% Else %>
             <div class="bos-mesaj">
-              <p>Bu Ay &#304;&#231;in Hen&#252;z Yemek Men&#252;s&#252; Eklenmemi&#351;.</p>
+              <p>Bu Ay &#304;&#231;in Hen&#252;z <% If menu_tipi = "diyet" Then %>Diyet <% End If %>Yemek Men&#252;s&#252; Eklenmemi&#351;.</p>
             </div>
             <% End If %>
           </div>
