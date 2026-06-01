@@ -234,7 +234,7 @@ End Function
           </div>
           <div class="ay-kart-footer">
             <a href="yemek_index.asp?yil=<%= rsAylar("yil") %>&ay=<%= rsAylar("ay") %>&izleme=1<% If aktif_sekme = "diyet" Then %>&tip=diyet<% End If %>" class="btn-detay">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>Detaylar&#305; G&#246;r
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>Men&#252;y&#252; G&#246;r
             </a>
             <a href="izleme_istatistik_sayfa.asp?yil=<%= rsAylar("yil") %>&ay=<%= rsAylar("ay") %><% If aktif_sekme = "diyet" Then %>&tip=diyet<% End If %>" class="btn-istatistik">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>&#304;statistik

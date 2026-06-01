@@ -167,6 +167,31 @@ If Not rsGelecekD Is Nothing Then rsGelecekD.Close: Set rsGelecekD = Nothing
 Err.Clear
 On Error GoTo 0
 If gelecekKayitDiyet > 0 Then gelecekDurumDiyet = "girildi" Else gelecekDurumDiyet = "girilmedi"
+
+' ============================================
+' GECMIS DONEM LISTESI - NORMAL
+' ============================================
+Dim rsGecmis, sqlGecmis
+sqlGecmis = "SELECT DISTINCT Year(tarih) as yil, Month(tarih) as ay FROM yemek_listesi " & _
+            "WHERE (Year(tarih) < " & bugun_yil & ") " & _
+            "OR (Year(tarih) = " & bugun_yil & " AND Month(tarih) < " & bugun_ay & ") " & _
+            "ORDER BY Year(tarih) DESC, Month(tarih) DESC"
+Set rsGecmis = ConnYemek.Execute(sqlGecmis)
+
+' ============================================
+' GECMIS DONEM LISTESI - DIYET
+' ============================================
+Dim rsGecmisDiyet, sqlGecmisDiyet, diyetGecmisVar
+diyetGecmisVar = False
+On Error Resume Next
+sqlGecmisDiyet = "SELECT DISTINCT Year(tarih) as yil, Month(tarih) as ay FROM diyet_yemek_listesi " & _
+            "WHERE (Year(tarih) < " & bugun_yil & ") " & _
+            "OR (Year(tarih) = " & bugun_yil & " AND Month(tarih) < " & bugun_ay & ") " & _
+            "ORDER BY Year(tarih) DESC, Month(tarih) DESC"
+Set rsGecmisDiyet = ConnYemek.Execute(sqlGecmisDiyet)
+If Err.Number = 0 Then diyetGecmisVar = True
+Err.Clear
+On Error GoTo 0
 %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -262,6 +287,37 @@ If gelecekKayitDiyet > 0 Then gelecekDurumDiyet = "girildi" Else gelecekDurumDiy
     .menu-btn-icon svg { width: 22px; height: 22px; fill: #fff; }
     .menu-btn-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
     .menu-btn-text span { font-size: 11px; color: #999; }
+
+    /* GECMIS DONEM */
+    .gecmis-container { background: #fff; border-radius: 12px; padding: 22px; box-shadow: 0 4px 14px rgba(0,0,0,0.05); margin-top: 18px; }
+    .gecmis-title { font-size: 15px; color: #2c3e50; margin: 0 0 15px 0; padding-bottom: 12px; border-bottom: 2px solid var(--main); display: flex; align-items: center; gap: 10px; }
+    .gecmis-title svg { width: 22px; height: 22px; fill: var(--main); }
+    .gecmis-title.diyet-title { border-bottom-color: var(--diyet); }
+    .gecmis-title.diyet-title svg { fill: var(--diyet); }
+    .gecmis-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; max-height: 200px; overflow-y: auto; }
+    .gecmis-grid::-webkit-scrollbar { width: 5px; }
+    .gecmis-grid::-webkit-scrollbar-thumb { background: var(--main); border-radius: 10px; }
+    .gecmis-item { background: #fff; color: var(--dark); border: 2px solid var(--main); padding: 12px; border-radius: 10px; text-align: center; text-decoration: none; font-weight: 600; font-size: 13px; transition: all 0.3s; cursor: pointer; white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .gecmis-item:hover { background: linear-gradient(135deg, var(--main), var(--dark)); color: #fff; transform: translateY(-3px); box-shadow: 0 6px 16px rgba(69,184,195,0.35); }
+    .gecmis-item.diyet-item { color: var(--diyet-dark); border-color: var(--diyet); }
+    .gecmis-item.diyet-item:hover { background: linear-gradient(135deg, var(--diyet), var(--diyet-dark)); color: #fff; box-shadow: 0 6px 16px rgba(76,175,80,0.35); }
+    .gecmis-separator { opacity: 0.5; font-weight: 300; font-size: 16px; }
+
+    /* MODAL */
+    .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0); transition: background 0.3s; }
+    .modal.show { background: rgba(0,0,0,0.7); }
+    .modal-content { background: #fff; margin: 2% auto; border-radius: 14px; width: 900px; max-width: 95%; height: 90vh; box-shadow: 0 20px 50px rgba(0,0,0,0.3); overflow: hidden; transform: scale(0.7); opacity: 0; transition: transform 0.3s, opacity 0.3s; }
+    .modal.show .modal-content { transform: scale(1); opacity: 1; }
+    .modal.hide .modal-content { transform: scale(0.7); opacity: 0; }
+    .modal.hide { background: rgba(0,0,0,0); }
+    .modal-header { background: linear-gradient(90deg, var(--main), var(--dark)); color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .modal-header.diyet-modal-header { background: linear-gradient(90deg, var(--diyet), var(--diyet-dark)); }
+    .modal-header h2 { margin: 0; font-size: 17px; display: flex; align-items: center; gap: 10px; }
+    .modal-header h2 svg { width: 22px; height: 22px; }
+    .close { color: #fff; font-size: 28px; font-weight: bold; cursor: pointer; transition: all 0.3s; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+    .close:hover { background: rgba(255,255,255,0.2); transform: rotate(90deg); }
+    .modal-body { height: calc(90vh - 62px); overflow: hidden; }
+    .modal-body iframe { width: 100%; height: 100%; border: none; }
 
     @media (max-width: 1000px) { .mini-stats { flex-wrap: wrap; } .mini-stat { min-width: calc(50% - 6px); } }
     @media (max-width: 768px) { #header { flex-wrap: wrap; gap: 8px; padding: 10px; } #header h1 { font-size: 15px; } .mini-stats { flex-direction: column; } .ay-durum-row { grid-template-columns: 1fr; } .yil-cards { grid-template-columns: 1fr 1fr; } .menu-body { flex-direction: column; } }
@@ -397,9 +453,106 @@ If gelecekKayitDiyet > 0 Then gelecekDurumDiyet = "girildi" Else gelecekDurumDiy
       </div>
     </div>
 
+    <!-- GECMIS DONEM - NORMAL -->
+    <div class="gecmis-container">
+      <h2 class="gecmis-title">
+        <svg viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"/></svg>
+        Ge&#231;mi&#351; D&#246;nem Listeleri
+      </h2>
+      <div class="gecmis-grid">
+        <% If Not rsGecmis.EOF Then
+          Do While Not rsGecmis.EOF
+            Dim ay_adi_g, yil_no_g
+            yil_no_g = rsGecmis("yil")
+            ay_adi_g = GetMonthName(rsGecmis("ay"))
+        %>
+        <a href="javascript:void(0);" onclick="openGecmis(<%= rsGecmis("yil") %>, <%= rsGecmis("ay") %>, 'normal')" class="gecmis-item">
+          <span><%= ay_adi_g %></span>
+          <span class="gecmis-separator">|</span>
+          <span><%= yil_no_g %></span>
+        </a>
+        <%  rsGecmis.MoveNext
+          Loop
+        Else %>
+        <p style="text-align:center; color:#999; grid-column: 1/-1; padding: 20px;">Hen&#252;z ge&#231;mi&#351; d&#246;nem kayd&#305; bulunmuyor</p>
+        <% End If %>
+      </div>
+    </div>
+
+    <!-- GECMIS DONEM - DIYET -->
+    <% If diyetGecmisVar Then %>
+    <div class="gecmis-container">
+      <h2 class="gecmis-title diyet-title">
+        <svg viewBox="0 0 24 24"><path d="M17.21 9l-4.38-6.56c-.19-.28-.51-.42-.83-.42-.32 0-.64.14-.83.43L6.79 9C6.3 9.71 6 10.57 6 11.5 6 14.53 8.47 17 11.5 17h1c3.03 0 5.5-2.47 5.5-5.5 0-.93-.3-1.79-.79-2.5z"/></svg>
+        Ge&#231;mi&#351; D&#246;nem Diyet Listeleri
+      </h2>
+      <div class="gecmis-grid">
+        <% If Not rsGecmisDiyet.EOF Then
+          Do While Not rsGecmisDiyet.EOF
+            Dim ay_adi_gd, yil_no_gd
+            yil_no_gd = rsGecmisDiyet("yil")
+            ay_adi_gd = GetMonthName(rsGecmisDiyet("ay"))
+        %>
+        <a href="javascript:void(0);" onclick="openGecmis(<%= rsGecmisDiyet("yil") %>, <%= rsGecmisDiyet("ay") %>, 'diyet')" class="gecmis-item diyet-item">
+          <span><%= ay_adi_gd %></span>
+          <span class="gecmis-separator">|</span>
+          <span><%= yil_no_gd %></span>
+        </a>
+        <%  rsGecmisDiyet.MoveNext
+          Loop
+        Else %>
+        <p style="text-align:center; color:#999; grid-column: 1/-1; padding: 20px;">Hen&#252;z ge&#231;mi&#351; diyet d&#246;nem kayd&#305; bulunmuyor</p>
+        <% End If %>
+      </div>
+    </div>
+    <% End If %>
+
+  </div>
+
+  <!-- GECMIS DONEM MODAL -->
+  <div id="gecmisModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header" id="gecmisModalHeader">
+        <h2 id="gecmisTitle">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27z"/></svg>
+          <span id="gecmisTitleText">Ge&#231;mi&#351; D&#246;nem</span>
+        </h2>
+        <span class="close" onclick="closeGecmis()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <iframe id="gecmisFrame" src=""></iframe>
+      </div>
+    </div>
   </div>
 
   <script>
+    function openGecmis(yil, ay, tip) {
+      var modal = document.getElementById('gecmisModal');
+      var header = document.getElementById('gecmisModalHeader');
+      var ayAdlari = ['', 'Ocak', '\u015eubat', 'Mart', 'Nisan', 'May\u0131s', 'Haziran', 'Temmuz', 'A\u011fustos', 'Eyl\u00fcl', 'Ekim', 'Kas\u0131m', 'Aral\u0131k'];
+      if (tip === 'diyet') {
+        document.getElementById('gecmisTitleText').textContent = ayAdlari[ay] + ' | ' + yil + ' - Diyet Yemek Listesi';
+        header.className = 'modal-header diyet-modal-header';
+      } else {
+        document.getElementById('gecmisTitleText').textContent = ayAdlari[ay] + ' | ' + yil + ' - Yemek Listesi';
+        header.className = 'modal-header';
+      }
+      modal.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      setTimeout(function() { modal.classList.add('show'); }, 10);
+      var url = 'yemek_gecmis.asp?yil=' + yil + '&ay=' + ay;
+      if (tip === 'diyet') url += '&tip=diyet';
+      setTimeout(function() { document.getElementById('gecmisFrame').src = url; }, 350);
+    }
+    function closeGecmis() {
+      var modal = document.getElementById('gecmisModal');
+      modal.classList.remove('show');
+      modal.classList.add('hide');
+      setTimeout(function() { modal.style.display = 'none'; modal.classList.remove('hide'); document.getElementById('gecmisFrame').src = ''; document.body.style.overflow = 'auto'; }, 300);
+    }
+    window.onclick = function(event) { if (event.target.id === 'gecmisModal' && event.target.className.indexOf('show') > -1) closeGecmis(); };
+    document.addEventListener('keydown', function(event) { if (event.key === 'Escape') closeGecmis(); });
+
     var inactivityTimeout;
     function resetInactivityTimer() {
       clearTimeout(inactivityTimeout);
@@ -416,6 +569,11 @@ If gelecekKayitDiyet > 0 Then gelecekDurumDiyet = "girildi" Else gelecekDurumDiy
 </body>
 </html>
 <%
+rsGecmis.Close
+Set rsGecmis = Nothing
+If diyetGecmisVar Then
+  If Not rsGecmisDiyet Is Nothing Then rsGecmisDiyet.Close: Set rsGecmisDiyet = Nothing
+End If
 Set dictYillar = Nothing
 Set dictYillarDiyet = Nothing
 %>
