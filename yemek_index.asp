@@ -144,13 +144,13 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     :root {
-      --primary-color: #25abb9;
-      --primary-dark: #1e8c99;
+      --primary-color: <% If menu_tipi = "diyet" Then %>#4caf50<% Else %>#25abb9<% End If %>;
+      --primary-dark: <% If menu_tipi = "diyet" Then %>#388e3c<% Else %>#1e8c99<% End If %>;
       --secondary-color: #dc3545;
       --secondary-dark: #c82333;
       --white: #fff;
-      --shadow-medium: rgba(37,171,185,0.3);
-      --shadow-heavy: rgba(30,140,153,0.5);
+      --shadow-medium: <% If menu_tipi = "diyet" Then %>rgba(76,175,80,0.3)<% Else %>rgba(37,171,185,0.3)<% End If %>;
+      --shadow-heavy: <% If menu_tipi = "diyet" Then %>rgba(56,142,60,0.5)<% Else %>rgba(30,140,153,0.5)<% End If %>;
       --transition-speed: 0.25s;
     }
 
@@ -338,7 +338,7 @@ ay_adi = GetMonthName(secilen_ay)
       right: 30px;
       width: 50px;
       height: 50px;
-      background-color: #25abb9;
+      background-color: var(--primary-color);
       color: #fff;
       font-size: 24px;
       text-align: center;
@@ -353,7 +353,7 @@ ay_adi = GetMonthName(secilen_ay)
       font-family: 'Open Sans', sans-serif;
     }
     #scrollTopBtn:hover {
-      background-color: #1e8c99;
+      background-color: var(--primary-dark);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
       transform: scale(1.1);
     }
@@ -368,7 +368,7 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .tablo-header {
-      background-color: #25abb9;
+      background-color: var(--primary-color);
       display: table;
       width: 100%;
       table-layout: fixed;
@@ -385,7 +385,7 @@ ay_adi = GetMonthName(secilen_ay)
       font-weight: 700;
       font-size: 13px;
       color: #ffffff;
-      border: 1px solid #1e8c99;
+      border: 1px solid var(--primary-dark);
       text-transform: uppercase;
       letter-spacing: 0.5px;
       font-family: 'Open Sans', sans-serif;
@@ -416,11 +416,11 @@ ay_adi = GetMonthName(secilen_ay)
       background: #f1f1f1;
     }
     .tablo-body-container::-webkit-scrollbar-thumb {
-      background: #25abb9;
+      background: var(--primary-color);
       border-radius: 5px;
     }
     .tablo-body-container::-webkit-scrollbar-thumb:hover {
-      background: #1e8c99;
+      background: var(--primary-dark);
     }
 
     .yemek-tablo {
@@ -451,7 +451,7 @@ ay_adi = GetMonthName(secilen_ay)
       display: block;
       font-size: 15px;
       font-weight: 700;
-      color: #25abb9;
+      color: var(--primary-color);
       margin-bottom: 6px;
     }
 
@@ -487,7 +487,7 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .yemek-tablo td ul li::marker {
-      color: #25abb9;
+      color: var(--primary-color);
     }
 
     .yemek-tablo tbody tr:nth-child(even) {
@@ -501,19 +501,19 @@ ay_adi = GetMonthName(secilen_ay)
 
     .yemek-tablo tbody tr.bugun-satir {
       background-color: #e0f7fa !important;
-      border-left: 4px solid #25abb9;
+      border-left: 4px solid var(--primary-color);
     }
     .yemek-tablo tbody tr.bugun-satir .tarih-col {
       background-color: #d4f1f5 !important;
     }
     .yemek-tablo tbody tr.bugun-satir .tarih-date {
-      color: #1e8c99;
+      color: var(--primary-dark);
       font-size: 16px;
     }
     .yemek-tablo tbody tr.bugun-satir .tarih-day {
-      background: #25abb9;
+      background: var(--primary-color);
       color: #fff;
-      border-color: #1e8c99;
+      border-color: var(--primary-dark);
     }
 
     .bos-mesaj {
@@ -603,7 +603,7 @@ ay_adi = GetMonthName(secilen_ay)
           <div class="baslik">
             <div class="left-side">
               <% If Not izlemeModuAktif Then %>
-              <button class="back-button" onclick="window.history.back()" title="Geri">
+              <button class="back-button" onclick="window.location.href='/anasayfa_new.asp'" title="Ana Sayfa">
                 <svg width="24" height="24" viewBox="0 0 24 24">
                   <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
                 </svg>
