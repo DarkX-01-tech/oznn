@@ -300,7 +300,7 @@ End Function
       }
       modal.classList.add('show');
       document.body.style.overflow = 'hidden';
-      var url = 'yemek_index.asp?yil=' + yil + '&ay=' + ay + '&izleme=1';
+      var url = 'yemek_gecmis.asp?yil=' + yil + '&ay=' + ay;
       if (tip === 'diyet') url += '&tip=diyet';
       document.getElementById('menuFrame').src = url;
     }
