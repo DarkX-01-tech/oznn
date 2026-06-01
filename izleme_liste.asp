@@ -116,6 +116,9 @@ End Function
     .liste-header { background: linear-gradient(135deg, var(--main), var(--dark)); color: #fff; padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; }
     .liste-header h2 { font-size: 18px; margin: 0; display: flex; align-items: center; gap: 10px; }
     .liste-header h2 svg { width: 24px; height: 24px; }
+    .btn-yillik { background: rgba(255,255,255,0.2); color: #fff; padding: 8px 16px; border: 2px solid rgba(255,255,255,0.3); border-radius: 20px; text-decoration: none; font-size: 12px; font-weight: 600; transition: all 0.3s; display: flex; align-items: center; gap: 6px; }
+    .btn-yillik:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+    .btn-yillik svg { width: 16px; height: 16px; fill: currentColor; }
 
     .ay-kartlari { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding: 22px; }
     .ay-kart { background: #fff; border: 2px solid #e8e8e8; border-radius: 14px; padding: 0; transition: all 0.35s cubic-bezier(0.22,1,0.36,1); overflow: hidden; }
@@ -204,6 +207,10 @@ End Function
           Ayl&#305;k Yemek Men&#252;leri
           <% End If %>
         </h2>
+        <a href="izleme_istatistik_yillik.asp?yil=<%= Year(Now()) %><% If aktif_sekme = "diyet" Then %>&tip=diyet<% End If %>" class="btn-yillik">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+          Y&#305;ll&#305;k &#304;statistik
+        </a>
       </div>
       <% If Not rsAylar.EOF Then %>
       <div class="ay-kartlari">
