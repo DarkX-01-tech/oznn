@@ -69,14 +69,28 @@ End If
 '====================================
 ' Veritabanından Verileri Çek
 '====================================
-Dim rsYemek, sqlYemek
+Dim rsYemek, sqlYemek, dbHata
+dbHata = False
 
+On Error Resume Next
 sqlYemek = "SELECT * FROM " & hedef_tablo & " " & _
            "WHERE aktif = True " & _
            "AND YEAR(tarih) = " & secilen_yil & " " & _
            "AND MONTH(tarih) = " & secilen_ay & " " & _
            "ORDER BY tarih ASC"
 Set rsYemek = ConnYemek.Execute(sqlYemek)
+If Err.Number <> 0 Then
+    dbHata = True
+    Err.Clear
+    sqlYemek = "SELECT * FROM yemek_listesi " & _
+               "WHERE aktif = True " & _
+               "AND YEAR(tarih) = " & secilen_yil & " " & _
+               "AND MONTH(tarih) = " & secilen_ay & " " & _
+               "ORDER BY tarih ASC"
+    Set rsYemek = ConnYemek.Execute(sqlYemek)
+    menu_tipi = "normal"
+End If
+On Error GoTo 0
 
 Function GetMonthName(monthNum)
     Select Case monthNum
