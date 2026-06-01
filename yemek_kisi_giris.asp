@@ -26,6 +26,22 @@ End Function
 
 Dim basarili_mesaj, hata_mesaj
 
+If Request.QueryString("sil") <> "" Then
+    Dim silId
+    silId = Request.QueryString("sil")
+    If IsNumeric(silId) Then
+        On Error Resume Next
+        ConnYemek.Execute "DELETE FROM yemek_kisi_sayisi WHERE id = " & CInt(silId)
+        If Err.Number = 0 Then
+            basarili_mesaj = "Kay&#305;t silindi!"
+        Else
+            hata_mesaj = "Silme s&#305;ras&#305;nda hata olu&#351;tu!"
+        End If
+        Err.Clear
+        On Error GoTo 0
+    End If
+End If
+
 If Request.Form("btn_kaydet") <> "" Then
     Dim frm_tarih, frm_tip, frm_kisi
     frm_tarih = Request.Form("tarih")
@@ -148,8 +164,33 @@ On Error GoTo 0
     .tip-badge.normal { background: rgba(69,184,195,0.12); color: var(--dark); }
     .tip-badge.diyet { background: rgba(76,175,80,0.12); color: var(--diyet-dark); }
 
+    .islem-td { display: flex; gap: 6px; }
+    .btn-duzenle, .btn-sil { width: 30px; height: 30px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+    .btn-duzenle { background: rgba(69,184,195,0.1); }
+    .btn-duzenle svg { width: 14px; height: 14px; fill: var(--dark); }
+    .btn-duzenle:hover { background: var(--main); }
+    .btn-duzenle:hover svg { fill: #fff; }
+    .btn-sil { background: rgba(229,57,53,0.1); }
+    .btn-sil svg { width: 14px; height: 14px; fill: #e53935; }
+    .btn-sil:hover { background: #e53935; }
+    .btn-sil:hover svg { fill: #fff; }
+
     @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } .bugun-row { grid-template-columns: 1fr; } }
   </style>
+  <script>
+    function duzenleSatir(tarih, tip, kisi) {
+      document.querySelector('input[name="tarih"]').value = tarih;
+      document.querySelector('select[name="menu_tipi"]').value = tip;
+      document.querySelector('input[name="kisi_sayisi"]').value = kisi;
+      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      document.querySelector('input[name="kisi_sayisi"]').focus();
+    }
+    function silSatir(id) {
+      if (confirm('Bu kayd\u0131 silmek istedi\u011finize emin misiniz?')) {
+        window.location.href = 'yemek_kisi_giris.asp?sil=' + id;
+      }
+    }
+  </script>
 </head>
 <body>
 <div id="header">
@@ -219,15 +260,25 @@ On Error GoTo 0
       <h3>Son Kay&#305;tlar</h3>
     </div>
     <table class="son-tablo">
-      <thead><tr><th>Tarih</th><th>Tip</th><th>Ki&#351;i</th><th>Kullan&#305;c&#305;</th></tr></thead>
+      <thead><tr><th>Tarih</th><th>Tip</th><th>Ki&#351;i</th><th>&#304;&#351;lem</th></tr></thead>
       <tbody>
         <% If Not rsSon10.EOF Then
-          Do While Not rsSon10.EOF %>
+          Do While Not rsSon10.EOF
+            Dim kayitTarihStr
+            kayitTarihStr = Year(rsSon10("tarih")) & "-" & Right("0" & Month(rsSon10("tarih")), 2) & "-" & Right("0" & Day(rsSon10("tarih")), 2)
+        %>
         <tr>
           <td><strong><%= Right("0" & Day(rsSon10("tarih")), 2) %>.<%= Right("0" & Month(rsSon10("tarih")), 2) %>.<%= Year(rsSon10("tarih")) %></strong></td>
           <td><span class="tip-badge <%= rsSon10("menu_tipi") %>"><% If rsSon10("menu_tipi") = "diyet" Then %>Diyet<% Else %>Normal<% End If %></span></td>
           <td><strong><%= rsSon10("kisi_sayisi") %></strong></td>
-          <td><%= rsSon10("kullanici") %></td>
+          <td class="islem-td">
+            <button class="btn-duzenle" onclick="duzenleSatir('<%= kayitTarihStr %>', '<%= rsSon10("menu_tipi") %>', <%= rsSon10("kisi_sayisi") %>)" title="D&#252;zenle">
+              <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            </button>
+            <button class="btn-sil" onclick="silSatir(<%= rsSon10("id") %>)" title="Sil">
+              <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+          </td>
         </tr>
         <%  rsSon10.MoveNext
           Loop
