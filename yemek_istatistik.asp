@@ -294,9 +294,9 @@ If kisiVar And Not rsKisi.EOF Then
     On Error GoTo 0
 End If
 
-<!-- #include file="database/yemek_degisiklik_istatistik.asp" -->
-
+degisiklik_bolum = "veri"
 %>
+<!-- #include file="database/yemek_degisiklik_istatistik.asp" -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -606,7 +606,10 @@ End If
       <div class="kisi-empty">Bu ay i&#231;in ki&#351;i say&#305;s&#305; verisi girilmemi&#351;.</div>
       <% End If %>
     </div>
-    <!-- #include file="database/yemek_degisiklik_istatistik_ui.asp" -->
+    <%
+    degisiklik_bolum = "buton"
+    %>
+    <!-- #include file="database/yemek_degisiklik_istatistik.asp" -->
   </div><!-- main-right -->
 
   </div><!-- main-layout -->
@@ -627,7 +630,10 @@ End If
   </div>
 </div>
 
-<!-- #include file="database/yemek_degisiklik_istatistik_modal.asp" -->
+<%
+degisiklik_bolum = "modal"
+%>
+<!-- #include file="database/yemek_degisiklik_istatistik.asp" -->
 
 <script>
 var tumVeri = <%= jsonArama %>;
