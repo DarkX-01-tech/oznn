@@ -17,6 +17,16 @@ Function LogHtmlSafe(val)
     LogHtmlSafe = s
 End Function
 
+Function LogJsonStr(val)
+    Dim s
+    s = LogSafeStr(val)
+    s = Replace(s, "\", "\\")
+    s = Replace(s, """", "\""")
+    s = Replace(s, Chr(13), "")
+    s = Replace(s, Chr(10), "")
+    LogJsonStr = s
+End Function
+
 Function LogSqlStr(val)
     LogSqlStr = Replace(LogSafeStr(val), "'", "''")
 End Function
