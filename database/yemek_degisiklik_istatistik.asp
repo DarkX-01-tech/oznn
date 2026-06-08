@@ -5,15 +5,12 @@
 If degisiklikVeriHazir <> "evet" Then
     degisiklikVeriHazir = "evet"
 
-    Dim rsDegisiklik, degisiklikVar, degisiklikHata
     degisiklikVar = False
     degisiklikHata = False
-    Dim degisiklikSayisi, degisenMenuGun, ogleDegisim, aksamDegisim
     degisiklikSayisi = 0
     degisenMenuGun = 0
     ogleDegisim = 0
     aksamDegisim = 0
-    Dim degisiklikTabloHtml
     degisiklikTabloHtml = ""
 
     On Error Resume Next
@@ -23,7 +20,6 @@ If degisiklikVeriHazir <> "evet" Then
     Else
         degisiklikVar = True
         If Not rsDegisiklik.EOF Then
-            Dim rsDegOzet
             Set rsDegOzet = ConnYemek.Execute("SELECT COUNT(*) AS toplam, COUNT(DISTINCT menu_tarih) AS gun FROM yemek_degisiklik_log WHERE yil = " & secilen_yil & " AND ay = " & secilen_ay & " AND menu_tipi = '" & menu_tipi & "'")
             If Not rsDegOzet.EOF Then
                 degisiklikSayisi = rsDegOzet("toplam")
@@ -31,7 +27,6 @@ If degisiklikVeriHazir <> "evet" Then
             End If
             rsDegOzet.Close: Set rsDegOzet = Nothing
 
-            Dim rsOgleAksam
             Set rsOgleAksam = ConnYemek.Execute("SELECT ogun_tipi FROM yemek_degisiklik_log WHERE yil = " & secilen_yil & " AND ay = " & secilen_ay & " AND menu_tipi = '" & menu_tipi & "'")
             Do While Not rsOgleAksam.EOF
                 If OgunTipiOgleMi(rsOgleAksam("ogun_tipi")) Then
@@ -44,7 +39,6 @@ If degisiklikVeriHazir <> "evet" Then
             rsOgleAksam.Close: Set rsOgleAksam = Nothing
 
             Do While Not rsDegisiklik.EOF
-                Dim satirOgun, satirEski, satirYeni, satirKullanici
                 If OgunTipiOgleMi(rsDegisiklik("ogun_tipi")) Then
                     satirOgun = "<span class=""degisiklik-modal-ogun ogle"">&#214;&#287;le</span> " & GetOgunTipiEtiket(rsDegisiklik("ogun_tipi"))
                 Else
@@ -75,17 +69,14 @@ If degisiklikVeriHazir <> "evet" Then
     End If
     Err.Clear
 
-    Dim guncellemeHata, guncellemeSayisi
     guncellemeHata = False
     guncellemeSayisi = 0
-    Dim guncellemeFiltre
     If menu_tipi = "diyet" Then
         guncellemeFiltre = " AND (guncelleme_tipi LIKE '%Diyet%' OR aciklama LIKE '%Diyet%')"
     Else
         guncellemeFiltre = " AND ((guncelleme_tipi NOT LIKE '%Diyet%' OR guncelleme_tipi IS NULL) AND (aciklama NOT LIKE '%Diyet%' OR aciklama IS NULL))"
     End If
 
-    Dim rsGuncSay
     Set rsGuncSay = ConnYemek.Execute("SELECT COUNT(*) AS adet FROM yemek_guncelleme_log WHERE yil = " & secilen_yil & " AND ay = " & secilen_ay & guncellemeFiltre)
     If Err.Number <> 0 Then
         guncellemeHata = True
