@@ -1,4 +1,5 @@
 <!-- #include file="database/Connection.asp" -->
+<!-- #include file="includes/yemek_degisiklik_log.asp" -->
 <%
 '====================================
 ' Session Kontrolü
@@ -89,6 +90,13 @@ If Request.Form("btnGuncelle") <> "" Then
         aksam_yan_urun = Replace(aksam_yan_urun, "'", "''")
         aksam_tatli = Replace(aksam_tatli, "'", "''")
 
+        Call LogKayitOgunDegisiklikleri(rsKayit("tarih"), rsKayit, _
+            Trim(Request.Form("ogle_corba")), Trim(Request.Form("ogle_ana_yemek")), _
+            Trim(Request.Form("ogle_yan_urun")), Trim(Request.Form("ogle_tatli")), _
+            Trim(Request.Form("aksam_corba")), Trim(Request.Form("aksam_ana_yemek")), _
+            Trim(Request.Form("aksam_yan_urun")), Trim(Request.Form("aksam_tatli")), _
+            admin_kullanici, menu_tipi, kayit_yil, kayit_ay)
+
         Dim sqlUpdate
         sqlUpdate = "UPDATE " & hedef_tablo & " SET " & _
                     "tarih = #" & tarih & "#, " & _
@@ -108,6 +116,13 @@ If Request.Form("btnGuncelle") <> "" Then
         ConnYemek.Execute sqlUpdate
 
         If Err.Number = 0 Then
+            Dim logTipiTek
+            If menu_tipi = "diyet" Then
+                logTipiTek = "Tekil G&#252;n G&#252;ncelleme (Diyet)"
+            Else
+                logTipiTek = "Tekil G&#252;n G&#252;ncelleme"
+            End If
+            Call LogGuncellemeOturumu(kayit_yil, kayit_ay, logTipiTek, admin_kullanici, "1 g&#252;n g&#252;ncellendi")
             Response.Redirect "yemek_liste_detay.asp?yil=" & kayit_yil & "&ay=" & kayit_ay & tip_param & "&durum=guncellendi"
         Else
             hata_mesaj = "G&#252;ncelleme s&#305;ras&#305;nda hata olu&#351;tu: " & Err.Description

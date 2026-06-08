@@ -1,4 +1,5 @@
 <!-- #include file="database/Connection.asp" -->
+<!-- #include file="includes/yemek_degisiklik_log.asp" -->
 <%
 If Session("yemek_admin_giris") <> "OK" Then
     Response.Redirect "giris.asp"
@@ -97,6 +98,14 @@ If Request.Form("toplu_guncelle") <> "" Then
         aksam_ana_yemek = Replace(aksam_ana_yemek, "'", "''")
         aksam_yan_urun = Replace(aksam_yan_urun, "'", "''")
         aksam_tatli = Replace(aksam_tatli, "'", "''")
+
+        Call LogKayitOgunDegisiklikleri(rsYemek("tarih"), rsYemek, _
+            Trim(Request.Form("ogle_corba_" & kayit_id)), Trim(Request.Form("ogle_ana_" & kayit_id)), _
+            Trim(Request.Form("ogle_yan_" & kayit_id)), Trim(Request.Form("ogle_tatli_" & kayit_id)), _
+            Trim(Request.Form("aksam_corba_" & kayit_id)), Trim(Request.Form("aksam_ana_" & kayit_id)), _
+            Trim(Request.Form("aksam_yan_" & kayit_id)), Trim(Request.Form("aksam_tatli_" & kayit_id)), _
+            admin_kullanici, menu_tipi, secilen_yil, secilen_ay)
+
         Dim sqlUpdate
         sqlUpdate = "UPDATE " & hedef_tablo & " SET gun_adi = '" & gun_adi_str & "', ogle_corba = '" & ogle_corba & "', ogle_ana_yemek = '" & ogle_ana_yemek & "', ogle_yan_urun = '" & ogle_yan_urun & "', ogle_tatli = '" & ogle_tatli & "', aksam_corba = '" & aksam_corba & "', aksam_ana_yemek = '" & aksam_ana_yemek & "', aksam_yan_urun = '" & aksam_yan_urun & "', aksam_tatli = '" & aksam_tatli & "' WHERE id = " & kayit_id
         ConnYemek.Execute sqlUpdate
@@ -110,17 +119,13 @@ If Request.Form("toplu_guncelle") <> "" Then
     Loop
     On Error GoTo 0
 
-    On Error Resume Next
-    Dim logSql, logTipi
+    Dim logTipi
     If menu_tipi = "diyet" Then
         logTipi = "Toplu G&#252;ncelleme (Diyet)"
     Else
         logTipi = "Toplu G&#252;ncelleme"
     End If
-    logSql = "INSERT INTO yemek_guncelleme_log (yil, ay, guncelleme_tarihi, guncelleme_tipi, kullanici, aciklama) VALUES (" & secilen_yil & ", " & secilen_ay & ", Now(), '" & logTipi & "', '" & Replace(admin_kullanici, "'", "''") & "', '" & basarili_sayisi & " g&#252;n g&#252;ncellendi')"
-    ConnYemek.Execute logSql
-    Err.Clear
-    On Error GoTo 0
+    Call LogGuncellemeOturumu(secilen_yil, secilen_ay, logTipi, admin_kullanici, basarili_sayisi & " g&#252;n g&#252;ncellendi")
 
     If hata_sayisi = 0 Then
         Response.Redirect "yemek_liste_detay.asp?yil=" & secilen_yil & "&ay=" & secilen_ay & tip_param & "&durum=guncellendi"
