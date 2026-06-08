@@ -378,17 +378,22 @@ degisiklik_bolum = "veri"
     .detay-btn svg { width: 13px; height: 13px; fill: currentColor; }
 
     .modal-overlay {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.45); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
       z-index: 1000; justify-content: center; align-items: flex-start; padding: 40px 15px; overflow-y: auto;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.28s ease, visibility 0.28s ease;
     }
-    .modal-overlay.show { display: flex; }
+    .modal-overlay.show { opacity: 1; visibility: visible; pointer-events: auto; }
+    .modal-overlay.closing { opacity: 0; visibility: hidden; pointer-events: none; }
     .modal-box {
       background: linear-gradient(135deg, #f0f9fa, #e6f4f1); border-radius: 16px;
       width: 100%; max-width: 750px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
       overflow: hidden; animation: modalSlide 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
+    .modal-overlay.closing .modal-box { animation: modalSlideOut 0.28s ease forwards; }
     @keyframes modalSlide { from { opacity: 0; transform: translateY(-40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes modalSlideOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-30px) scale(0.95); } }
 
     .modal-header {
       background: linear-gradient(90deg, var(--main), var(--dark)); color: #fff;
@@ -402,7 +407,8 @@ degisiklik_bolum = "veri"
       cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;
     }
     .modal-close:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg); }
-    .modal-body { padding: 18px; max-height: 65vh; overflow-y: auto; }
+    .modal-body { padding: 18px; overflow: visible; }
+    #modalIcerik { overflow: visible; }
     .modal-body::-webkit-scrollbar { width: 4px; }
     .modal-body::-webkit-scrollbar-thumb { background: var(--main); border-radius: 10px; }
 
@@ -422,7 +428,7 @@ degisiklik_bolum = "veri"
     .ogun-badge.ogle { background: rgba(69,184,195,0.15); color: #2e8b91; }
     .ogun-badge.aksam { background: rgba(156,39,176,0.12); color: #7b1fa2; }
 
-    .modal-tablo-wrap { background: #fff; border-radius: 10px; border: 1px solid #e8e8e8; overflow: hidden; }
+    .modal-tablo-wrap { background: #fff; border-radius: 10px; border: 1px solid #e8e8e8; max-height: 55vh; overflow: auto; }
     .modal-tablo { width: 100%; border-collapse: collapse; }
     .modal-tablo thead th {
       background: linear-gradient(135deg, var(--main), var(--dark)); color: #fff;
@@ -704,7 +710,7 @@ function detayGoster(yemekAdiRaw) {
 
   if (bulunanlar.length === 0) {
     document.getElementById('modalIcerik').innerHTML = '<div class="empty-msg">Bu yeme\u011Fe ait detay bulunamad\u0131.</div>';
-    document.getElementById('detayModal').classList.add('show');
+    modalAnimAc(document.getElementById('detayModal'));
     document.body.style.overflow = 'hidden';
     return;
   }
@@ -777,16 +783,17 @@ function detayGoster(yemekAdiRaw) {
   html += '</tbody></table></div>';
 
   document.getElementById('modalIcerik').innerHTML = html;
-  document.getElementById('detayModal').classList.add('show');
+  modalAnimAc(document.getElementById('detayModal'));
   document.body.style.overflow = 'hidden';
 }
 
 function modalKapat() {
-  document.getElementById('detayModal').classList.remove('show');
-  var degModal = document.getElementById('degisiklikModal');
-  if (!degModal || !degModal.classList.contains('show')) {
-    document.body.style.overflow = '';
-  }
+  modalAnimKapat(document.getElementById('detayModal'), function() {
+    var degModal = document.getElementById('degisiklikModal');
+    if (!degModal || !degModal.classList.contains('show')) {
+      document.body.style.overflow = '';
+    }
+  });
 }
 
 document.addEventListener('keydown', function(e) {

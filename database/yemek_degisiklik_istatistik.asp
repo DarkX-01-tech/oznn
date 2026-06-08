@@ -145,8 +145,8 @@ If degisiklik_bolum = "buton" Then
   .degisiklik-btn-ozet-item .dbo-sayi { font-size: 16px; font-weight: 700; color: #e65100; }
   .degisiklik-btn-ozet-item .dbo-label { font-size: 9px; color: #999; text-transform: uppercase; margin-top: 2px; }
   .degisiklik-btn-action { padding: 14px 16px; }
-  .degisiklik-ac-btn { width: 100%; padding: 11px 16px; border: none; border-radius: 10px; background: linear-gradient(135deg, #ff9800, #e65100); color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-  .degisiklik-ac-btn svg { width: 16px; height: 16px; fill: currentColor; pointer-events: none; }
+  .degisiklik-gor-btn { width: 100%; justify-content: center; padding: 10px 16px; font-size: 12px; gap: 6px; }
+  .degisiklik-gor-btn:active { transform: translateY(0); }
   .degisiklik-btn-warn { padding: 16px; color: #e65100; font-size: 11px; text-align: center; }
 </style>
 <div class="degisiklik-btn-card">
@@ -162,8 +162,8 @@ If degisiklik_bolum = "buton" Then
     <div class="degisiklik-btn-ozet-item"><div class="dbo-sayi"><%= degisiklikSayisi %></div><div class="dbo-label">&#214;&#287;&#252;n De&#287;i&#351;ikli&#287;i</div></div>
   </div>
   <div class="degisiklik-btn-action">
-    <button type="button" class="degisiklik-ac-btn" onclick="degisiklikModalAc(); return false;">
-      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+    <button type="button" class="detay-btn degisiklik-gor-btn" onclick="degisiklikModalAc(); return false;">
+      <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
       De&#287;i&#351;iklikleri G&#246;r&#252;nt&#252;le
     </button>
   </div>
@@ -174,7 +174,9 @@ ElseIf degisiklik_bolum = "modal" Then
 %>
 <style>
   #degisiklikModal .modal-box { max-width: 960px; }
-  #degisiklikModal .degisiklik-tablo-wrap { max-height: 60vh; overflow: auto; }
+  #degisiklikModalIcerik { overflow: visible; }
+  .degisiklik-modal-nav { margin-bottom: 12px; padding: 10px 0 6px; overflow: visible; }
+  .degisiklik-tablo-scroll { max-height: 55vh; overflow: auto; }
   .degisiklik-tablo { width: 100%; border-collapse: collapse; font-size: 12px; }
   .degisiklik-tablo thead th { background: #fff3e0; color: #bf360c; padding: 10px 12px; text-align: left; font-size: 10px; text-transform: uppercase; }
   .degisiklik-tablo tbody td { padding: 9px 12px; border-bottom: 1px solid #f5f5f5; vertical-align: top; }
@@ -199,9 +201,10 @@ ElseIf degisiklik_bolum = "modal" Then
       <button type="button" class="modal-close" onclick="degisiklikModalKapat();">&times;</button>
     </div>
     <div class="modal-body">
-      <div class="degisiklik-tablo-wrap" id="degisiklikModalIcerik">
+      <div id="degisiklikModalIcerik">
         <% If degisiklik_kapsam = "ay" Then %>
         <% If degisiklikTabloHtml <> "" Then %>
+        <div class="degisiklik-tablo-scroll">
         <table class="degisiklik-tablo">
           <thead>
             <tr>
@@ -215,6 +218,7 @@ ElseIf degisiklik_bolum = "modal" Then
           </thead>
           <tbody><%= degisiklikTabloHtml %></tbody>
         </table>
+        </div>
         <% Else %>
         <div class="degisiklik-empty">Bu ay i&#231;in hen&#252;z kay&#305;tl&#305; &#246;&#287;&#252;n de&#287;i&#351;ikli&#287;i yok.</div>
         <% End If %>
@@ -224,6 +228,19 @@ ElseIf degisiklik_bolum = "modal" Then
   </div>
 </div>
 <script type="text/javascript">
+function modalAnimAc(el) {
+  if (!el) return;
+  el.classList.remove('closing');
+  el.classList.add('show');
+}
+function modalAnimKapat(el, done) {
+  if (!el || !el.classList.contains('show')) { if (done) done(); return; }
+  el.classList.add('closing');
+  setTimeout(function() {
+    el.classList.remove('show', 'closing');
+    if (done) done();
+  }, 280);
+}
 var degisiklikKapsam = '<%= degisiklik_kapsam %>';
 var degisiklikYil = <%= secilen_yil %>;
 <% If degisiklik_kapsam = "yil" Then %>
@@ -285,11 +302,11 @@ function degisiklikGunGoster(ayNo) {
   for (var i = 0; i < degisiklikKayitlar.length; i++) {
     if (parseInt(degisiklikKayitlar[i].ay) === parseInt(ayNo)) kayitlar.push(degisiklikKayitlar[i]);
   }
-  var h = '<div style="margin-bottom:10px;"><button type="button" class="detay-btn" onclick="degisiklikAyGoster();return false;"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Ay Baz\u0131na D\u00F6n</button></div>';
+  var h = '<div class="degisiklik-modal-nav"><button type="button" class="detay-btn" onclick="degisiklikAyGoster();return false;"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Ay Baz\u0131na D\u00F6n</button></div>';
   if (kayitlar.length === 0) {
     h += '<div class="degisiklik-empty">Bu ay i\u00E7in kay\u0131t yok.</div>';
   } else {
-    h += '<table class="degisiklik-tablo"><thead><tr>';
+    h += '<div class="degisiklik-tablo-scroll"><table class="degisiklik-tablo"><thead><tr>';
     h += '<th>De\u011Fi\u015Fiklik Tarihi/Saati</th><th>Men\u00FC G\u00FCn\u00FC</th><th>\u00D6\u011F\u00FCn</th><th>Eski \u00D6\u011F\u00FCn</th><th>Yeni \u00D6\u011F\u00FCn</th><th>Kullan\u0131c\u0131</th>';
     h += '</tr></thead><tbody>';
     for (var p = 0; p < kayitlar.length; p++) {
@@ -303,7 +320,7 @@ function degisiklikGunGoster(ayNo) {
       h += '<td>' + k.kullanici + '</td>';
       h += '</tr>';
     }
-    h += '</tbody></table>';
+    h += '</tbody></table></div>';
   }
   document.getElementById('degisiklikModalIcerik').innerHTML = h;
 }
@@ -313,17 +330,18 @@ function degisiklikModalAc() {
   var modal = document.getElementById('degisiklikModal');
   if (!modal) return;
   if (degisiklikKapsam === 'yil' && typeof degisiklikAyGoster === 'function') degisiklikAyGoster();
-  modal.className = 'modal-overlay show';
+  modalAnimAc(modal);
   document.body.style.overflow = 'hidden';
 }
 function degisiklikModalKapat() {
   var modal = document.getElementById('degisiklikModal');
   if (!modal) return;
-  modal.className = 'modal-overlay';
-  var detayModal = document.getElementById('detayModal');
-  if (!detayModal || detayModal.className.indexOf('show') === -1) {
-    document.body.style.overflow = '';
-  }
+  modalAnimKapat(modal, function() {
+    var detayModal = document.getElementById('detayModal');
+    if (!detayModal || !detayModal.classList.contains('show')) {
+      document.body.style.overflow = '';
+    }
+  });
 }
 </script>
 <%

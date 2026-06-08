@@ -269,19 +269,24 @@ sKeys = GetSortedKeys(dictTumu)
     .yemek-bar { height: 100%; background: linear-gradient(90deg, var(--main), var(--dark)); border-radius: 3px; transition: width 0.6s ease; }
 
     .detay-btn { padding: 6px 14px; border: 2px solid #e0e0e0; border-radius: 20px; background: #fff; color: #666; font-size: 11px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: all 0.3s; flex-shrink: 0; }
-    .detay-btn:hover { border-color: var(--main); color: var(--main); transform: translateY(-2px); }
+    .detay-btn:hover { border-color: var(--main); color: var(--main); transform: translateY(-2px); box-shadow: 0 4px 12px <% If menu_tipi = "diyet" Then %>rgba(76,175,80,0.15)<% Else %>rgba(69,184,195,0.15)<% End If %>; }
+    .detay-btn:active { transform: translateY(0); }
     .detay-btn svg { width: 13px; height: 13px; fill: currentColor; }
 
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 1000; justify-content: center; align-items: flex-start; padding: 30px 15px; overflow-y: auto; }
-    .modal-overlay.show { display: flex; }
+    .modal-overlay { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 1000; justify-content: center; align-items: flex-start; padding: 30px 15px; overflow-y: auto; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.28s ease, visibility 0.28s ease; }
+    .modal-overlay.show { opacity: 1; visibility: visible; pointer-events: auto; }
+    .modal-overlay.closing { opacity: 0; visibility: hidden; pointer-events: none; }
     .modal-box { background: #fff; border-radius: 16px; width: 100%; max-width: 800px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); overflow: hidden; animation: modalIn 0.3s ease; }
+    .modal-overlay.closing .modal-box { animation: modalOut 0.28s ease forwards; }
     @keyframes modalIn { from { opacity: 0; transform: translateY(-30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes modalOut { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-30px) scale(0.95); } }
     .modal-header { background: linear-gradient(90deg, var(--main), var(--dark)); color: #fff; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; }
     .modal-header h2 { font-size: 15px; margin: 0; display: flex; align-items: center; gap: 8px; font-weight: 600; }
     .modal-header h2 svg { width: 18px; height: 18px; fill: currentColor; }
     .modal-close { background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.4); color: #fff; width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
     .modal-close:hover { background: rgba(255,255,255,0.35); transform: rotate(90deg); }
-    .modal-body { padding: 18px; max-height: 70vh; overflow-y: auto; }
+    .modal-body { padding: 18px; overflow: visible; }
+    #modalIcerik { overflow: visible; }
     .modal-body::-webkit-scrollbar { width: 4px; }
     .modal-body::-webkit-scrollbar-thumb { background: var(--main); border-radius: 10px; }
 
@@ -292,7 +297,7 @@ sKeys = GetSortedKeys(dictTumu)
     .modal-ozet-card.vurgulu { background: #fff8e1; border-color: #ffe082; }
     .modal-ozet-card.vurgulu .mo-sayi { color: #e65100; font-size: 13px; }
 
-    .modal-tablo-wrap { background: #fff; border-radius: 10px; border: 1px solid #e8e8e8; overflow: hidden; }
+    .modal-tablo-wrap { background: #fff; border-radius: 10px; border: 1px solid #e8e8e8; max-height: 55vh; overflow: auto; }
     .modal-tablo { width: 100%; border-collapse: collapse; }
     .modal-tablo thead th { background: linear-gradient(135deg, var(--main), var(--dark)); color: #fff; padding: 9px 12px; font-size: 10px; text-align: left; font-weight: 600; text-transform: uppercase; }
     .modal-tablo tbody tr { border-bottom: 1px solid #f5f5f5; transition: background 0.2s; cursor: pointer; }
@@ -461,7 +466,7 @@ function detayGoster(yr) {
 
   document.getElementById('modalBaslik').innerHTML = '"' + ya + '" Y\u0131ll\u0131k Detay';
 
-  if (toplamB === 0) { document.getElementById('modalIcerik').innerHTML = '<p style="text-align:center;color:#999;padding:40px;">Veri bulunamad\u0131.</p>'; document.getElementById('detayModal').classList.add('show'); document.body.style.overflow='hidden'; return; }
+  if (toplamB === 0) { document.getElementById('modalIcerik').innerHTML = '<p style="text-align:center;color:#999;padding:40px;">Veri bulunamad\u0131.</p>'; modalAnimAc(document.getElementById('detayModal')); document.body.style.overflow='hidden'; return; }
 
   var ayS = Object.keys(ayBazli).length;
   var ecO = '', ecOS = 0;
@@ -490,7 +495,7 @@ function detayGoster(yr) {
   h += '</tbody></table></div>';
 
   document.getElementById('modalIcerik').innerHTML = h;
-  document.getElementById('detayModal').classList.add('show');
+  modalAnimAc(document.getElementById('detayModal'));
   document.body.style.overflow = 'hidden';
 }
 
@@ -509,7 +514,7 @@ function gunDetayGoster(yemekAdi, ayNo) {
 
   document.getElementById('modalBaslik').innerHTML = '"' + yemekAdi + '" - ' + ayAdlari[ayNo] + ' G\u00fcn Detay\u0131';
 
-  var h = '<div style="margin-bottom:10px;"><button class="detay-btn" onclick="detayGoster(\'' + yemekAdi.replace(/'/g,"&#39;") + '\')"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Ay Baz\u0131na D\u00f6n</button></div>';
+  var h = '<div class="degisiklik-modal-nav"><button type="button" class="detay-btn" onclick="detayGoster(\'' + yemekAdi.replace(/'/g,"&#39;") + '\');return false;"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Ay Baz\u0131na D\u00f6n</button></div>';
   h += '<div class="modal-tablo-wrap"><table class="modal-tablo"><thead><tr><th>#</th><th>Tarih</th><th>G\u00fcn</th><th>\u00D6\u011F\u00FCn</th><th>Kategori</th></tr></thead><tbody>';
 
   for (var p = 0; p < bulunanlar.length; p++) {
@@ -524,9 +529,10 @@ function gunDetayGoster(yemekAdi, ayNo) {
 }
 
 function modalKapat() {
-  document.getElementById('detayModal').classList.remove('show');
-  var dm = document.getElementById('degisiklikModal');
-  if (!dm || dm.className.indexOf('show') === -1) document.body.style.overflow = '';
+  modalAnimKapat(document.getElementById('detayModal'), function() {
+    var dm = document.getElementById('degisiklikModal');
+    if (!dm || !dm.classList.contains('show')) document.body.style.overflow = '';
+  });
 }
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
