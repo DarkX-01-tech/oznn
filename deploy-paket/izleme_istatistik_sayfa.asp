@@ -228,6 +228,9 @@ If Err.Number = 0 Then
 End If
 Err.Clear
 On Error GoTo 0
+
+<!-- #include file="database/yemek_degisiklik_istatistik.asp" -->
+
 %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -388,8 +391,6 @@ On Error GoTo 0
     <div class="ozet-card"><div class="ozet-icon bg4"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><div class="ozet-info"><span>Tek Kullan&#305;m</span><strong><%= tek_kullanim %></strong><small>Yemek Sadece 1 Kez</small></div></div>
   </div>
 
-  <!-- #include file="database/yemek_degisiklik_istatistik.asp" -->
-
   <div class="main-layout">
   <div class="main-left">
   <div class="filter-bar">
@@ -434,6 +435,7 @@ On Error GoTo 0
       <div class="kisi-empty">Bu ay i&#231;in ki&#351;i say&#305;s&#305; verisi girilmemi&#351;.</div>
       <% End If %>
     </div>
+    <!-- #include file="database/yemek_degisiklik_istatistik_ui.asp" -->
   </div><!-- main-right -->
   </div><!-- main-layout -->
 </div>
@@ -453,7 +455,7 @@ var ogunKeys = ['ogle_corba','ogle_ana','ogle_yan','ogle_tatli','aksam_corba','a
 function decodeHtml(html){var d=document.createElement('div');d.innerHTML=html;return d.textContent||d.innerText||'';}
 function detayGoster(yr){var ya=decodeHtml(yr),al=ya.toLowerCase(),bl=[],od={},tb=0,gs=0,gd={};for(var o=0;o<ogunKeys.length;o++)od[ogunKeys[o]]=0;for(var i=0;i<tumVeri.length;i++){var r=tumVeri[i],gb=false,go=[];for(var k=0;k<ogunKeys.length;k++){var key=ogunKeys[k],val=r[key];if(val&&val.toLowerCase()===al){gb=true;tb++;od[key]++;go.push({ogun:key});var gt=decodeHtml(r.gun);if(gd[gt])gd[gt]++;else gd[gt]=1;}}if(gb){gs++;bl.push({tarih:r.tarih,gun:r.gun,ogunler:go});}}document.getElementById('modalBaslik').innerHTML='&quot;'+ya+'&quot; Detayl\u0131 \u0130statistik';if(bl.length===0){document.getElementById('modalIcerik').innerHTML='<div class="empty-msg">Detay bulunamad\u0131.</div>';document.getElementById('detayModal').classList.add('show');document.body.style.overflow='hidden';return;}var eco='',ecs=0;for(var m=0;m<ogunKeys.length;m++){if(od[ogunKeys[m]]>ecs){ecs=od[ogunKeys[m]];eco=ogunLabels[ogunKeys[m]];}}var ecg='',ecgs=0;for(var g in gd){if(gd[g]>ecgs){ecgs=gd[g];ecg=g;}}var oc=0,ac=0;for(var a=0;a<ogunKeys.length;a++){if(ogunKeys[a].indexOf('ogle')>-1)oc+=od[ogunKeys[a]];else ac+=od[ogunKeys[a]];}var h='<div class="modal-ozet">';h+='<div class="modal-ozet-card"><div class="mo-sayi">'+tb+'</div><div class="mo-baslik">Toplam</div></div>';h+='<div class="modal-ozet-card"><div class="mo-sayi">'+gs+'</div><div class="mo-baslik">Farkl\u0131 G\u00FCn</div></div>';if(oc>0)h+='<div class="modal-ozet-card"><div class="mo-sayi">'+oc+'</div><div class="mo-baslik">\u00D6\u011Fle</div></div>';if(ac>0)h+='<div class="modal-ozet-card"><div class="mo-sayi">'+ac+'</div><div class="mo-baslik">Ak\u015Fam</div></div>';h+='<div class="modal-ozet-card vurgulu"><div class="mo-sayi">'+eco+'</div><div class="mo-baslik">En \u00C7ok \u00D6\u011F\u00FCn</div></div>';if(ecg)h+='<div class="modal-ozet-card vurgulu"><div class="mo-sayi">'+ecg+'</div><div class="mo-baslik">En \u00C7ok G\u00FCn</div></div>';h+='</div>';var odh='';for(var n=0;n<ogunKeys.length;n++){if(od[ogunKeys[n]]>0){var ot=ogunKeys[n].indexOf('ogle')>-1?'ogle':'aksam';odh+='<span class="ogun-badge '+ot+'">'+ogunLabels[ogunKeys[n]]+': '+od[ogunKeys[n]]+'</span> ';}}if(odh){h+='<div class="modal-ogun-bar"><span class="modal-ogun-label">\u00D6\u011F\u00FCn Da\u011F\u0131l\u0131m\u0131</span>'+odh+'</div>';}h+='<div class="modal-tablo-wrap"><table class="modal-tablo"><thead><tr><th>#</th><th>Tarih</th><th>G\u00FCn</th><th>\u00D6\u011F\u00FCn</th><th>Kategori</th></tr></thead><tbody>';var s=0;for(var p=0;p<bl.length;p++){var b=bl[p];for(var q=0;q<b.ogunler.length;q++){s++;var ot2=b.ogunler[q].ogun.indexOf('ogle')>-1?'ogle':'aksam';var oa=ot2==='ogle'?'\u00D6\u011Fle':'Ak\u015Fam';h+='<tr><td>'+s+'</td><td><strong>'+b.tarih+'</strong></td><td>'+b.gun+'</td><td><span class="ogun-badge '+ot2+'">'+oa+'</span></td><td><span class="kategori-badge">'+kategoriLabels[b.ogunler[q].ogun]+'</span></td></tr>';}}h+='</tbody></table></div>';document.getElementById('modalIcerik').innerHTML=h;document.getElementById('detayModal').classList.add('show');document.body.style.overflow='hidden';}
 function modalKapat(){document.getElementById('detayModal').classList.remove('show');document.body.style.overflow='';}
-document.addEventListener('keydown',function(e){if(e.keyCode===27)modalKapat();});
+document.addEventListener('keydown',function(e){if(e.keyCode===27){degisiklikModalKapat();modalKapat();}});
 function showTab(tab,btn){var s=document.querySelectorAll('.kategori-section');for(var i=0;i<s.length;i++)s[i].classList.remove('active');document.getElementById('sec_'+tab).classList.add('active');var b=document.querySelectorAll('.filter-btn');for(var j=0;j<b.length;j++)b[j].classList.remove('active');btn.classList.add('active');}
 </script>
 </body>
@@ -468,8 +470,5 @@ Set dictAksamCorba = Nothing: Set dictAksamAna = Nothing: Set dictAksamYan = Not
 Set dictTumu = Nothing
 If degisiklikVar Then
     If Not rsDegisiklik Is Nothing Then rsDegisiklik.Close: Set rsDegisiklik = Nothing
-End If
-If guncellemeVar Then
-    If Not rsGuncelleme Is Nothing Then rsGuncelleme.Close: Set rsGuncelleme = Nothing
 End If
 %>

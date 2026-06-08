@@ -294,6 +294,8 @@ If kisiVar And Not rsKisi.EOF Then
     On Error GoTo 0
 End If
 
+<!-- #include file="database/yemek_degisiklik_istatistik.asp" -->
+
 %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -498,8 +500,6 @@ End If
     </div>
   </div>
 
-  <!-- #include file="database/yemek_degisiklik_istatistik.asp" -->
-
   <div class="main-layout">
   <div class="main-left">
 
@@ -606,6 +606,7 @@ End If
       <div class="kisi-empty">Bu ay i&#231;in ki&#351;i say&#305;s&#305; verisi girilmemi&#351;.</div>
       <% End If %>
     </div>
+    <!-- #include file="database/yemek_degisiklik_istatistik_ui.asp" -->
   </div><!-- main-right -->
 
   </div><!-- main-layout -->
@@ -778,7 +779,10 @@ function modalKapat() {
 }
 
 document.addEventListener('keydown', function(e) {
-  if (e.keyCode === 27) modalKapat();
+  if (e.keyCode === 27) {
+    degisiklikModalKapat();
+    modalKapat();
+  }
 });
 
 function showTab(tab, btn) {
@@ -809,8 +813,5 @@ Set dictAksamTatli = Nothing
 Set dictTumu = Nothing
 If degisiklikVar Then
     If Not rsDegisiklik Is Nothing Then rsDegisiklik.Close: Set rsDegisiklik = Nothing
-End If
-If guncellemeVar Then
-    If Not rsGuncelleme Is Nothing Then rsGuncelleme.Close: Set rsGuncelleme = Nothing
 End If
 %>
