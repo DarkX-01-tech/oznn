@@ -1,5 +1,5 @@
 <!-- #include file="database/Connection.asp" -->
-<!-- #include file="includes/yemek_degisiklik_log.asp" -->
+<!-- #include file="database/yemek_degisiklik_log.asp" -->
 <%
 If Session("yemek_admin_giris") <> "OK" Then
     Response.Redirect "giris.asp"

@@ -1,5 +1,5 @@
 <!-- #include file="database/Connection.asp" -->
-<!-- #include file="includes/yemek_degisiklik_log.asp" -->
+<!-- #include file="database/yemek_degisiklik_log.asp" -->
 <%
 '====================================
 ' Session Kontrolü

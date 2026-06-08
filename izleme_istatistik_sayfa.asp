@@ -1,4 +1,5 @@
 <!-- #include file="database/Connection.asp" -->
+<!-- #include file="database/yemek_degisiklik_log.asp" -->
 <%
 If Session("yemek_izleme_giris") <> "OK" Then
     Response.Redirect "izleme_giris.asp"
@@ -387,6 +388,8 @@ On Error GoTo 0
     <div class="ozet-card"><div class="ozet-icon bg4"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div><div class="ozet-info"><span>Tek Kullan&#305;m</span><strong><%= tek_kullanim %></strong><small>Yemek Sadece 1 Kez</small></div></div>
   </div>
 
+  <!-- #include file="database/yemek_degisiklik_istatistik.asp" -->
+
   <div class="main-layout">
   <div class="main-left">
   <div class="filter-bar">
@@ -463,4 +466,10 @@ End If
 Set dictOgleCorba = Nothing: Set dictOgleAna = Nothing: Set dictOgleYan = Nothing: Set dictOgleTatli = Nothing
 Set dictAksamCorba = Nothing: Set dictAksamAna = Nothing: Set dictAksamYan = Nothing: Set dictAksamTatli = Nothing
 Set dictTumu = Nothing
+If degisiklikVar Then
+    If Not rsDegisiklik Is Nothing Then rsDegisiklik.Close: Set rsDegisiklik = Nothing
+End If
+If guncellemeVar Then
+    If Not rsGuncelleme Is Nothing Then rsGuncelleme.Close: Set rsGuncelleme = Nothing
+End If
 %>
