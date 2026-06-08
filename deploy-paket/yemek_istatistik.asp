@@ -783,51 +783,9 @@ function modalKapat() {
   }
 }
 
-function degisiklikModalAc() {
-  var modal = document.getElementById('degisiklikModal');
-  if (!modal) return;
-  modal.classList.add('show');
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-}
-
-function degisiklikModalKapat() {
-  var modal = document.getElementById('degisiklikModal');
-  if (!modal) return;
-  modal.classList.remove('show');
-  modal.style.display = 'none';
-  var detayModal = document.getElementById('detayModal');
-  if (!detayModal || !detayModal.classList.contains('show')) {
-    document.body.style.overflow = '';
-  }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  var acBtn = document.getElementById('degisiklikAcBtn');
-  if (acBtn) {
-    acBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      degisiklikModalAc();
-    });
-  }
-  var kapatBtn = document.getElementById('degisiklikModalKapatBtn');
-  if (kapatBtn) {
-    kapatBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      degisiklikModalKapat();
-    });
-  }
-  var degModal = document.getElementById('degisiklikModal');
-  if (degModal) {
-    degModal.addEventListener('click', function(e) {
-      if (e.target === degModal) degisiklikModalKapat();
-    });
-  }
-});
-
 document.addEventListener('keydown', function(e) {
   if (e.keyCode === 27) {
-    degisiklikModalKapat();
+    if (typeof degisiklikModalKapat === 'function') degisiklikModalKapat();
     modalKapat();
   }
 });
