@@ -7,6 +7,16 @@ Function LogSafeStr(val)
     End If
 End Function
 
+Function LogHtmlSafe(val)
+    Dim s
+    s = LogSafeStr(val)
+    s = Replace(s, "&", "&amp;")
+    s = Replace(s, "<", "&lt;")
+    s = Replace(s, ">", "&gt;")
+    s = Replace(s, """", "&quot;")
+    LogHtmlSafe = s
+End Function
+
 Function LogSqlStr(val)
     LogSqlStr = Replace(LogSafeStr(val), "'", "''")
 End Function

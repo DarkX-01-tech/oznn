@@ -1,6 +1,9 @@
 <%
 ' degisiklik_bolum: "veri" | "buton" | "modal"
-' Gerekli degiskenler: secilen_yil, secilen_ay, menu_tipi, ay_adi
+' degisiklik_kapsam: "ay" (varsayilan) | "yil"
+' Gerekli: secilen_yil, menu_tipi | aylik icin ay_adi, secilen_ay
+
+If degisiklik_kapsam = "" Then degisiklik_kapsam = "ay"
 
 If degisiklikVeriHazir <> "evet" Then
     degisiklikVeriHazir = "evet"
@@ -13,21 +16,23 @@ If degisiklikVeriHazir <> "evet" Then
     aksamDegisim = 0
     degisiklikTabloHtml = ""
 
+    degisiklikLogFiltre = "yil = " & secilen_yil & " AND menu_tipi = '" & menu_tipi & "'"
+    If degisiklik_kapsam = "ay" Then
+        degisiklikLogFiltre = degisiklikLogFiltre & " AND ay = " & secilen_ay
+    End If
+
     On Error Resume Next
-    Set rsDegisiklik = ConnYemek.Execute("SELECT * FROM yemek_degisiklik_log WHERE yil = " & secilen_yil & " AND ay = " & secilen_ay & " AND menu_tipi = '" & menu_tipi & "' ORDER BY degisiklik_tarihi DESC")
+    Set rsDegisiklik = ConnYemek.Execute("SELECT * FROM yemek_degisiklik_log WHERE " & degisiklikLogFiltre & " ORDER BY degisiklik_tarihi DESC")
     If Err.Number <> 0 Then
         degisiklikHata = True
     Else
         degisiklikVar = True
         If Not rsDegisiklik.EOF Then
-            Set rsDegOzet = ConnYemek.Execute("SELECT COUNT(*) AS toplam, COUNT(DISTINCT menu_tarih) AS gun FROM yemek_degisiklik_log WHERE yil = " & secilen_yil & " AND ay = " & secilen_ay & " AND menu_tipi = '" & menu_tipi & "'")
-            If Not rsDegOzet.EOF Then
-                degisiklikSayisi = rsDegOzet("toplam")
-                degisenMenuGun = rsDegOzet("gun")
-            End If
+            Set rsDegOzet = ConnYemek.Execute("SELECT COUNT(DISTINCT menu_tarih) AS gun FROM yemek_degisiklik_log WHERE " & degisiklikLogFiltre)
+            If Not rsDegOzet.EOF Then degisenMenuGun = rsDegOzet("gun")
             rsDegOzet.Close: Set rsDegOzet = Nothing
 
-            Set rsOgleAksam = ConnYemek.Execute("SELECT ogun_tipi FROM yemek_degisiklik_log WHERE yil = " & secilen_yil & " AND ay = " & secilen_ay & " AND menu_tipi = '" & menu_tipi & "'")
+            Set rsOgleAksam = ConnYemek.Execute("SELECT ogun_tipi FROM yemek_degisiklik_log WHERE " & degisiklikLogFiltre)
             Do While Not rsOgleAksam.EOF
                 If OgunTipiOgleMi(rsOgleAksam("ogun_tipi")) Then
                     ogleDegisim = ogleDegisim + 1
@@ -39,24 +44,28 @@ If degisiklikVeriHazir <> "evet" Then
             rsOgleAksam.Close: Set rsOgleAksam = Nothing
 
             Do While Not rsDegisiklik.EOF
+                degisiklikSayisi = degisiklikSayisi + 1
                 If OgunTipiOgleMi(rsDegisiklik("ogun_tipi")) Then
                     satirOgun = "<span class=""degisiklik-modal-ogun ogle"">&#214;&#287;le</span> " & GetOgunTipiEtiket(rsDegisiklik("ogun_tipi"))
                 Else
                     satirOgun = "<span class=""degisiklik-modal-ogun aksam"">Ak&#351;am</span> " & GetOgunTipiEtiket(rsDegisiklik("ogun_tipi"))
                 End If
                 If LogSafeStr(rsDegisiklik("eski_deger")) <> "" Then
-                    satirEski = Server.HTMLEncode(rsDegisiklik("eski_deger"))
+                    satirEski = LogHtmlSafe(rsDegisiklik("eski_deger"))
                 Else
                     satirEski = "<em>(bo&#351;)</em>"
                 End If
                 If LogSafeStr(rsDegisiklik("yeni_deger")) <> "" Then
-                    satirYeni = Server.HTMLEncode(rsDegisiklik("yeni_deger"))
+                    satirYeni = LogHtmlSafe(rsDegisiklik("yeni_deger"))
                 Else
                     satirYeni = "<em>(bo&#351;)</em>"
                 End If
-                satirKullanici = Server.HTMLEncode(rsDegisiklik("kullanici"))
+                satirKullanici = LogHtmlSafe(rsDegisiklik("kullanici"))
                 degisiklikTabloHtml = degisiklikTabloHtml & "<tr>"
                 degisiklikTabloHtml = degisiklikTabloHtml & "<td>" & FormatDateTime(rsDegisiklik("degisiklik_tarihi"), 0) & "</td>"
+                If degisiklik_kapsam = "yil" Then
+                    degisiklikTabloHtml = degisiklikTabloHtml & "<td>" & GetMonthName(CInt(rsDegisiklik("ay"))) & "</td>"
+                End If
                 degisiklikTabloHtml = degisiklikTabloHtml & "<td>" & FormatDateTime(rsDegisiklik("menu_tarih"), 2) & "</td>"
                 degisiklikTabloHtml = degisiklikTabloHtml & "<td>" & satirOgun & "</td>"
                 degisiklikTabloHtml = degisiklikTabloHtml & "<td class=""eski-val"">" & satirEski & "</td>"
@@ -77,11 +86,18 @@ If degisiklikVeriHazir <> "evet" Then
         guncellemeFiltre = " AND ((guncelleme_tipi NOT LIKE '%Diyet%' OR guncelleme_tipi IS NULL) AND (aciklama NOT LIKE '%Diyet%' OR aciklama IS NULL))"
     End If
 
-    Set rsGuncSay = ConnYemek.Execute("SELECT COUNT(*) AS adet FROM yemek_guncelleme_log WHERE yil = " & secilen_yil & " AND ay = " & secilen_ay & guncellemeFiltre)
+    guncellemeLogFiltre = "yil = " & secilen_yil & guncellemeFiltre
+    If degisiklik_kapsam = "ay" Then
+        guncellemeLogFiltre = "yil = " & secilen_yil & " AND ay = " & secilen_ay & guncellemeFiltre
+    End If
+
+    Set rsGuncSay = ConnYemek.Execute("SELECT COUNT(*) AS adet FROM yemek_guncelleme_log WHERE " & guncellemeLogFiltre)
     If Err.Number <> 0 Then
         guncellemeHata = True
     Else
-        If Not rsGuncSay.EOF Then guncellemeSayisi = rsGuncSay("adet")
+        If Not rsGuncSay.EOF Then
+            If Not IsNull(rsGuncSay("adet")) Then guncellemeSayisi = rsGuncSay("adet")
+        End If
     End If
     rsGuncSay.Close: Set rsGuncSay = Nothing
     Err.Clear
@@ -145,7 +161,7 @@ ElseIf degisiklik_bolum = "modal" Then
     <div class="modal-header" style="background:linear-gradient(90deg,#ff9800,#e65100);">
       <h2>
         <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
-        <span><%= ay_adi %> <%= secilen_yil %> Men&#252; De&#287;i&#351;iklikleri</span>
+        <span><% If degisiklik_kapsam = "yil" Then %><%= secilen_yil %> Y&#305;l&#305; Men&#252; De&#287;i&#351;iklikleri<% Else %><%= ay_adi & " " & secilen_yil %> Men&#252; De&#287;i&#351;iklikleri<% End If %></span>
       </h2>
       <button type="button" class="modal-close" onclick="degisiklikModalKapat();">&times;</button>
     </div>
@@ -156,6 +172,7 @@ ElseIf degisiklik_bolum = "modal" Then
           <thead>
             <tr>
               <th>De&#287;i&#351;iklik Tarihi/Saati</th>
+              <% If degisiklik_kapsam = "yil" Then %><th>Ay</th><% End If %>
               <th>Men&#252; G&#252;n&#252;</th>
               <th>&#214;&#287;&#252;n</th>
               <th>Eski &#214;&#287;&#252;n</th>
@@ -166,7 +183,7 @@ ElseIf degisiklik_bolum = "modal" Then
           <tbody><%= degisiklikTabloHtml %></tbody>
         </table>
         <% Else %>
-        <div class="degisiklik-empty">Bu ay i&#231;in hen&#252;z kay&#305;tl&#305; &#246;&#287;&#252;n de&#287;i&#351;ikli&#287;i yok.</div>
+        <div class="degisiklik-empty"><% If degisiklik_kapsam = "yil" Then %>Bu y&#305;l i&#231;in hen&#252;z kay&#305;tl&#305; &#246;&#287;&#252;n de&#287;i&#351;ikli&#287;i yok.<% Else %>Bu ay i&#231;in hen&#252;z kay&#305;tl&#305; &#246;&#287;&#252;n de&#287;i&#351;ikli&#287;i yok.<% End If %></div>
         <% End If %>
       </div>
     </div>
