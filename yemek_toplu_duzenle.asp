@@ -121,9 +121,9 @@ If Request.Form("toplu_guncelle") <> "" Then
 
     Dim logTipi
     If menu_tipi = "diyet" Then
-        logTipi = "Toplu G&#252;ncelleme (Diyet)"
+        logTipi = "Ayl&#305;k Liste G&#252;ncellenmesi (Diyet)"
     Else
-        logTipi = "Toplu G&#252;ncelleme"
+        logTipi = "Ayl&#305;k Liste G&#252;ncellenmesi"
     End If
     Call LogGuncellemeOturumu(secilen_yil, secilen_ay, logTipi, admin_kullanici, basarili_sayisi & " g&#252;n g&#252;ncellendi")
 

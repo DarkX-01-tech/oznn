@@ -104,10 +104,68 @@ Function GetOgunTipiEtiket(ogunKodu)
     End Select
 End Function
 
-Function GuncellemeTipiGoster(rsG)
+Function EntityDecode(val)
+    Dim s
+    s = LogSafeStr(val)
+    s = Replace(s, "&#351;", ChrW(351))
+    s = Replace(s, "&#350;", ChrW(350))
+    s = Replace(s, "&#287;", ChrW(287))
+    s = Replace(s, "&#286;", ChrW(286))
+    s = Replace(s, "&#252;", ChrW(252))
+    s = Replace(s, "&#220;", ChrW(220))
+    s = Replace(s, "&#246;", ChrW(246))
+    s = Replace(s, "&#214;", ChrW(214))
+    s = Replace(s, "&#231;", ChrW(231))
+    s = Replace(s, "&#199;", ChrW(199))
+    s = Replace(s, "&#305;", ChrW(305))
+    s = Replace(s, "&#304;", ChrW(304))
+    EntityDecode = s
+End Function
+
+Function GuncellemeMetinGoster(val)
+    GuncellemeMetinGoster = LogHtmlSafe(EntityDecode(val))
+End Function
+
+Function GuncellemeTipEtiket(tip)
     Dim t
-    t = LogSafeStr(rsG("guncelleme_tipi"))
-    If t = "" Then t = LogSafeStr(rsG("kullanici"))
-    GuncellemeTipiGoster = t
+    t = LCase(EntityDecode(LogSafeStr(tip)))
+    If InStr(t, "toplu") > 0 Or InStr(t, "ayl") > 0 Then
+        If InStr(t, "diyet") > 0 Then
+            GuncellemeTipEtiket = "Ayl&#305;k Liste G&#252;ncellenmesi (Diyet)"
+        Else
+            GuncellemeTipEtiket = "Ayl&#305;k Liste G&#252;ncellenmesi"
+        End If
+    ElseIf InStr(t, "tek") > 0 Or InStr(t, "tekil") > 0 Or InStr(t, "g&#252;nl") > 0 Then
+        If InStr(t, "diyet") > 0 Then
+            GuncellemeTipEtiket = "G&#252;nl&#252;k Liste G&#252;ncellenmesi (Diyet)"
+        Else
+            GuncellemeTipEtiket = "G&#252;nl&#252;k Liste G&#252;ncellenmesi"
+        End If
+    Else
+        GuncellemeTipEtiket = GuncellemeMetinGoster(tip)
+    End If
+End Function
+
+Function GuncellemeOzetMetni(tip, aciklama, yil, ayNo, ayAdiStr)
+    Dim t, acik, ayEtiket
+    t = LCase(EntityDecode(LogSafeStr(tip)))
+    acik = EntityDecode(LogSafeStr(aciklama))
+    If ayAdiStr <> "" Then
+        ayEtiket = ayAdiStr
+    Else
+        ayEtiket = GetMonthName(CInt(ayNo))
+    End If
+    If InStr(t, "toplu") > 0 Or InStr(t, "ayl") > 0 Then
+        GuncellemeOzetMetni = ayEtiket & " " & yil & " ay&#305;n&#305;n men&#252; listesi g&#252;ncellendi"
+        If acik <> "" Then GuncellemeOzetMetni = GuncellemeOzetMetni & " (" & GuncellemeMetinGoster(aciklama) & ")"
+    ElseIf acik <> "" Then
+        GuncellemeOzetMetni = GuncellemeMetinGoster(aciklama)
+    Else
+        GuncellemeOzetMetni = GuncellemeTipEtiket(tip)
+    End If
+End Function
+
+Function GuncellemeTipiGoster(rsG)
+    GuncellemeTipiGoster = GuncellemeTipEtiket(rsG("guncelleme_tipi"))
 End Function
 %>

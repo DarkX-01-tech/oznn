@@ -118,9 +118,9 @@ If Request.Form("btnGuncelle") <> "" Then
         If Err.Number = 0 Then
             Dim logTipiTek
             If menu_tipi = "diyet" Then
-                logTipiTek = "Tekil G&#252;n G&#252;ncelleme (Diyet)"
+                logTipiTek = "G&#252;nl&#252;k Liste G&#252;ncellenmesi (Diyet)"
             Else
-                logTipiTek = "Tekil G&#252;n G&#252;ncelleme"
+                logTipiTek = "G&#252;nl&#252;k Liste G&#252;ncellenmesi"
             End If
             Call LogGuncellemeOturumu(kayit_yil, kayit_ay, logTipiTek, admin_kullanici, "1 g&#252;n g&#252;ncellendi")
             Response.Redirect "yemek_liste_detay.asp?yil=" & kayit_yil & "&ay=" & kayit_ay & tip_param & "&durum=guncellendi"
