@@ -122,6 +122,22 @@ ay_adi = GetMonthName(secilen_ay)
   <meta http-equiv="Expires" content="0">
   <title>M&#220; Pendik E.A.H. Portal - Yemek Listesi</title>
   <link rel="icon" href="../../images/hastane_portal_logo.png"/>
+  <script>
+    (function() {
+      try {
+        var navEntry = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        if (navEntry && navEntry.type === 'reload' && /[?&]tip=diyet(?:&|$)/.test(window.location.search)) {
+          var params = window.location.search.substring(1).split('&');
+          var kept = [];
+          for (var i = 0; i < params.length; i++) {
+            if (params[i] && params[i].indexOf('tip=') !== 0) kept.push(params[i]);
+          }
+          var qs = kept.length ? '?' + kept.join('&') : '';
+          window.location.replace(window.location.pathname + qs);
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <style type="text/css">
     @font-face {
@@ -148,7 +164,12 @@ ay_adi = GetMonthName(secilen_ay)
       --primary-dark: <% If menu_tipi = "diyet" Then %>#388e3c<% Else %>#1e8c99<% End If %>;
       --secondary-color: #dc3545;
       --secondary-dark: #c82333;
+      --turkuaz-color: #25abb9;
+      --turkuaz-dark: #1e8c99;
+      --diyet-color: #4caf50;
+      --diyet-dark: #388e3c;
       --white: #fff;
+      --btn-border: #e0e0e0;
       --shadow-medium: <% If menu_tipi = "diyet" Then %>rgba(76,175,80,0.3)<% Else %>rgba(37,171,185,0.3)<% End If %>;
       --shadow-heavy: <% If menu_tipi = "diyet" Then %>rgba(56,142,60,0.5)<% Else %>rgba(30,140,153,0.5)<% End If %>;
       --transition-speed: 0.25s;
@@ -243,93 +264,89 @@ ay_adi = GetMonthName(secilen_ay)
       gap: 8px;
     }
 
-    .back-button {
-      background-color: var(--primary-color);
-      border: 2px solid var(--white);
+    .ghost-btn {
+      background: transparent;
+      border: 2px solid var(--btn-border);
+      color: #888;
       cursor: pointer;
-      box-shadow: 0 4px 8px var(--shadow-medium);
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       transition: all var(--transition-speed) ease;
-      position: relative;
-      overflow: hidden;
+      font-family: 'Open Sans', sans-serif;
+      text-decoration: none;
+      box-shadow: none;
+    }
+
+    .ghost-btn:hover {
+      transform: translateY(-2px);
+      background: transparent;
+    }
+
+    .ghost-btn:active {
+      transform: translateY(0);
+    }
+
+    .back-button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
       padding: 0;
     }
 
     .back-button:hover {
-      transform: scale(1.05);
-      background-color: var(--primary-dark);
-      box-shadow: 0 6px 12px var(--shadow-heavy);
+      border-color: var(--secondary-color);
+      color: var(--secondary-color);
+      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
     }
 
     .back-button svg {
       width: 18px;
       height: 18px;
-      fill: var(--white);
+      fill: currentColor;
+      transition: fill var(--transition-speed) ease;
     }
 
     .diyet-toggle-btn {
-      background-color: #4caf50;
-      border: 2px solid var(--white);
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(76,175,80,0.3);
       padding: 6px 14px;
       border-radius: 20px;
-      display: flex;
-      align-items: center;
       gap: 6px;
-      transition: all var(--transition-speed) ease;
       font-size: 12px;
       font-weight: 600;
-      color: var(--white);
-      font-family: 'Open Sans', sans-serif;
-      text-decoration: none;
     }
 
     .diyet-toggle-btn:hover {
-      transform: scale(1.05);
-      background-color: #388e3c;
-      box-shadow: 0 6px 12px rgba(56,142,60,0.5);
+      border-color: var(--diyet-color);
+      color: var(--diyet-color);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
     }
 
     .diyet-toggle-btn svg {
       width: 16px;
       height: 16px;
-      fill: var(--white);
+      fill: currentColor;
+      transition: fill var(--transition-speed) ease;
     }
 
     .normal-toggle-btn {
-      background-color: var(--primary-color);
-      border: 2px solid var(--white);
-      cursor: pointer;
-      box-shadow: 0 4px 8px var(--shadow-medium);
       padding: 6px 14px;
       border-radius: 20px;
-      display: flex;
-      align-items: center;
       gap: 6px;
-      transition: all var(--transition-speed) ease;
       font-size: 12px;
       font-weight: 600;
-      color: var(--white);
-      font-family: 'Open Sans', sans-serif;
-      text-decoration: none;
     }
 
     .normal-toggle-btn:hover {
-      transform: scale(1.05);
-      background-color: var(--primary-dark);
-      box-shadow: 0 6px 12px var(--shadow-heavy);
+      border-color: var(--turkuaz-color);
+      color: var(--turkuaz-color);
+      box-shadow: 0 4px 12px rgba(37, 171, 185, 0.15);
     }
 
     .normal-toggle-btn svg {
       width: 16px;
       height: 16px;
-      fill: var(--white);
+      fill: currentColor;
+      transition: fill var(--transition-speed) ease;
     }
 
     #scrollTopBtn {
@@ -338,13 +355,14 @@ ay_adi = GetMonthName(secilen_ay)
       right: 30px;
       width: 50px;
       height: 50px;
-      background-color: var(--primary-color);
-      color: #fff;
+      background: transparent;
+      border: 2px solid var(--btn-border);
+      color: #888;
       font-size: 24px;
       text-align: center;
-      line-height: 50px;
+      line-height: 46px;
       border-radius: 50%;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: none;
       cursor: pointer;
       transition: all 0.3s ease, opacity 0.5s ease;
       opacity: 0;
@@ -352,10 +370,13 @@ ay_adi = GetMonthName(secilen_ay)
       z-index: 999;
       font-family: 'Open Sans', sans-serif;
     }
+
     #scrollTopBtn:hover {
-      background-color: var(--primary-dark);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
-      transform: scale(1.1);
+      background: transparent;
+      border-color: var(--primary-color);
+      color: var(--primary-color);
+      box-shadow: 0 4px 12px var(--shadow-medium);
+      transform: translateY(-2px);
     }
 
     .tablo-container-wrapper {
@@ -538,17 +559,11 @@ ay_adi = GetMonthName(secilen_ay)
       var container = document.querySelector('.tablo-body-container');
       if (todayRow && container) {
         setTimeout(function() {
-          var rowTop = todayRow.offsetTop - container.offsetTop;
-          container.scrollTo({ top: rowTop - 50, behavior: 'smooth' });
+          var scrollPos = todayRow.offsetTop - Math.max(0, (container.clientHeight - todayRow.offsetHeight) / 2);
+          if (scrollPos < 0) scrollPos = 0;
+          container.scrollTo({ top: scrollPos, behavior: 'smooth' });
         }, 300);
       }
-
-      setTimeout(function() {
-        var c = document.querySelector('.tablo-body-container');
-        if (c) {
-          c.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      }, 15000);
 
       var btn = document.getElementById("scrollTopBtn");
       var cont = document.querySelector('.tablo-body-container');
@@ -603,7 +618,7 @@ ay_adi = GetMonthName(secilen_ay)
           <div class="baslik">
             <div class="left-side">
               <% If Not izlemeModuAktif Then %>
-              <button class="back-button" onclick="window.location.href='/anasayfa_new.asp'" title="Ana Sayfa">
+              <button class="back-button ghost-btn" onclick="window.location.href='/anasayfa_new.asp'" title="Ana Sayfa">
                 <svg width="24" height="24" viewBox="0 0 24 24">
                   <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
                 </svg>
@@ -616,12 +631,12 @@ ay_adi = GetMonthName(secilen_ay)
             <div class="right-side">
               <% If Not izlemeModuAktif Then %>
                 <% If menu_tipi = "diyet" Then %>
-                <a href="javascript:void(0);" onclick="switchMenu('normal')" class="normal-toggle-btn" title="Normal Men&#252;">
+                <a href="javascript:void(0);" onclick="switchMenu('normal')" class="normal-toggle-btn ghost-btn" title="Normal Men&#252;">
                   <svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
                   Normal
                 </a>
                 <% Else %>
-                <a href="javascript:void(0);" onclick="switchMenu('diyet')" class="diyet-toggle-btn" title="Diyet Men&#252;s&#252;">
+                <a href="javascript:void(0);" onclick="switchMenu('diyet')" class="diyet-toggle-btn ghost-btn" title="Diyet Men&#252;s&#252;">
                   <svg viewBox="0 0 24 24"><path d="M17.21 9l-4.38-6.56c-.19-.28-.51-.42-.83-.42-.32 0-.64.14-.83.43L6.79 9C6.3 9.71 6 10.57 6 11.5 6 14.53 8.47 17 11.5 17h1c3.03 0 5.5-2.47 5.5-5.5 0-.93-.3-1.79-.79-2.5z"/></svg>
                   Diyet
                 </a>
