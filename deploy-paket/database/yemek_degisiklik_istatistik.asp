@@ -385,41 +385,54 @@ function guncellemeTabloHtmlJs(liste) {
 
 function degisiklikAyGoster() {
   document.getElementById('degisiklikModalBaslik').innerHTML = degisiklikYil + ' Y\u0131l\u0131 Men\u00FC De\u011Fi\u015Fiklikleri';
-  var h = guncellemeTabloHtmlJs(guncellemeKayitlar);
-  if ((!degisiklikKayitlar || degisiklikKayitlar.length === 0) && (!guncellemeKayitlar || guncellemeKayitlar.length === 0)) {
+
+  var ayBazliOgun = {}, aySet = {}, toplamOgun = 0, guncellemeToplam = 0;
+  if (degisiklikKayitlar && degisiklikKayitlar.length > 0) {
+    toplamOgun = degisiklikKayitlar.length;
+    for (var i = 0; i < degisiklikKayitlar.length; i++) {
+      var a = degisiklikKayitlar[i].ay;
+      aySet[a] = true;
+      if (!ayBazliOgun[a]) ayBazliOgun[a] = 0;
+      ayBazliOgun[a]++;
+    }
+  }
+  if (guncellemeKayitlar && guncellemeKayitlar.length > 0) {
+    guncellemeToplam = guncellemeKayitlar.length;
+    for (var gi = 0; gi < guncellemeKayitlar.length; gi++) {
+      aySet[guncellemeKayitlar[gi].ay] = true;
+    }
+  }
+
+  var ayKeys = Object.keys(aySet).sort(function(a,b){return parseInt(a)-parseInt(b);});
+  if (ayKeys.length === 0) {
     document.getElementById('degisiklikModalIcerik').innerHTML = '<div class="degisiklik-empty">Bu y\u0131l i\u00E7in hen\u00FCz kay\u0131tl\u0131 g\u00FCncelleme veya \u00F6\u011F\u00FCn de\u011Fi\u015Fikli\u011Fi yok.</div>';
     return;
   }
-  if (!degisiklikKayitlar || degisiklikKayitlar.length === 0) {
-    document.getElementById('degisiklikModalIcerik').innerHTML = h + '<div class="degisiklik-empty">Bu y\u0131l i\u00E7in \u00F6\u011F\u00FCn de\u011Fi\u015Fikli\u011Fi kayd\u0131 yok.</div>';
-    return;
-  }
-  var ayBazli = {}, toplam = degisiklikKayitlar.length;
-  for (var i = 0; i < degisiklikKayitlar.length; i++) {
-    var a = degisiklikKayitlar[i].ay;
-    if (!ayBazli[a]) ayBazli[a] = 0;
-    ayBazli[a]++;
-  }
-  var aySayisi = Object.keys(ayBazli).length;
+
   var hAy = '<div class="modal-ozet">';
-  hAy += '<div class="modal-ozet-card"><div class="mo-sayi">' + toplam + '</div><div class="mo-baslik">Toplam</div></div>';
-  hAy += '<div class="modal-ozet-card"><div class="mo-sayi">' + aySayisi + '</div><div class="mo-baslik">Farkl\u0131 Ay</div></div>';
+  hAy += '<div class="modal-ozet-card"><div class="mo-sayi">' + toplamOgun + '</div><div class="mo-baslik">Toplam</div></div>';
+  hAy += '<div class="modal-ozet-card"><div class="mo-sayi">' + ayKeys.length + '</div><div class="mo-baslik">Farkl\u0131 Ay</div></div>';
+  if (guncellemeToplam > 0) {
+    hAy += '<div class="modal-ozet-card"><div class="mo-sayi">' + guncellemeToplam + '</div><div class="mo-baslik">Liste G\u00FCncelleme</div></div>';
+  }
   hAy += '</div>';
-  hAy += '<div class="modal-tablo-wrap"><table class="modal-tablo"><thead><tr><th>#</th><th>Ay</th><th>De\u011Fi\u015Fiklik</th><th></th></tr></thead><tbody>';
+  hAy += '<div class="degisiklik-section"><div class="degisiklik-section-title"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10z"/></svg>Ay Baz\u0131 \u00D6zet</div>';
+  hAy += '<div class="degisiklik-tablo-scroll gunc-scroll"><div class="modal-tablo-wrap"><table class="modal-tablo"><thead><tr><th>#</th><th>Ay</th><th>De\u011Fi\u015Fiklik</th><th></th></tr></thead><tbody>';
   var sira = 0;
-  var ayKeys = Object.keys(ayBazli).sort(function(a,b){return parseInt(a)-parseInt(b);});
   for (var j = 0; j < ayKeys.length; j++) {
     sira++;
     var ayK = parseInt(ayKeys[j]);
+    var ogunSay = ayBazliOgun[ayK] || 0;
+    var degisiklikMetin = ogunSay > 0 ? (ogunSay + ' Kez') : '<em style="color:#999;">Liste g\u00FCncellemesi</em>';
     hAy += '<tr onclick="degisiklikGunGoster(' + ayK + ')" style="cursor:pointer;">';
     hAy += '<td>' + sira + '</td>';
     hAy += '<td><span class="ay-link">' + degisiklikAyAdlari[ayK] + '</span></td>';
-    hAy += '<td><strong>' + ayBazli[ayK] + ' Kez</strong></td>';
+    hAy += '<td><strong>' + degisiklikMetin + '</strong></td>';
     hAy += '<td><button type="button" class="detay-btn" onclick="event.stopPropagation();degisiklikGunGoster(' + ayK + ')"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>G\u00fcn Baz</button></td>';
     hAy += '</tr>';
   }
-  hAy += '</tbody></table></div>';
-  document.getElementById('degisiklikModalIcerik').innerHTML = h + hAy;
+  hAy += '</tbody></table></div></div></div>';
+  document.getElementById('degisiklikModalIcerik').innerHTML = hAy;
 }
 
 function degisiklikGunGoster(ayNo) {
