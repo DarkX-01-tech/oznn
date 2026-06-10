@@ -122,6 +122,22 @@ ay_adi = GetMonthName(secilen_ay)
   <meta http-equiv="Expires" content="0">
   <title>M&#220; Pendik E.A.H. Portal - Yemek Listesi</title>
   <link rel="icon" href="../../images/hastane_portal_logo.png"/>
+  <script>
+    (function() {
+      try {
+        var navEntry = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+        if (navEntry && navEntry.type === 'reload' && /[?&]tip=diyet(?:&|$)/.test(window.location.search)) {
+          var params = window.location.search.substring(1).split('&');
+          var kept = [];
+          for (var i = 0; i < params.length; i++) {
+            if (params[i] && params[i].indexOf('tip=') !== 0) kept.push(params[i]);
+          }
+          var qs = kept.length ? '?' + kept.join('&') : '';
+          window.location.replace(window.location.pathname + qs);
+        }
+      } catch (e) {}
+    })();
+  </script>
 
   <style type="text/css">
     @font-face {
