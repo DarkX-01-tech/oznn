@@ -249,7 +249,9 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .ghost-btn {
-      background: var(--white);
+      background: transparent;
+      border: 2px solid var(--btn-border);
+      color: #888;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -257,12 +259,12 @@ ay_adi = GetMonthName(secilen_ay)
       transition: all var(--transition-speed) ease;
       font-family: 'Open Sans', sans-serif;
       text-decoration: none;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      box-shadow: none;
     }
 
     .ghost-btn:hover {
       transform: translateY(-2px);
-      color: var(--white);
+      background: transparent;
     }
 
     .ghost-btn:active {
@@ -270,8 +272,6 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .back-button {
-      border: 2px solid var(--secondary-color);
-      color: var(--secondary-color);
       width: 36px;
       height: 36px;
       border-radius: 50%;
@@ -279,9 +279,9 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .back-button:hover {
-      background-color: var(--secondary-color);
       border-color: var(--secondary-color);
-      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.25);
+      color: var(--secondary-color);
+      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
     }
 
     .back-button svg {
@@ -292,8 +292,6 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .diyet-toggle-btn {
-      border: 2px solid var(--diyet-color);
-      color: var(--diyet-color);
       padding: 6px 14px;
       border-radius: 20px;
       gap: 6px;
@@ -302,9 +300,9 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .diyet-toggle-btn:hover {
-      background-color: var(--diyet-color);
       border-color: var(--diyet-color);
-      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+      color: var(--diyet-color);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
     }
 
     .diyet-toggle-btn svg {
@@ -315,8 +313,6 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .normal-toggle-btn {
-      border: 2px solid var(--turkuaz-color);
-      color: var(--turkuaz-color);
       padding: 6px 14px;
       border-radius: 20px;
       gap: 6px;
@@ -325,9 +321,9 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .normal-toggle-btn:hover {
-      background-color: var(--turkuaz-color);
       border-color: var(--turkuaz-color);
-      box-shadow: 0 4px 12px rgba(37, 171, 185, 0.25);
+      color: var(--turkuaz-color);
+      box-shadow: 0 4px 12px rgba(37, 171, 185, 0.15);
     }
 
     .normal-toggle-btn svg {
@@ -343,14 +339,14 @@ ay_adi = GetMonthName(secilen_ay)
       right: 30px;
       width: 50px;
       height: 50px;
-      background: var(--white);
-      border: 2px solid var(--primary-color);
-      color: var(--primary-color);
+      background: transparent;
+      border: 2px solid var(--btn-border);
+      color: #888;
       font-size: 24px;
       text-align: center;
       line-height: 46px;
       border-radius: 50%;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      box-shadow: none;
       cursor: pointer;
       transition: all 0.3s ease, opacity 0.5s ease;
       opacity: 0;
@@ -360,9 +356,9 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     #scrollTopBtn:hover {
-      background-color: var(--primary-color);
+      background: transparent;
       border-color: var(--primary-color);
-      color: var(--white);
+      color: var(--primary-color);
       box-shadow: 0 4px 12px var(--shadow-medium);
       transform: translateY(-2px);
     }
