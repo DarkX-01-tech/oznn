@@ -16,6 +16,8 @@ If degisiklikVeriHazir <> "evet" Then
     aksamDegisim = 0
     degisiklikTabloHtml = ""
     degisiklikJson = "[]"
+    guncellemeTabloHtml = ""
+    guncellemeJson = "[]"
 
     degisiklikLogFiltre = "yil = " & secilen_yil & " AND menu_tipi = '" & menu_tipi & "'"
     If degisiklik_kapsam = "ay" Then
@@ -120,15 +122,68 @@ If degisiklikVeriHazir <> "evet" Then
         guncellemeLogFiltre = "yil = " & secilen_yil & " AND ay = " & secilen_ay & guncellemeFiltre
     End If
 
-    Set rsGuncSay = ConnYemek.Execute("SELECT COUNT(*) AS adet FROM yemek_guncelleme_log WHERE " & guncellemeLogFiltre)
+    Set rsGunc = ConnYemek.Execute("SELECT * FROM yemek_guncelleme_log WHERE " & guncellemeLogFiltre & " ORDER BY guncelleme_tarihi DESC")
     If Err.Number <> 0 Then
         guncellemeHata = True
     Else
-        If Not rsGuncSay.EOF Then
-            If Not IsNull(rsGuncSay("adet")) Then guncellemeSayisi = rsGuncSay("adet")
+        guncellemeJsonIlk = True
+        guncellemeJsonBuf = ""
+        Do While Not rsGunc.EOF
+            guncellemeSayisi = guncellemeSayisi + 1
+            satirGuncTarih = FormatDateTime(rsGunc("guncelleme_tarihi"), 0)
+            satirGuncTip = LogHtmlSafe(rsGunc("guncelleme_tipi"))
+            satirGuncKullanici = LogHtmlSafe(rsGunc("kullanici"))
+            satirGuncAciklama = LogHtmlSafe(rsGunc("aciklama"))
+            satirGuncAy = CInt(rsGunc("ay"))
+
+            satirGuncOzet = satirGuncAciklama
+            If InStr(LCase(rsGunc("guncelleme_tipi") & ""), "toplu") > 0 Then
+                If degisiklik_kapsam = "ay" And ay_adi <> "" Then
+                    satirGuncOzet = ay_adi & " " & secilen_yil & " ay&#305;n&#305;n men&#252; listesi g&#252;ncellendi"
+                    If LogSafeStr(rsGunc("aciklama")) <> "" Then
+                        satirGuncOzet = satirGuncOzet & " (" & satirGuncAciklama & ")"
+                    End If
+                Else
+                    satirGuncOzet = GetMonthName(satirGuncAy) & " " & secilen_yil & " ay&#305;n&#305;n men&#252; listesi g&#252;ncellendi"
+                    If LogSafeStr(rsGunc("aciklama")) <> "" Then
+                        satirGuncOzet = satirGuncOzet & " (" & satirGuncAciklama & ")"
+                    End If
+                End If
+            ElseIf satirGuncOzet = "" Then
+                satirGuncOzet = satirGuncTip
+            End If
+
+            If InStr(LCase(rsGunc("guncelleme_tipi") & ""), "toplu") > 0 Then
+                satirGuncBadge = "toplu"
+            Else
+                satirGuncBadge = "tekil"
+            End If
+
+            If degisiklik_kapsam = "ay" Then
+                guncellemeTabloHtml = guncellemeTabloHtml & "<tr>"
+                guncellemeTabloHtml = guncellemeTabloHtml & "<td>" & satirGuncTarih & "</td>"
+                guncellemeTabloHtml = guncellemeTabloHtml & "<td><span class=""gunc-badge " & satirGuncBadge & """>" & satirGuncTip & "</span></td>"
+                guncellemeTabloHtml = guncellemeTabloHtml & "<td class=""gunc-ozet"">" & satirGuncOzet & "</td>"
+                guncellemeTabloHtml = guncellemeTabloHtml & "<td>" & satirGuncKullanici & "</td>"
+                guncellemeTabloHtml = guncellemeTabloHtml & "</tr>"
+            Else
+                If Not guncellemeJsonIlk Then guncellemeJsonBuf = guncellemeJsonBuf & ","
+                guncellemeJsonIlk = False
+                guncellemeJsonBuf = guncellemeJsonBuf & "{"
+                guncellemeJsonBuf = guncellemeJsonBuf & """ay"":" & satirGuncAy & ","
+                guncellemeJsonBuf = guncellemeJsonBuf & """tarih"":""" & LogJsonStr(satirGuncTarih) & ""","
+                guncellemeJsonBuf = guncellemeJsonBuf & """tip"":""" & LogJsonStr(rsGunc("guncelleme_tipi")) & ""","
+                guncellemeJsonBuf = guncellemeJsonBuf & """aciklama"":""" & LogJsonStr(rsGunc("aciklama")) & ""","
+                guncellemeJsonBuf = guncellemeJsonBuf & """kullanici"":""" & LogJsonStr(rsGunc("kullanici")) & """"
+                guncellemeJsonBuf = guncellemeJsonBuf & "}"
+            End If
+            rsGunc.MoveNext
+        Loop
+        If degisiklik_kapsam = "yil" Then
+            guncellemeJson = "[" & guncellemeJsonBuf & "]"
         End If
     End If
-    rsGuncSay.Close: Set rsGuncSay = Nothing
+    If Not rsGunc Is Nothing Then rsGunc.Close: Set rsGunc = Nothing
     Err.Clear
     On Error GoTo 0
 End If
@@ -190,6 +245,17 @@ ElseIf degisiklik_bolum = "modal" Then
   #degisiklikModal .modal-ozet-card .mo-sayi { color: #e65100; }
   #degisiklikModal .modal-tablo thead th { background: linear-gradient(135deg, #ff9800, #e65100); }
   #degisiklikModal .ay-link { color: #e65100; font-weight: 600; }
+  .degisiklik-section { margin-bottom: 18px; }
+  .degisiklik-section-title { font-size: 11px; font-weight: 700; color: #1565c0; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.4px; display: flex; align-items: center; gap: 6px; }
+  .degisiklik-section-title.ogun-title { color: #e65100; }
+  .degisiklik-section-title svg { width: 14px; height: 14px; fill: currentColor; }
+  .guncelleme-tablo { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .guncelleme-tablo thead th { background: #e3f2fd; color: #1565c0; padding: 10px 12px; text-align: left; font-size: 10px; text-transform: uppercase; }
+  .guncelleme-tablo tbody td { padding: 9px 12px; border-bottom: 1px solid #f0f4f8; vertical-align: top; }
+  .gunc-badge { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 10px; font-weight: 600; white-space: nowrap; }
+  .gunc-badge.toplu { background: rgba(33,150,243,0.12); color: #1565c0; }
+  .gunc-badge.tekil { background: rgba(76,175,80,0.12); color: #2e7d32; }
+  .gunc-ozet { color: #333; font-weight: 500; }
 </style>
 <div class="modal-overlay" id="degisiklikModal" onclick="if(event.target===this) degisiklikModalKapat();">
   <div class="modal-box">
@@ -203,24 +269,52 @@ ElseIf degisiklik_bolum = "modal" Then
     <div class="modal-body">
       <div id="degisiklikModalIcerik">
         <% If degisiklik_kapsam = "ay" Then %>
-        <% If degisiklikTabloHtml <> "" Then %>
-        <div class="degisiklik-tablo-scroll">
-        <table class="degisiklik-tablo">
-          <thead>
-            <tr>
-              <th>De&#287;i&#351;iklik Tarihi/Saati</th>
-              <th>Men&#252; G&#252;n&#252;</th>
-              <th>&#214;&#287;&#252;n</th>
-              <th>Eski &#214;&#287;&#252;n</th>
-              <th>Yeni &#214;&#287;&#252;n</th>
-              <th>Kullan&#305;c&#305;</th>
-            </tr>
-          </thead>
-          <tbody><%= degisiklikTabloHtml %></tbody>
-        </table>
+        <% If guncellemeTabloHtml <> "" Then %>
+        <div class="degisiklik-section">
+          <div class="degisiklik-section-title">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+            Ayl&#305;k / Toplu G&#252;ncellemeler
+          </div>
+          <div class="degisiklik-tablo-scroll">
+          <table class="guncelleme-tablo">
+            <thead>
+              <tr>
+                <th>G&#252;ncelleme Tarihi/Saati</th>
+                <th>&#304;&#351;lem Tipi</th>
+                <th>A&#231;&#305;klama</th>
+                <th>Kullan&#305;c&#305;</th>
+              </tr>
+            </thead>
+            <tbody><%= guncellemeTabloHtml %></tbody>
+          </table>
+          </div>
         </div>
-        <% Else %>
-        <div class="degisiklik-empty">Bu ay i&#231;in hen&#252;z kay&#305;tl&#305; &#246;&#287;&#252;n de&#287;i&#351;ikli&#287;i yok.</div>
+        <% End If %>
+        <% If degisiklikTabloHtml <> "" Then %>
+        <div class="degisiklik-section">
+          <div class="degisiklik-section-title ogun-title">
+            <svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>
+            &#214;&#287;&#252;n De&#287;i&#351;iklikleri
+          </div>
+          <div class="degisiklik-tablo-scroll">
+          <table class="degisiklik-tablo">
+            <thead>
+              <tr>
+                <th>De&#287;i&#351;iklik Tarihi/Saati</th>
+                <th>Men&#252; G&#252;n&#252;</th>
+                <th>&#214;&#287;&#252;n</th>
+                <th>Eski &#214;&#287;&#252;n</th>
+                <th>Yeni &#214;&#287;&#252;n</th>
+                <th>Kullan&#305;c&#305;</th>
+              </tr>
+            </thead>
+            <tbody><%= degisiklikTabloHtml %></tbody>
+          </table>
+          </div>
+        </div>
+        <% End If %>
+        <% If guncellemeTabloHtml = "" And degisiklikTabloHtml = "" Then %>
+        <div class="degisiklik-empty">Bu ay i&#231;in hen&#252;z kay&#305;tl&#305; g&#252;ncelleme veya &#246;&#287;&#252;n de&#287;i&#351;ikli&#287;i yok.</div>
         <% End If %>
         <% End If %>
       </div>
@@ -245,6 +339,7 @@ var degisiklikKapsam = '<%= degisiklik_kapsam %>';
 var degisiklikYil = <%= secilen_yil %>;
 <% If degisiklik_kapsam = "yil" Then %>
 var degisiklikKayitlar = <%= degisiklikJson %>;
+var guncellemeKayitlar = <%= guncellemeJson %>;
 var degisiklikAyAdlari = ['','Ocak','\u015eubat','Mart','Nisan','May\u0131s','Haziran','Temmuz','A\u011fustos','Eyl\u00fcl','Ekim','Kas\u0131m','Aral\u0131k'];
 var degisiklikOgunEtiket = {
   'ogle_corba':'\u00C7orba','ogle_ana':'Ana Yemek','ogle_yan':'Yan \u00DCr\u00FCn','ogle_tatli':'Tatl\u0131/Meyve',
@@ -262,10 +357,45 @@ function degisiklikDegerHtml(val, sinif) {
   return '<span class="' + sinif + '">' + val + '</span>';
 }
 
+function guncellemeBadgeSinif(tip) {
+  if (!tip) return 'tekil';
+  return tip.toLowerCase().indexOf('toplu') >= 0 ? 'toplu' : 'tekil';
+}
+
+function guncellemeOzetMetni(k) {
+  var tip = k.tip || '';
+  if (tip.toLowerCase().indexOf('toplu') >= 0) {
+    var t = degisiklikAyAdlari[parseInt(k.ay)] + ' ' + degisiklikYil + ' ay\u0131n\u0131n men\u00FC listesi g\u00FCncellendi';
+    if (k.aciklama) t += ' (' + k.aciklama + ')';
+    return t;
+  }
+  return k.aciklama || tip || '-';
+}
+
+function guncellemeTabloHtmlJs(liste) {
+  if (!liste || liste.length === 0) return '';
+  var h = '<div class="degisiklik-section"><div class="degisiklik-section-title"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>Ayl\u0131k / Toplu G\u00FCncellemeler</div>';
+  h += '<div class="degisiklik-tablo-scroll"><table class="guncelleme-tablo"><thead><tr><th>G\u00FCncelleme Tarihi/Saati</th><th>\u0130\u015Flem Tipi</th><th>A\u00E7\u0131klama</th><th>Kullan\u0131c\u0131</th></tr></thead><tbody>';
+  for (var g = 0; g < liste.length; g++) {
+    var kg = liste[g];
+    h += '<tr><td>' + kg.tarih + '</td>';
+    h += '<td><span class="gunc-badge ' + guncellemeBadgeSinif(kg.tip) + '">' + (kg.tip || '-') + '</span></td>';
+    h += '<td class="gunc-ozet">' + guncellemeOzetMetni(kg) + '</td>';
+    h += '<td>' + kg.kullanici + '</td></tr>';
+  }
+  h += '</tbody></table></div></div>';
+  return h;
+}
+
 function degisiklikAyGoster() {
   document.getElementById('degisiklikModalBaslik').innerHTML = degisiklikYil + ' Y\u0131l\u0131 Men\u00FC De\u011Fi\u015Fiklikleri';
+  var h = guncellemeTabloHtmlJs(guncellemeKayitlar);
+  if ((!degisiklikKayitlar || degisiklikKayitlar.length === 0) && (!guncellemeKayitlar || guncellemeKayitlar.length === 0)) {
+    document.getElementById('degisiklikModalIcerik').innerHTML = '<div class="degisiklik-empty">Bu y\u0131l i\u00E7in hen\u00FCz kay\u0131tl\u0131 g\u00FCncelleme veya \u00F6\u011F\u00FCn de\u011Fi\u015Fikli\u011Fi yok.</div>';
+    return;
+  }
   if (!degisiklikKayitlar || degisiklikKayitlar.length === 0) {
-    document.getElementById('degisiklikModalIcerik').innerHTML = '<div class="degisiklik-empty">Bu y\u0131l i\u00E7in hen\u00FCz kay\u0131tl\u0131 \u00F6\u011F\u00FCn de\u011Fi\u015Fikli\u011Fi yok.</div>';
+    document.getElementById('degisiklikModalIcerik').innerHTML = h + '<div class="degisiklik-empty">Bu y\u0131l i\u00E7in \u00F6\u011F\u00FCn de\u011Fi\u015Fikli\u011Fi kayd\u0131 yok.</div>';
     return;
   }
   var ayBazli = {}, toplam = degisiklikKayitlar.length;
@@ -275,25 +405,25 @@ function degisiklikAyGoster() {
     ayBazli[a]++;
   }
   var aySayisi = Object.keys(ayBazli).length;
-  var h = '<div class="modal-ozet">';
-  h += '<div class="modal-ozet-card"><div class="mo-sayi">' + toplam + '</div><div class="mo-baslik">Toplam</div></div>';
-  h += '<div class="modal-ozet-card"><div class="mo-sayi">' + aySayisi + '</div><div class="mo-baslik">Farkl\u0131 Ay</div></div>';
-  h += '</div>';
-  h += '<div class="modal-tablo-wrap"><table class="modal-tablo"><thead><tr><th>#</th><th>Ay</th><th>De\u011Fi\u015Fiklik</th><th></th></tr></thead><tbody>';
+  var hAy = '<div class="modal-ozet">';
+  hAy += '<div class="modal-ozet-card"><div class="mo-sayi">' + toplam + '</div><div class="mo-baslik">Toplam</div></div>';
+  hAy += '<div class="modal-ozet-card"><div class="mo-sayi">' + aySayisi + '</div><div class="mo-baslik">Farkl\u0131 Ay</div></div>';
+  hAy += '</div>';
+  hAy += '<div class="modal-tablo-wrap"><table class="modal-tablo"><thead><tr><th>#</th><th>Ay</th><th>De\u011Fi\u015Fiklik</th><th></th></tr></thead><tbody>';
   var sira = 0;
   var ayKeys = Object.keys(ayBazli).sort(function(a,b){return parseInt(a)-parseInt(b);});
   for (var j = 0; j < ayKeys.length; j++) {
     sira++;
     var ayK = parseInt(ayKeys[j]);
-    h += '<tr onclick="degisiklikGunGoster(' + ayK + ')" style="cursor:pointer;">';
-    h += '<td>' + sira + '</td>';
-    h += '<td><span class="ay-link">' + degisiklikAyAdlari[ayK] + '</span></td>';
-    h += '<td><strong>' + ayBazli[ayK] + ' Kez</strong></td>';
-    h += '<td><button type="button" class="detay-btn" onclick="event.stopPropagation();degisiklikGunGoster(' + ayK + ')"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>G\u00fcn Baz</button></td>';
-    h += '</tr>';
+    hAy += '<tr onclick="degisiklikGunGoster(' + ayK + ')" style="cursor:pointer;">';
+    hAy += '<td>' + sira + '</td>';
+    hAy += '<td><span class="ay-link">' + degisiklikAyAdlari[ayK] + '</span></td>';
+    hAy += '<td><strong>' + ayBazli[ayK] + ' Kez</strong></td>';
+    hAy += '<td><button type="button" class="detay-btn" onclick="event.stopPropagation();degisiklikGunGoster(' + ayK + ')"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>G\u00fcn Baz</button></td>';
+    hAy += '</tr>';
   }
-  h += '</tbody></table></div>';
-  document.getElementById('degisiklikModalIcerik').innerHTML = h;
+  hAy += '</tbody></table></div>';
+  document.getElementById('degisiklikModalIcerik').innerHTML = h + hAy;
 }
 
 function degisiklikGunGoster(ayNo) {
@@ -302,10 +432,22 @@ function degisiklikGunGoster(ayNo) {
   for (var i = 0; i < degisiklikKayitlar.length; i++) {
     if (parseInt(degisiklikKayitlar[i].ay) === parseInt(ayNo)) kayitlar.push(degisiklikKayitlar[i]);
   }
+  var guncAy = [];
+  if (guncellemeKayitlar) {
+    for (var gx = 0; gx < guncellemeKayitlar.length; gx++) {
+      if (parseInt(guncellemeKayitlar[gx].ay) === parseInt(ayNo)) guncAy.push(guncellemeKayitlar[gx]);
+    }
+  }
   var h = '<div class="degisiklik-modal-nav"><button type="button" class="detay-btn" onclick="degisiklikAyGoster();return false;"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Ay Baz\u0131na D\u00F6n</button></div>';
+  h += guncellemeTabloHtmlJs(guncAy);
   if (kayitlar.length === 0) {
-    h += '<div class="degisiklik-empty">Bu ay i\u00E7in kay\u0131t yok.</div>';
+    if (guncAy.length === 0) {
+      h += '<div class="degisiklik-empty">Bu ay i\u00E7in kay\u0131t yok.</div>';
+    } else {
+      h += '<div class="degisiklik-empty">Bu ay i\u00E7in \u00F6\u011F\u00FCn de\u011Fi\u015Fikli\u011Fi kayd\u0131 yok.</div>';
+    }
   } else {
+    h += '<div class="degisiklik-section"><div class="degisiklik-section-title ogun-title"><svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/></svg>\u00D6\u011F\u00FCn De\u011Fi\u015Fiklikleri</div>';
     h += '<div class="degisiklik-tablo-scroll"><table class="degisiklik-tablo"><thead><tr>';
     h += '<th>De\u011Fi\u015Fiklik Tarihi/Saati</th><th>Men\u00FC G\u00FCn\u00FC</th><th>\u00D6\u011F\u00FCn</th><th>Eski \u00D6\u011F\u00FCn</th><th>Yeni \u00D6\u011F\u00FCn</th><th>Kullan\u0131c\u0131</th>';
     h += '</tr></thead><tbody>';
@@ -320,7 +462,7 @@ function degisiklikGunGoster(ayNo) {
       h += '<td>' + k.kullanici + '</td>';
       h += '</tr>';
     }
-    h += '</tbody></table></div>';
+    h += '</tbody></table></div></div>';
   }
   document.getElementById('degisiklikModalIcerik').innerHTML = h;
 }
