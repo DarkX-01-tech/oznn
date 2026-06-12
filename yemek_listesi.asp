@@ -119,14 +119,29 @@ ay_adi = GetMonthName(secilen_ay)
 
     :root {
       --primary-color: #25abb9;
+      --primary-light: #4ec4d0;
       --primary-dark: #1e8c99;
+      --primary-soft: rgba(37, 171, 185, 0.08);
+      --primary-glow: rgba(37, 171, 185, 0.18);
       --secondary-color: #dc3545;
       --secondary-dark: #c82333;
       --white: #fff;
-      --btn-border: #e0e0e0;
-      --shadow-medium: rgba(37,171,185,0.3);
-      --shadow-heavy: rgba(30,140,153,0.5);
-      --transition-speed: 0.25s;
+      --surface: #ffffff;
+      --surface-muted: #f8fbfc;
+      --text-primary: #1a2b33;
+      --text-secondary: #5a6b73;
+      --text-muted: #8a9aa3;
+      --border-light: rgba(37, 171, 185, 0.12);
+      --border-subtle: #e8eef0;
+      --btn-border: #dde5e8;
+      --shadow-soft: 0 4px 24px rgba(26, 43, 51, 0.06);
+      --shadow-medium: rgba(37, 171, 185, 0.28);
+      --shadow-heavy: rgba(30, 140, 153, 0.45);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --transition-speed: 0.28s;
+      --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * {
@@ -146,23 +161,87 @@ ay_adi = GetMonthName(secilen_ay)
       margin: 0;
       padding: 0;
       overflow-x: hidden;
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(255,255,255,0.72) 0%, rgba(240,248,250,0.55) 50%, rgba(230,245,248,0.65) 100%);
+      pointer-events: none;
+      z-index: 0;
     }
 
     .golgeliKutu {
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 1;
       width: 900px;
-      margin: 40px auto;
-      background-color: #fff;
-      border-radius: 8px;
+      margin: 36px auto 48px;
+      background: var(--surface);
+      border-radius: var(--radius-lg);
       overflow: hidden;
-      transition: box-shadow 0.3s, background-color 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow:
+        0 1px 2px rgba(26, 43, 51, 0.04),
+        0 8px 24px rgba(26, 43, 51, 0.08),
+        0 24px 48px rgba(37, 171, 185, 0.1);
+      transition: box-shadow 0.4s var(--transition-smooth), transform 0.4s var(--transition-smooth);
+      animation: pageFadeIn 0.6s var(--transition-smooth) both;
+    }
+
+    @keyframes pageFadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .banner-wrap {
+      position: relative;
+      overflow: hidden;
+      line-height: 0;
+    }
+
+    .banner-wrap img {
+      display: block;
+      width: 100%;
+      height: 165px;
+      object-fit: cover;
+    }
+
+    .banner-wrap::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 48px;
+      background: linear-gradient(to bottom, transparent, var(--surface));
+      pointer-events: none;
+    }
+
+    .content-area {
+      background: var(--surface);
     }
 
     .baslik {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 15px 0 5px 0;
+      margin: 0;
+      padding: 22px 20px 18px;
+      position: relative;
+    }
+
+    .baslik::after {
+      content: '';
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-light) 20%, var(--border-light) 80%, transparent);
     }
 
     .left-side {
@@ -184,33 +263,69 @@ ay_adi = GetMonthName(secilen_ay)
     .center-title {
       flex: 1;
       text-align: center;
-      font-size: 28px;
-      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title-main {
+      font-size: 26px;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+      letter-spacing: 1.8px;
+      line-height: 1.2;
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 55%, var(--primary-dark) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
+    .title-month {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--primary-dark);
+      background: linear-gradient(135deg, var(--primary-soft), rgba(255,255,255,0.9));
+      border: 1px solid var(--border-light);
+      border-radius: 999px;
+      box-shadow: 0 2px 8px var(--primary-glow);
+    }
+
+    .title-month::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      box-shadow: 0 0 6px var(--primary-color);
+    }
+
     .ghost-btn {
-      background: transparent;
-      border: 2px solid var(--btn-border);
-      color: #888;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1.5px solid var(--btn-border);
+      color: var(--text-muted);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: all var(--transition-speed) ease;
+      transition: all var(--transition-speed) var(--transition-smooth);
       font-family: 'Open Sans', sans-serif;
       text-decoration: none;
-      box-shadow: none;
+      box-shadow: var(--shadow-soft);
     }
 
     .ghost-btn:hover {
       transform: translateY(-2px);
-      background: transparent;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 6px 20px rgba(26, 43, 51, 0.1);
     }
 
     .ghost-btn:active {
@@ -218,8 +333,8 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .back-button {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       padding: 0;
     }
@@ -227,7 +342,7 @@ ay_adi = GetMonthName(secilen_ay)
     .back-button:hover {
       border-color: var(--secondary-color);
       color: var(--secondary-color);
-      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+      box-shadow: 0 6px 18px rgba(220, 53, 69, 0.18);
     }
 
     .back-button svg {
@@ -238,7 +353,7 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .takvim-wrapper {
-      padding: 8px 20px 20px 20px;
+      padding: 20px 24px 28px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
@@ -247,48 +362,71 @@ ay_adi = GetMonthName(secilen_ay)
 
     #scrollTopBtn {
       position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 50px;
-      height: 50px;
-      background: transparent;
-      border: 2px solid var(--btn-border);
-      color: #888;
-      font-size: 24px;
-      text-align: center;
-      line-height: 46px;
+      bottom: 32px;
+      right: 32px;
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1.5px solid var(--border-light);
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 50%;
-      box-shadow: none;
+      box-shadow: 0 4px 20px rgba(37, 171, 185, 0.15);
       cursor: pointer;
-      transition: all 0.3s ease, opacity 0.5s ease;
+      transition: all 0.35s var(--transition-smooth), opacity 0.5s ease, visibility 0.5s ease;
       opacity: 0;
       visibility: hidden;
       z-index: 999;
       font-family: 'Open Sans', sans-serif;
     }
 
+    #scrollTopBtn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      transition: transform 0.3s var(--transition-smooth);
+    }
+
     #scrollTopBtn:hover {
-      background: transparent;
+      background: var(--primary-color);
       border-color: var(--primary-color);
-      color: var(--primary-color);
-      box-shadow: 0 4px 12px var(--shadow-medium);
-      transform: translateY(-2px);
+      color: var(--white);
+      box-shadow: 0 8px 28px var(--shadow-medium);
+      transform: translateY(-3px);
+    }
+
+    #scrollTopBtn:hover svg {
+      transform: translateY(-1px);
     }
 
     .tablo-container-wrapper {
-      width: 98%;
+      width: 100%;
       margin: 0 auto;
-      border: 2px solid #ddd;
-      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-soft);
+      background: var(--surface);
     }
 
     .tablo-header {
-      background-color: #25abb9;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
       display: table;
       width: 100%;
       table-layout: fixed;
+      position: relative;
+    }
+
+    .tablo-header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%);
+      pointer-events: none;
     }
 
     .tablo-header-row {
@@ -297,15 +435,23 @@ ay_adi = GetMonthName(secilen_ay)
 
     .tablo-header-cell {
       display: table-cell;
-      padding: 14px 10px;
+      padding: 16px 12px;
       text-align: center;
       font-weight: 700;
-      font-size: 13px;
+      font-size: 12px;
       color: #ffffff;
-      border: 1px solid #1e8c99;
+      border: none;
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
       font-family: 'Open Sans', sans-serif;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .tablo-header-cell:last-child {
+      border-right: none;
     }
 
     .tablo-header-cell.tarih {
@@ -321,68 +467,81 @@ ay_adi = GetMonthName(secilen_ay)
     }
 
     .tablo-body-container {
-      max-height: 490px;
+      max-height: 500px;
       overflow-y: auto;
       overflow-x: hidden;
+      background: var(--surface-muted);
+      scroll-behavior: smooth;
     }
 
     .tablo-body-container::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
     }
     .tablo-body-container::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: transparent;
     }
     .tablo-body-container::-webkit-scrollbar-thumb {
-      background: #25abb9;
-      border-radius: 5px;
+      background: linear-gradient(180deg, var(--primary-light), var(--primary-color));
+      border-radius: 999px;
     }
     .tablo-body-container::-webkit-scrollbar-thumb:hover {
-      background: #1e8c99;
+      background: var(--primary-dark);
     }
 
     .yemek-tablo {
       width: 100%;
-      border-collapse: collapse;
-      background-color: #fff;
+      border-collapse: separate;
+      border-spacing: 0;
+      background-color: var(--surface);
       font-family: 'Open Sans', sans-serif;
       table-layout: fixed;
     }
 
     .yemek-tablo td {
-      padding: 12px 12px;
-      border: 1px solid #ddd;
-      font-size: 12px;
-      color: #333;
+      padding: 14px 16px;
+      border: none;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 12.5px;
+      color: var(--text-primary);
       vertical-align: middle;
+      line-height: 1.55;
+      transition: background-color 0.25s var(--transition-smooth);
+    }
+
+    .yemek-tablo tbody tr:last-child td {
+      border-bottom: none;
     }
 
     .yemek-tablo .tarih-col {
       width: 15%;
       text-align: center;
       font-weight: 600;
-      background-color: #f5f5f5;
+      background: linear-gradient(180deg, #f4f9fa 0%, #eef5f7 100%);
       vertical-align: middle;
+      border-right: 1px solid var(--border-subtle);
     }
 
     .tarih-date {
       display: block;
-      font-size: 15px;
-      font-weight: 700;
-      color: #25abb9;
-      margin-bottom: 6px;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
     }
 
     .tarih-day {
       display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      color: #555;
-      background: #fff;
-      padding: 4px 10px;
-      border-radius: 5px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background: var(--white);
+      padding: 5px 12px;
+      border-radius: 999px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border: 1px solid #ddd;
+      letter-spacing: 0.6px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 1px 3px rgba(26, 43, 51, 0.04);
     }
 
     .yemek-tablo .ogle-col,
@@ -392,60 +551,108 @@ ay_adi = GetMonthName(secilen_ay)
 
     .yemek-tablo td ul {
       margin: 0;
-      padding-left: 18px;
-      list-style-type: disc;
-      list-style-position: outside;
+      padding: 0;
+      list-style: none;
     }
 
     .yemek-tablo td ul li {
-      margin: 4px 0;
-      line-height: 1.5;
-      color: #333;
+      position: relative;
+      margin: 6px 0;
+      padding-left: 16px;
+      line-height: 1.55;
+      color: var(--text-primary);
     }
 
-    .yemek-tablo td ul li::marker {
-      color: #25abb9;
+    .yemek-tablo td ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.62em;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+      box-shadow: 0 0 4px var(--primary-glow);
     }
 
-    .yemek-tablo tbody tr:nth-child(even) {
-      background-color: #fafafa;
+    .yemek-tablo tbody tr {
+      transition: background-color 0.25s var(--transition-smooth), box-shadow 0.25s var(--transition-smooth);
     }
 
-    .yemek-tablo tbody tr:hover {
-      background-color: #f0f9fa;
-      transition: background-color 0.3s;
+    .yemek-tablo tbody tr:nth-child(even) td:not(.tarih-col) {
+      background-color: rgba(248, 251, 252, 0.6);
+    }
+
+    .yemek-tablo tbody tr:hover td {
+      background-color: var(--primary-soft);
+    }
+
+    .yemek-tablo tbody tr:hover .tarih-col {
+      background: linear-gradient(180deg, #e8f6f8 0%, #dff0f3 100%);
+    }
+
+    .yemek-tablo tbody tr.bugun-satir td {
+      background-color: rgba(224, 247, 250, 0.85) !important;
     }
 
     .yemek-tablo tbody tr.bugun-satir {
-      background-color: #e0f7fa !important;
-      border-left: 4px solid #25abb9;
+      box-shadow: inset 4px 0 0 var(--primary-color);
     }
+
     .yemek-tablo tbody tr.bugun-satir .tarih-col {
-      background-color: #d4f1f5 !important;
+      background: linear-gradient(180deg, #d4f1f5 0%, #c5ecf2 100%) !important;
     }
+
     .yemek-tablo tbody tr.bugun-satir .tarih-date {
-      color: #1e8c99;
-      font-size: 16px;
+      color: var(--primary-dark);
+      font-size: 17px;
     }
+
     .yemek-tablo tbody tr.bugun-satir .tarih-day {
-      background: #25abb9;
-      color: #fff;
-      border-color: #1e8c99;
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      color: var(--white);
+      border-color: transparent;
+      box-shadow: 0 2px 8px var(--shadow-medium);
     }
 
     .bos-mesaj {
       text-align: center;
-      padding: 60px 20px;
-      color: #666;
+      padding: 56px 32px;
+      margin: 8px 0 0;
+      width: 100%;
+      color: var(--text-secondary);
       font-size: 15px;
-      margin: 20px;
+      background: linear-gradient(135deg, var(--surface-muted), var(--surface));
+      border: 1px dashed var(--border-light);
+      border-radius: var(--radius-md);
+    }
+
+    .bos-mesaj-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: var(--primary-soft);
+      color: var(--primary-color);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .bos-mesaj p {
+      max-width: 360px;
+      margin: 0 auto;
+      line-height: 1.6;
     }
 
     .bos-mesaj strong {
       display: block;
-      font-size: 18px;
-      color: #333;
-      margin-bottom: 10px;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
     }
   </style>
 
@@ -485,17 +692,21 @@ ay_adi = GetMonthName(secilen_ay)
   </script>
 </head>
 <body>
-  <div id="scrollTopBtn" onclick="scrollToTop()">^</div>
+  <div id="scrollTopBtn" onclick="scrollToTop()" title="Yukar&#305; Kayd&#305;r">
+    <svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+  </div>
 
   <div align="center" class="golgeliKutu">
     <table id="Table_01" width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td colspan="3">
-          <img src="../../images/muhst_06.png" width="100%" height="165" alt="">
+          <div class="banner-wrap">
+            <img src="../../images/muhst_06.png" width="100%" height="165" alt="">
+          </div>
         </td>
       </tr>
       <tr>
-        <td bgcolor="#FFFFFF" width="100%" valign="top" align="center">
+        <td class="content-area" width="100%" valign="top" align="center">
 
           <div class="baslik">
             <div class="left-side">
@@ -508,7 +719,8 @@ ay_adi = GetMonthName(secilen_ay)
               <% End If %>
             </div>
             <div class="center-title">
-              AYLIK YEMEK MEN&#220;S&#220; (<%= ay_adi %>)
+              <span class="title-main">AYLIK YEMEK MEN&#220;S&#220;</span>
+              <span class="title-month"><%= ay_adi %> <%= secilen_yil %></span>
             </div>
             <div class="right-side"></div>
           </div>
@@ -591,7 +803,8 @@ ay_adi = GetMonthName(secilen_ay)
             </div>
             <% Else %>
             <div class="bos-mesaj">
-              <p>Bu Ay &#304;&#231;in Hen&#252;z Yemek Men&#252;s&#252; Eklenmemi&#351;.</p>
+              <div class="bos-mesaj-icon">&#127860;</div>
+              <p><strong>Men&#252; Bulunamad&#305;</strong>Bu ay i&#231;in hen&#252;z yemek men&#252;s&#252; eklenmemi&#351;.</p>
             </div>
             <% End If %>
           </div>
