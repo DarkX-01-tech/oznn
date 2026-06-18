@@ -105,8 +105,7 @@
         .duyuru-icerik b,
         .duyuru-icerik strong { font-weight: 800 !important; }
 
-        .duyuru-icerik table,
-        .duyuru-tablo-always table {
+        .duyuru-icerik table {
           width: 100% !important;
           max-width: 100% !important;
           border-collapse: collapse !important;
@@ -120,19 +119,12 @@
           color: #555 !important;
           text-shadow: none !important;
           background: #fff !important;
-        }
-        .duyuru-tablo-always {
-          display: block !important;
+          display: table !important;
           visibility: visible !important;
           opacity: 1 !important;
-          max-height: none !important;
-          overflow: visible !important;
-          margin: 12px 0 !important;
         }
         .duyuru-icerik table td,
-        .duyuru-icerik table th,
-        .duyuru-tablo-always table td,
-        .duyuru-tablo-always table th {
+        .duyuru-icerik table th {
           border: none !important;
           border-bottom: 1px solid #e5e5e5 !important;
           padding: 8px 12px !important;
@@ -148,42 +140,26 @@
           background-color: #ffffff !important;
         }
         .duyuru-icerik table tr:last-child td,
-        .duyuru-icerik table tr:last-child th,
-        .duyuru-tablo-always table tr:last-child td,
-        .duyuru-tablo-always table tr:last-child th {
+        .duyuru-icerik table tr:last-child th {
           border-bottom: none !important;
         }
         .duyuru-icerik table tr:first-child td,
-        .duyuru-icerik table tr:first-child th,
-        .duyuru-tablo-always table tr:first-child td,
-        .duyuru-tablo-always table tr:first-child th {
+        .duyuru-icerik table tr:first-child th {
           background-color: #f2f2f2 !important;
           font-weight: 600 !important;
           text-align: center !important;
           border-bottom: 1px solid #e5e5e5 !important;
         }
-        .duyuru-icerik table tr:not(:first-child) td:first-child,
-        .duyuru-tablo-always table tr:not(:first-child) td:first-child {
+        .duyuru-icerik table tr:not(:first-child) td:first-child {
           font-weight: 600 !important;
           width: 42% !important;
         }
-        .duyuru-icerik table tr:not(:first-child) td:last-child,
-        .duyuru-tablo-always table tr:not(:first-child) td:last-child {
+        .duyuru-icerik table tr:not(:first-child) td:last-child {
           font-weight: 400 !important;
         }
         .duyuru-icerik table b,
-        .duyuru-icerik table strong,
-        .duyuru-tablo-always table b,
-        .duyuru-tablo-always table strong {
+        .duyuru-icerik table strong {
           font-weight: 600 !important;
-        }
-        .duyuru-icerik .image-content.show table,
-        .duyuru-icerik > table,
-        .duyuru-icerik table,
-        .duyuru-tablo-always table {
-          display: table !important;
-          visibility: visible !important;
-          opacity: 1 !important;
         }
 
         .duyuru-tarih {
@@ -765,63 +741,43 @@ Response.Write "**********"
                             Response.End
                         End If
 
-                        Function FindTableEnd(s, startPos)
-                            Dim depth, pos, nextOpen, nextClose, sLower
-                            sLower = LCase(s & "")
-                            depth = 1
-                            pos = startPos + 6
-                            Do While depth > 0
-                                nextOpen = InStr(pos, sLower, "<table")
-                                nextClose = InStr(pos, sLower, "</table")
-                                If nextClose = 0 Then
-                                    FindTableEnd = 0
-                                    Exit Function
-                                End If
-                                If nextOpen > 0 And nextOpen < nextClose Then
-                                    depth = depth + 1
-                                    pos = nextOpen + 6
-                                Else
-                                    depth = depth - 1
-                                    If depth = 0 Then
-                                        FindTableEnd = nextClose + Len("</table>")
-                                        Exit Function
-                                    End If
-                                    pos = nextClose + Len("</table>")
-                                End If
-                            Loop
-                            FindTableEnd = 0
-                        End Function
+                        Sub WriteGizlenebilirParca(parca, gorselleriGoster)
+                            Dim lid, cid
+                            If Len(Trim(parca & "")) = 0 Then Exit Sub
+                            If gorselleriGoster Or InStr(LCase(parca), "<img") = 0 Then
+                                Response.Write parca
+                            Else
+                                imageCounter = imageCounter + 1
+                                lid = "imgLink" & imageCounter
+                                cid = "imgContent" & imageCounter
+                                Response.Write "<div class='image-toggle-link' id='" & lid & "' onclick=""toggleImage('" & lid & "', '" & cid & "')"">"
+                                Response.Write "  <span class='text'>Görseli Açmak İçin Tıklayınız</span>"
+                                Response.Write "</div>"
+                                Response.Write "<div class='image-content' id='" & cid & "'>"
+                                Response.Write parca
+                                Response.Write "</div>"
+                            End If
+                        End Sub
 
-                        Function ExtractTables(html)
-                            Dim result, pos, endPos, block, s
-                            s = html & ""
-                            s = Replace(s, "&lt;table", "<table", 1, -1, vbTextCompare)
-                            s = Replace(s, "&lt;/table", "</table", 1, -1, vbTextCompare)
-                            result = ""
-                            Do While InStr(LCase(s), "<table") > 0
-                                pos = InStr(LCase(s), "<table")
-                                endPos = FindTableEnd(s, pos)
-                                If endPos = 0 Then Exit Do
-                                block = Mid(s, pos, endPos - pos)
-                                result = result & block
-                                s = Left(s, pos - 1) & Mid(s, endPos)
+                        Sub WriteIcerikTablolariAcik(html, gorselleriGoster)
+                            Dim kalan, tblPos, tblEnd, parca, tablo
+                            kalan = html & ""
+                            Do While InStr(LCase(kalan), "<table") > 0
+                                tblPos = InStr(LCase(kalan), "<table")
+                                parca = Left(kalan, tblPos - 1)
+                                Call WriteGizlenebilirParca(parca, gorselleriGoster)
+                                kalan = Mid(kalan, tblPos)
+                                tblEnd = InStr(LCase(kalan), "</table>")
+                                If tblEnd = 0 Then
+                                    Response.Write kalan
+                                    Exit Sub
+                                End If
+                                tablo = Left(kalan, tblEnd + Len("</table>") - 1)
+                                Response.Write tablo
+                                kalan = Mid(kalan, tblEnd + Len("</table>"))
                             Loop
-                            ExtractTables = result
-                        End Function
-
-                        Function RemoveTables(html)
-                            Dim result, pos, endPos
-                            result = html & ""
-                            result = Replace(result, "&lt;table", "<table", 1, -1, vbTextCompare)
-                            result = Replace(result, "&lt;/table", "</table", 1, -1, vbTextCompare)
-                            Do While InStr(LCase(result), "<table") > 0
-                                pos = InStr(LCase(result), "<table")
-                                endPos = FindTableEnd(result, pos)
-                                If endPos = 0 Then Exit Do
-                                result = Left(result, pos - 1) & Mid(result, endPos)
-                            Loop
-                            RemoveTables = result
-                        End Function
+                            Call WriteGizlenebilirParca(kalan, gorselleriGoster)
+                        End Sub
 
                         If Not rsDuyuru.EOF Then
                             Do While Not rsDuyuru.EOF
@@ -893,73 +849,24 @@ Response.Write "**********"
                                 End If
 
                                 If Trim(icerik) <> "" Then
-                                    Dim tablesAlways, bodyContent
-                                    tablesAlways = ExtractTables(icerik)
-                                    If Len(tablesAlways) > 0 Then
-                                        bodyContent = RemoveTables(icerik)
-                                    Else
-                                        bodyContent = icerik
-                                    End If
-
                                     Response.Write "<tr><td class='duyuru-icerik'>"
-
-                                    If InStr(LCase(bodyContent), "<img") > 0 Then
+                                    If InStr(LCase(icerik), "<img") > 0 Then
+                                        Dim imgPos
+                                        imgPos = InStr(LCase(icerik), "<img")
+                                        If imgPos > 1 Then Response.Write Left(icerik, imgPos - 1)
+                                        Call WriteIcerikTablolariAcik(Mid(icerik, imgPos), gorselleriGoster)
+                                    ElseIf gorsellerKapaliMi And InStr(LCase(icerik), "<table") = 0 Then
                                         imageCounter = imageCounter + 1
-                                        Dim linkId, contentId, textContent, imageContent, imgPos
-                                        linkId = "imgLink" & imageCounter
-                                        contentId = "imgContent" & imageCounter
-                                        imgPos = InStr(LCase(bodyContent), "<img")
-                                        If imgPos > 1 Then
-                                            textContent = Left(bodyContent, imgPos - 1)
-                                            imageContent = Mid(bodyContent, imgPos)
-                                        Else
-                                            textContent = ""
-                                            imageContent = bodyContent
-                                        End If
-
-                                        If Len(tablesAlways) = 0 And InStr(LCase(imageContent), "<table") > 0 Then
-                                            tablesAlways = ExtractTables(imageContent)
-                                            If Len(tablesAlways) > 0 Then
-                                                imageContent = RemoveTables(imageContent)
-                                            Else
-                                                gorselleriGoster = True
-                                            End If
-                                        End If
-
-                                        If Trim(textContent) <> "" Then Response.Write textContent
-                                        If Len(tablesAlways) > 0 Then
-                                            Response.Write "<div class='duyuru-tablo-always'>" & tablesAlways & "</div>"
-                                        End If
-                                        If gorselleriGoster Then
-                                            Response.Write imageContent
-                                        Else
-                                            Response.Write "<div class='image-toggle-link' id='" & linkId & "' onclick=""toggleImage('" & linkId & "', '" & contentId & "')"">"
-                                            Response.Write "  <span class='text'>Görseli Açmak İçin Tıklayınız</span>"
-                                            Response.Write "</div>"
-                                            Response.Write "<div class='image-content' id='" & contentId & "'>"
-                                            Response.Write imageContent
-                                            Response.Write "</div>"
-                                        End If
+                                        Dim linkId2, contentId2
+                                        linkId2 = "imgLink" & imageCounter
+                                        contentId2 = "imgContent" & imageCounter
+                                        Response.Write "<div class='image-toggle-link' id='" & linkId2 & "' onclick=""toggleImage('" & linkId2 & "', '" & contentId2 & "')"">"
+                                        Response.Write "  <span class='text'>İçeriği Açmak İçin Tıklayınız</span>"
+                                        Response.Write "</div>"
+                                        Response.Write "<div class='image-content' id='" & contentId2 & "'>" & icerik & "</div>"
                                     Else
-                                        If Trim(bodyContent) <> "" Then
-                                            If gorsellerKapaliMi And Len(tablesAlways) = 0 And InStr(LCase(bodyContent), "<table") = 0 Then
-                                                imageCounter = imageCounter + 1
-                                                Dim linkId2, contentId2
-                                                linkId2 = "imgLink" & imageCounter
-                                                contentId2 = "imgContent" & imageCounter
-                                                Response.Write "<div class='image-toggle-link' id='" & linkId2 & "' onclick=""toggleImage('" & linkId2 & "', '" & contentId2 & "')"">"
-                                                Response.Write "  <span class='text'>İçeriği Açmak İçin Tıklayınız</span>"
-                                                Response.Write "</div>"
-                                                Response.Write "<div class='image-content' id='" & contentId2 & "'>" & bodyContent & "</div>"
-                                            Else
-                                                Response.Write bodyContent
-                                            End If
-                                        End If
-                                        If Len(tablesAlways) > 0 Then
-                                            Response.Write "<div class='duyuru-tablo-always'>" & tablesAlways & "</div>"
-                                        End If
+                                        Call WriteIcerikTablolariAcik(icerik, gorselleriGoster)
                                     End If
-
                                     Response.Write "</td></tr>"
                                 End If
 
