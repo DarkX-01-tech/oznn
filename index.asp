@@ -105,67 +105,82 @@
         .duyuru-icerik b,
         .duyuru-icerik strong { font-weight: 800 !important; }
 
-        .duyuru-icerik table {
-          width: 100%;
-          max-width: 100%;
-          border-collapse: collapse;
-          margin: 12px 0;
-          border: none;
-          text-align: left;
-          font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 12px;
-          line-height: 1.6;
-          font-weight: 400;
-          color: #555;
-          text-shadow: none;
-          background: #fff;
+        .duyuru-icerik table,
+        .duyuru-tablo-always table {
+          width: 100% !important;
+          max-width: 100% !important;
+          border-collapse: collapse !important;
+          margin: 12px 0 !important;
+          border: 1px solid #e5e5e5 !important;
+          text-align: left !important;
+          font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+          font-size: 12px !important;
+          line-height: 1.6 !important;
+          font-weight: 400 !important;
+          color: #555 !important;
+          text-shadow: none !important;
+          background: #fff !important;
+        }
+        .duyuru-tablo-always {
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          max-height: none !important;
+          overflow: visible !important;
+          margin: 12px 0 !important;
         }
         .duyuru-icerik table td,
-        .duyuru-icerik table th {
-          border: none;
-          border-bottom: 1px solid #e5e5e5;
-          padding: 8px 10px;
+        .duyuru-icerik table th,
+        .duyuru-tablo-always table td,
+        .duyuru-tablo-always table th {
+          border: none !important;
+          border-bottom: 1px solid #e5e5e5 !important;
+          padding: 8px 12px !important;
           text-align: left !important;
-          font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 12px;
-          line-height: 1.6;
-          font-weight: 400;
-          color: #555;
-          vertical-align: middle;
-          word-break: break-word;
-          text-shadow: none;
+          font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+          font-size: 12px !important;
+          line-height: 1.6 !important;
+          font-weight: 400 !important;
+          color: #555 !important;
+          vertical-align: middle !important;
+          word-break: break-word !important;
+          text-shadow: none !important;
+          background-color: #ffffff !important;
         }
         .duyuru-icerik table tr:last-child td,
-        .duyuru-icerik table tr:last-child th {
-          border-bottom: none;
+        .duyuru-icerik table tr:last-child th,
+        .duyuru-tablo-always table tr:last-child td,
+        .duyuru-tablo-always table tr:last-child th {
+          border-bottom: none !important;
         }
         .duyuru-icerik table tr:first-child td,
-        .duyuru-icerik table tr:first-child th {
-          background-color: #f2f2f2;
-          font-weight: 600;
+        .duyuru-icerik table tr:first-child th,
+        .duyuru-tablo-always table tr:first-child td,
+        .duyuru-tablo-always table tr:first-child th {
+          background-color: #f2f2f2 !important;
+          font-weight: 600 !important;
           text-align: center !important;
-          border-bottom: 1px solid #e5e5e5;
+          border-bottom: 1px solid #e5e5e5 !important;
         }
-        .duyuru-icerik table tr:not(:first-child):nth-child(even) td {
-          background-color: #ffffff;
+        .duyuru-icerik table tr:not(:first-child) td:first-child,
+        .duyuru-tablo-always table tr:not(:first-child) td:first-child {
+          font-weight: 600 !important;
+          width: 42% !important;
         }
-        .duyuru-icerik table tr:not(:first-child):nth-child(odd) td {
-          background-color: #f9f9f9;
-        }
-        .duyuru-icerik table tr:not(:first-child) td:first-child {
-          font-weight: 600;
-          width: 42%;
-        }
-        .duyuru-icerik table tr:not(:first-child) td:last-child {
-          font-weight: 400;
+        .duyuru-icerik table tr:not(:first-child) td:last-child,
+        .duyuru-tablo-always table tr:not(:first-child) td:last-child {
+          font-weight: 400 !important;
         }
         .duyuru-icerik table b,
-        .duyuru-icerik table strong {
+        .duyuru-icerik table strong,
+        .duyuru-tablo-always table b,
+        .duyuru-tablo-always table strong {
           font-weight: 600 !important;
         }
         .duyuru-icerik .image-content.show table,
         .duyuru-icerik > table,
-        .duyuru-icerik table {
+        .duyuru-icerik table,
+        .duyuru-tablo-always table {
           display: table !important;
           visibility: visible !important;
           opacity: 1 !important;
@@ -849,30 +864,30 @@ Response.Write "**********"
                                 End If
 
                                 If Trim(icerik) <> "" Then
-                                    If InStr(LCase(icerik), "<img") > 0 Then
+                                    Dim tablesAlways, bodyContent
+                                    tablesAlways = ExtractTables(icerik)
+                                    bodyContent = RemoveTables(icerik)
+
+                                    Response.Write "<tr><td class='duyuru-icerik'>"
+
+                                    If InStr(LCase(bodyContent), "<img") > 0 Then
                                         imageCounter = imageCounter + 1
                                         Dim linkId, contentId, textContent, imageContent, imgPos
                                         linkId = "imgLink" & imageCounter
                                         contentId = "imgContent" & imageCounter
-                                        imgPos = InStr(LCase(icerik), "<img")
+                                        imgPos = InStr(LCase(bodyContent), "<img")
                                         If imgPos > 1 Then
-                                            textContent = Left(icerik, imgPos - 1)
-                                            imageContent = Mid(icerik, imgPos)
+                                            textContent = Left(bodyContent, imgPos - 1)
+                                            imageContent = Mid(bodyContent, imgPos)
                                         Else
                                             textContent = ""
-                                            imageContent = icerik
+                                            imageContent = bodyContent
                                         End If
 
-                                        Dim tablesAlways
-                                        tablesAlways = ExtractTables(icerik)
-                                        If Len(tablesAlways) > 0 Then
-                                            textContent = RemoveTables(textContent)
-                                            imageContent = RemoveTables(imageContent)
-                                        End If
-
-                                        Response.Write "<tr><td class='duyuru-icerik'>"
                                         If Trim(textContent) <> "" Then Response.Write textContent
-                                        If Len(tablesAlways) > 0 Then Response.Write tablesAlways
+                                        If Len(tablesAlways) > 0 Then
+                                            Response.Write "<div class='duyuru-tablo-always'>" & tablesAlways & "</div>"
+                                        End If
                                         If gorselleriGoster Then
                                             Response.Write imageContent
                                         Else
@@ -883,25 +898,27 @@ Response.Write "**********"
                                             Response.Write imageContent
                                             Response.Write "</div>"
                                         End If
-                                        Response.Write "</td></tr>"
                                     Else
-                                        Response.Write "<tr><td class='duyuru-icerik'>"
-                                        If InStr(LCase(icerik), "<table") > 0 Then
-                                            Response.Write icerik
-                                        ElseIf gorsellerKapaliMi Then
-                                            imageCounter = imageCounter + 1
-                                            Dim linkId2, contentId2
-                                            linkId2 = "imgLink" & imageCounter
-                                            contentId2 = "imgContent" & imageCounter
-                                            Response.Write "<div class='image-toggle-link' id='" & linkId2 & "' onclick=""toggleImage('" & linkId2 & "', '" & contentId2 & "')"">"
-                                            Response.Write "  <span class='text'>İçeriği Açmak İçin Tıklayınız</span>"
-                                            Response.Write "</div>"
-                                            Response.Write "<div class='image-content' id='" & contentId2 & "'>" & icerik & "</div>"
-                                        Else
-                                            Response.Write icerik
+                                        If Trim(bodyContent) <> "" Then
+                                            If gorsellerKapaliMi Then
+                                                imageCounter = imageCounter + 1
+                                                Dim linkId2, contentId2
+                                                linkId2 = "imgLink" & imageCounter
+                                                contentId2 = "imgContent" & imageCounter
+                                                Response.Write "<div class='image-toggle-link' id='" & linkId2 & "' onclick=""toggleImage('" & linkId2 & "', '" & contentId2 & "')"">"
+                                                Response.Write "  <span class='text'>İçeriği Açmak İçin Tıklayınız</span>"
+                                                Response.Write "</div>"
+                                                Response.Write "<div class='image-content' id='" & contentId2 & "'>" & bodyContent & "</div>"
+                                            Else
+                                                Response.Write bodyContent
+                                            End If
                                         End If
-                                        Response.Write "</td></tr>"
+                                        If Len(tablesAlways) > 0 Then
+                                            Response.Write "<div class='duyuru-tablo-always'>" & tablesAlways & "</div>"
+                                        End If
                                     End If
+
+                                    Response.Write "</td></tr>"
                                 End If
 
                                 If CLng(sabitAktif) = 0 Then
