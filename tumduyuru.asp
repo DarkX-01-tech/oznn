@@ -7,7 +7,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v10-tbody -->
+<!-- tablo-guncelleme-20260618-v11-anasayfa -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -107,74 +107,54 @@ session("ok") = false
         display: none !important;
     }
 
-    .duyuru-tablo-gorunur {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        max-height: none !important;
-        overflow: visible !important;
-        margin: 12px 0 !important;
-    }
-    .duyuru-tablo-gorunur table {
-        display: table !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-    .duyuru-icerik table,
-        width: 100% !important;
-        max-width: 100% !important;
-        border-collapse: collapse !important;
-        margin: 12px 0 !important;
-        border: 1px solid #e5e5e5 !important;
-        text-align: left !important;
-        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-        font-size: 12px !important;
-        line-height: 1.6 !important;
-        font-weight: 400 !important;
-        color: #555 !important;
-        text-shadow: none !important;
-        background: #fff !important;
-        display: table !important;
-        visibility: visible !important;
-        opacity: 1 !important;
+  /* Tablo: anasayfa (index.asp) ile ayni gorunum */
+    .duyuru-icerik table {
+        width: 100%;
+        max-width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0;
+        border: 1px solid #ddd;
+        text-align: left;
+        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 12px;
+        line-height: 1.6;
+        font-weight: 400;
+        color: #555;
+        text-shadow: none;
+        background: #fff;
     }
     .duyuru-icerik table td,
     .duyuru-icerik table th {
-        border: none !important;
-        border-bottom: 1px solid #e5e5e5 !important;
-        padding: 8px 12px !important;
-        text-align: left !important;
-        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-        font-size: 12px !important;
-        line-height: 1.6 !important;
-        font-weight: 400 !important;
-        color: #555 !important;
-        vertical-align: middle !important;
-        word-break: break-word !important;
-        text-shadow: none !important;
-        background-color: #ffffff !important;
-    }
-    .duyuru-icerik table tr:last-child td,
-    .duyuru-icerik table tr:last-child th {
-        border-bottom: none !important;
+        border: 1px solid #ddd;
+        padding: 8px 10px;
+        text-align: left;
+        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 12px;
+        line-height: 1.6;
+        font-weight: 400;
+        color: #555;
+        vertical-align: top;
+        word-break: break-word;
+        text-shadow: none;
+        background-color: #fff;
     }
     .duyuru-icerik table tr:first-child td,
     .duyuru-icerik table tr:first-child th {
-        background-color: #f2f2f2 !important;
-        font-weight: 600 !important;
-        text-align: center !important;
-        border-bottom: 1px solid #e5e5e5 !important;
+        background-color: #f2f2f2;
+        font-weight: 600;
+        text-align: center;
     }
-    .duyuru-icerik table tr:not(:first-child) td:first-child {
-        font-weight: 600 !important;
-        width: 42% !important;
+    .duyuru-icerik table tr:not(:first-child) td:first-child,
+    .duyuru-icerik table tr:not(:first-child) th:first-child {
+        font-weight: 600;
+        width: 38%;
     }
     .duyuru-icerik table tr:not(:first-child) td:last-child {
-        font-weight: 400 !important;
+        font-weight: 400;
     }
     .duyuru-icerik table b,
     .duyuru-icerik table strong {
-        font-weight: 600 !important;
+        font-weight: 600;
     }
 
     .baslik b, .baslik strong,
