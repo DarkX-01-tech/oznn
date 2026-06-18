@@ -111,7 +111,11 @@
           border-collapse: collapse;
           margin: 12px 0;
           text-align: left;
+          font-size: 12px;
+          line-height: 1.6;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           font-weight: 400;
+          color: #555;
           border: 1px solid #ddd;
         }
         .duyuru-icerik table td,
@@ -119,7 +123,11 @@
           border: 1px solid #ddd;
           padding: 8px 12px;
           text-align: left !important;
+          font-size: 12px;
+          line-height: 1.6;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           font-weight: 400;
+          color: #555;
           vertical-align: top;
           word-break: break-word;
         }
@@ -133,9 +141,18 @@
           font-weight: 600;
           width: 40%;
         }
+        .duyuru-icerik table td:last-child {
+          font-weight: 400;
+        }
         .duyuru-icerik table b,
         .duyuru-icerik table strong {
           font-weight: 600 !important;
+        }
+        .duyuru-icerik .image-content.show table,
+        .duyuru-icerik > table {
+          display: table !important;
+          visibility: visible !important;
+          opacity: 1 !important;
         }
 
         .duyuru-tarih {

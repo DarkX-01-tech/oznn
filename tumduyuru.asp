@@ -7,7 +7,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618 -->
+<!-- tablo-guncelleme-20260618-v2 -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -104,24 +104,28 @@ session("ok") = false
     .duyuru-icerik strong  { font-weight: 800 !important; }
 
     .duyuru-icerik table {
-        width: 100% !important;
-        max-width: 100% !important;
-        border-collapse: collapse !important;
-        margin: 12px 0 !important;
-        text-align: left !important;
-        font-weight: 400 !important;
-        border: 1px solid #ddd !important;
-        table-layout: auto !important;
-        display: table !important;
-        visibility: visible !important;
-        opacity: 1 !important;
+        width: 100%;
+        max-width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0;
+        text-align: left;
+        font-size: 12px;
+        line-height: 1.6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: 400;
+        color: #555;
+        border: 1px solid #ddd;
     }
     .duyuru-icerik table td,
     .duyuru-icerik table th {
         border: 1px solid #ddd;
         padding: 8px 12px;
         text-align: left !important;
+        font-size: 12px;
+        line-height: 1.6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-weight: 400;
+        color: #555;
         vertical-align: top;
         word-break: break-word;
     }
@@ -135,9 +139,18 @@ session("ok") = false
         font-weight: 600;
         width: 40%;
     }
+    .duyuru-icerik table td:last-child {
+        font-weight: 400;
+    }
     .duyuru-icerik table b,
     .duyuru-icerik table strong {
         font-weight: 600 !important;
+    }
+    .duyuru-icerik .image-content.show table,
+    .duyuru-icerik > table {
+        display: table !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 
     .baslik b, .baslik strong,
@@ -796,11 +809,44 @@ function debounce(fn, delay) {
     };
 }
 
+function resetSearchExpanded() {
+    document.querySelectorAll('.image-content[data-search-open]').forEach(function(box) {
+        box.classList.remove('show');
+        box.removeAttribute('data-search-open');
+    });
+}
+
+function expandTablesInRow(tr) {
+    if (!tr) return;
+    tr.querySelectorAll('.image-content').forEach(function(box) {
+        if (box.querySelector('table')) {
+            box.classList.add('show');
+            box.setAttribute('data-search-open', '1');
+            var toggle = box.previousElementSibling;
+            if (toggle && toggle.classList.contains('image-toggle-link')) {
+                toggle.classList.add('active');
+            }
+        }
+    });
+}
+
+function getAnnouncementRows(trBaslik) {
+    var rows = [trBaslik];
+    var tr = trBaslik.nextElementSibling;
+    while (tr && !tr.querySelector('.duyuru-baslik')) {
+        rows.push(tr);
+        tr = tr.nextElementSibling;
+    }
+    return rows;
+}
+
 function searchAnnouncements() {
     var raw = document.getElementById('search-bar').value.trim();
     var tokens = normalize(raw).split(/\s+/).filter(Boolean);
     var rows = document.querySelectorAll('.announcements-table tr');
     var noRow = document.getElementById('noMatchesRow');
+
+    resetSearchExpanded();
 
     if (tokens.length === 0) {
         rows.forEach(function(r) { r.style.display = 'table-row'; });
@@ -813,13 +859,19 @@ function searchAnnouncements() {
 
     document.querySelectorAll('.duyuru-baslik').forEach(function(td) {
         var trBaslik = td.parentElement;
-        var trIcerik = trBaslik.nextElementSibling;
-        var trTarih = trIcerik ? trIcerik.nextElementSibling : null;
-        var combo = normalize(td.innerText + ' ' + (trIcerik ? trIcerik.innerText : ''));
+        var announcementRows = getAnnouncementRows(trBaslik);
+        var combo = '';
+        announcementRows.forEach(function(r) {
+            combo += ' ' + r.innerText;
+        });
+        combo = normalize(combo);
         var hit = tokens.every(function(tok) { return combo.indexOf(tok) !== -1; });
 
         if (hit) {
-            [trBaslik, trIcerik, trTarih].forEach(function(r) { if (r) r.style.display = 'table-row'; });
+            announcementRows.forEach(function(r) {
+                r.style.display = 'table-row';
+                expandTablesInRow(r);
+            });
             matchFound = true;
         }
     });
