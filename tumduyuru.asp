@@ -1,14 +1,11 @@
-<%@ Language="VBScript" %>
-<!DOCTYPE html>
-<html>
 <%
 session("ok") = false
 %>
 <!-- #include file="admin/database/Connection.asp" -->
 <!-- #include file="ayarlar.asp" -->
 <head>
-<meta charset="utf-8">
 <meta http-equiv="Content-Language" content="tr">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
@@ -46,6 +43,11 @@ session("ok") = false
         background-color: #ffffff;
         border-radius: 8px;
         overflow: hidden;
+        transition: box-shadow 0.3s, background-color 0.3s;
+    }
+    .golgeliKutu:hover {
+        background-color: #f9f9f9;
+        box-shadow: 0 12px 24px rgba(0,0,0,0.3);
     }
 
     .baslik {
@@ -58,7 +60,9 @@ session("ok") = false
         letter-spacing: 1px;
         padding-bottom: 12px;
         text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+        transition: color 0.3s, border-color 0.3s;
     }
+    .baslik:hover          { color:#343a40; border-color:#c70039; }
     .baslik::after {
         content: "";
         display: block;
@@ -75,10 +79,13 @@ session("ok") = false
         color: #333;
         margin-bottom: 5px;
         font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         border-bottom: 2px solid #850303;
         padding-bottom: 4px;
         display: inline-block;
+        transition: color 0.3s, border-color 0.3s;
     }
+    .duyuru-baslik:hover   { color:#850303; border-color:#343a40; }
 
     .duyuru-icerik {
         font-size: 12px;
@@ -87,6 +94,7 @@ session("ok") = false
         line-height: 1.6;
         margin-bottom: 10px;
         text-align: justify;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
         overflow-wrap: break-word;
         word-break: break-word;
         white-space: normal;
@@ -102,6 +110,7 @@ session("ok") = false
         text-align: left;
         font-weight: 400;
         border: 1px solid #ddd;
+        table-layout: auto;
     }
     .duyuru-icerik table td,
     .duyuru-icerik table th {
@@ -134,28 +143,38 @@ session("ok") = false
         font-size: 12px;
         color: #888;
         text-align: right;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
         padding: 1em 0;
     }
 
-    a {
-        text-decoration: none;
-        color: #1e8b99;
-        font-weight: 600;
-    }
-    a:hover { color: #0d5f6b; }
-
+a {
+  text-decoration: none;
+  color: #1e8b99;
+  transition: all 0.25s ease;
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+}
+a:hover {
+  color: #0d5f6b;
+  border-bottom: 1px solid #0d5f6b;
+}
     .search-container {
         float: right;
         margin-right: 20px;
         margin-top: -20px;
+        position: relative;
     }
-    .search-container input[type="text"] {
+    .search-container form              { display:inline-block; position:relative; }
+    .search-container input[type="text"]{
         padding: 10px 15px;
         border: 1px solid #ccc;
         border-radius: 30px;
         font-size: 16px;
+        transition: border-color 0.3s, box-shadow 0.3s;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+    .search-container input[type="text"]:focus { border-color:#45b8c3; outline:none; box-shadow:0 4px 8px rgba(0,0,0,0.2); }
+    .search-container input[type="text"]:hover { border-color:#45b8c3; }
 
     #scrollTopBtn {
         position: fixed;
@@ -169,23 +188,35 @@ session("ok") = false
         text-align: center;
         line-height: 50px;
         border-radius: 50%;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         cursor: pointer;
+        transition: all 0.3s ease, opacity 0.5s ease;
         opacity: 0;
         visibility: hidden;
         z-index: 999;
+    }
+    #scrollTopBtn:hover {
+        background-color: #1e8c99;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+        transform: scale(1.1);
     }
 
     #apDiv1 {
         position: fixed;
         left: 2%;
         top: 2%;
+        width: auto;
+        height: auto;
+        z-index: 1;
         color: #BF0A2D;
         font-weight: bold;
         background: rgba(255,255,255,0.8);
         padding: 10px;
         border-radius: 5px;
-        z-index: 1;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: background 0.3s, box-shadow 0.3s;
     }
+    #apDiv1:hover        { background:rgba(255,255,255,1); box-shadow:0 4px 8px rgba(0,0,0,0.4); }
 
     .duyuru-container {
         max-height: 1220px;
@@ -201,8 +232,11 @@ session("ok") = false
         flex-direction: column;
         gap: 10px;
     }
-    .duyuru-container::-webkit-scrollbar { width:6px; }
-    .duyuru-container::-webkit-scrollbar-thumb { background:#45b8c3; border-radius:5px; }
+    .duyuru-container::-webkit-scrollbar        { width:6px; }
+    .duyuru-container::-webkit-scrollbar-track  { background:#ffffff; }
+    .duyuru-container::-webkit-scrollbar-thumb  { background:#45b8c3; border-radius:5px; }
+    .duyuru-container::-webkit-scrollbar-thumb:hover { background:#25abb9; }
+    .duyuru-container::-webkit-scrollbar-button { display:none; }
 
     #noMatchesRow td {
         font-size: 16px;
@@ -217,17 +251,37 @@ session("ok") = false
         position: absolute;
         bottom: 20px;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translateX(-50%) translateY(10px);
         background: rgba(69, 184, 195, 0.95);
         color: #fff;
         padding: 6px 12px;
         border-radius: 15px;
         font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
         opacity: 0;
         pointer-events: none;
+        transition: all 0.25s ease;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 5px;
     }
-    .image-wrapper:hover .image-tooltip { opacity: 1; }
+
+    .image-tooltip svg {
+        width: 14px;
+        height: 14px;
+        fill: none;
+        stroke: #fff;
+        stroke-width: 2;
+        flex-shrink: 0;
+    }
+
+    .image-wrapper:hover .image-tooltip {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
 
     .duyuru-icerik img {
         max-width: 100%;
@@ -235,10 +289,18 @@ session("ok") = false
         height: auto;
         display: block;
         border-radius: 8px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.12);
         margin: 10px auto;
         cursor: pointer;
+        transition: all 0.25s ease;
         border: 2px solid #f0f0f0;
         box-sizing: border-box;
+    }
+    
+    .duyuru-icerik img:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.18);
+        border-color: #45b8c3;
     }
 
     .image-modal {
@@ -253,11 +315,27 @@ session("ok") = false
     }
     .image-modal.show { opacity: 1; }
     .modal-content {
+        margin: auto;
+        display: block;
+        max-width: none;
+        max-height: none;
         position: absolute;
-        top: 50%; left: 50%;
+        top: 50%;
+        left: 50%;
+        transform-origin: center center;
+        transition: transform 0.3s ease, opacity 0.3s ease;
         border-radius: 8px;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.5);
         opacity: 0;
         cursor: grab;
+    }
+
+    .modal-content:active {
+        cursor: grabbing;
+    }
+
+    .modal-content.zoomed {
+        cursor: move;
     }
     .image-modal.show .modal-content {
         transform: translate(-50%, -50%) scale(1);
@@ -265,28 +343,60 @@ session("ok") = false
     }
     .modal-close {
         position: absolute;
-        top: 20px; right: 30px;
+        top: 20px;
+        right: 30px;
         color: #fff;
         font-size: 36px;
+        font-weight: bold;
         cursor: pointer;
+        transition: all 0.25s;
         z-index: 10001;
+        width: 45px;
+        height: 45px;
+        background: rgba(69, 184, 195, 0.9);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
     }
+
+    .modal-close:hover {
+        background: rgba(37, 171, 185, 1);
+        transform: rotate(90deg) scale(1.1);
+    }
+
     .modal-prev, .modal-next {
+        cursor: pointer;
         position: absolute;
         top: 50%;
-        width: 50px; height: 50px;
+        width: 50px;
+        height: 50px;
+        padding: 0;
         margin-top: -25px;
         color: white;
+        font-weight: bold;
         font-size: 26px;
+        transition: all 0.25s ease;
         border-radius: 50%;
+        user-select: none;
         background: rgba(69, 184, 195, 0.9);
         display: none;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
+        border: 2px solid rgba(255,255,255,0.2);
     }
     .modal-next { right: 25px; }
     .modal-prev { left: 25px; }
+    .modal-prev:hover, .modal-next:hover {
+        background: rgba(37, 171, 185, 1);
+        transform: scale(1.1);
+    }
+
+    .modal-prev:active, .modal-next:active {
+        transform: scale(0.95);
+    }
+
     .zoom-controls {
         position: absolute;
         bottom: 30px;
@@ -295,15 +405,73 @@ session("ok") = false
         display: none;
         gap: 10px;
         z-index: 10002;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 8px 12px;
+        border-radius: 25px;
+        backdrop-filter: blur(5px);
     }
+
     .zoom-btn {
-        width: 40px; height: 40px;
+        width: 40px;
+        height: 40px;
         background: rgba(69, 184, 195, 0.9);
         color: white;
+        border: 2px solid rgba(255,255,255,0.2);
         border-radius: 50%;
-        border: none;
+        font-size: 20px;
+        font-weight: bold;
         cursor: pointer;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        position: relative;
+        overflow: visible;
     }
+
+    .zoom-btn:hover {
+        background: rgba(37, 171, 185, 1);
+        transform: scale(1.1);
+    }
+
+    .zoom-btn:active {
+        transform: scale(0.95);
+    }
+
+    .zoom-btn svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: white;
+        stroke-width: 3;
+        stroke-linecap: round;
+        transition: all 0.25s ease;
+    }
+
+    .zoom-out:hover svg {
+        opacity: 0.3;
+    }
+
+    .zoom-in:hover svg {
+        transform: scale(1.3);
+    }
+
+    .zoom-reset svg {
+        width: 22px;
+        height: 22px;
+        fill: none;
+        stroke: white;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition: transform 0.25s ease;
+    }
+
+    .zoom-reset:hover svg {
+        transform: rotate(360deg);
+    }
+
     .zoom-indicator {
         position: absolute;
         top: 30px;
@@ -314,35 +482,52 @@ session("ok") = false
         padding: 6px 15px;
         border-radius: 15px;
         font-size: 13px;
-        opacity: 0;
+        font-weight: 600;
         z-index: 10002;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
     }
     .zoom-indicator.show { opacity: 1; }
 
-    .image-toggle-link {
-        display: inline-block;
-        color: #1e8b99;
-        font-size: 13px;
-        font-weight: 600;
-        margin: 8px 0;
-        padding: 6px 10px;
-        cursor: pointer;
-        border-left: 3px solid #1e8b99;
-        background: linear-gradient(90deg, rgba(30,139,153,0.12) 0%, transparent 100%);
-        border-radius: 0 6px 6px 0;
-    }
-    .image-content {
-        max-height: 0;
-        overflow: hidden;
-        opacity: 0;
-        margin: 0;
-        transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.25s ease;
-    }
-    .image-content.show {
-        max-height: 1200px;
-        opacity: 1;
-        margin: 10px 0 5px 0;
-    }
+    /* --- Resim aç / kapa butonu --- */
+.image-toggle-link {
+  display: inline-block;
+  color: #1e8b99;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 8px 0;
+  padding: 6px 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  border-left: 3px solid #1e8b99;
+  background: linear-gradient(90deg, rgba(30,139,153,0.12) 0%, transparent 100%);
+  border-radius: 0 6px 6px 0;
+}
+
+.image-toggle-link:hover {
+  color: #0d5f6b;
+  border-left-color: #0d5f6b;
+  padding-left: 12px;
+}
+
+/* Açılır / kapanır resim alanı */
+.image-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin: 0;
+    transition:
+        max-height 0.35s ease,
+        opacity 0.25s ease,
+        margin 0.25s ease;
+}
+.image-content.show {
+    max-height: 1200px;
+    opacity: 1;
+    margin: 10px 0 5px 0;
+}
 </style>
 
 <script>
@@ -652,12 +837,29 @@ document.addEventListener('DOMContentLoaded', function() {
 <div id="imageModal" class="image-modal">
     <span class="modal-close" onclick="closeModal()">&times;</span>
     <div id="zoomControls" class="zoom-controls">
-        <button class="zoom-btn zoom-out" onclick="zoomOut()">-</button>
-        <button class="zoom-btn zoom-reset" onclick="resetZoom()">0</button>
-        <button class="zoom-btn zoom-in" onclick="zoomIn()">+</button>
+        <button class="zoom-btn zoom-out" onclick="zoomOut()" title="Uzaklaştır (-)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
+        <button class="zoom-btn zoom-reset" onclick="resetZoom()" title="Sıfırla (0)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M1 4v6h6"></path>
+                <path d="M23 20v-6h-6"></path>
+                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+            </svg>
+        </button>
+        <button class="zoom-btn zoom-in" onclick="zoomIn()" title="Yakınlaştır (+)">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
     </div>
+    
     <div id="zoomIndicator" class="zoom-indicator">100%</div>
-    <img class="modal-content" id="modalImage" alt="">
+    
+    <img class="modal-content" id="modalImage">
     <a class="modal-prev" id="modalPrev" onclick="changeImage(-1)">&#10094;</a>
     <a class="modal-next" id="modalNext" onclick="changeImage(1)">&#10095;</a>
 </div>
