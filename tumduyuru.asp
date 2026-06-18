@@ -6,7 +6,6 @@ session("ok") = false
 %>
 <!-- #include file="admin/database/Connection.asp" -->
 <!-- #include file="ayarlar.asp" -->
-<!-- #include file="duyuru-icerik-render.inc" -->
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Language" content="tr">
@@ -95,7 +94,38 @@ session("ok") = false
     .duyuru-icerik b,
     .duyuru-icerik strong  { font-weight: 800 !important; }
 
-    <!--#include file="duyuru-tablo.css.inc"-->
+    .duyuru-icerik table {
+        width: 100%;
+        max-width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0;
+        text-align: left;
+        font-weight: 400;
+        border: 1px solid #ddd;
+    }
+    .duyuru-icerik table td,
+    .duyuru-icerik table th {
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        text-align: left !important;
+        font-weight: 400;
+        vertical-align: top;
+        word-break: break-word;
+    }
+    .duyuru-icerik table th,
+    .duyuru-icerik table tr:first-child td {
+        background-color: #f0f0f0;
+        font-weight: 600;
+        text-align: center !important;
+    }
+    .duyuru-icerik table td:first-child {
+        font-weight: 600;
+        width: 40%;
+    }
+    .duyuru-icerik table b,
+    .duyuru-icerik table strong {
+        font-weight: 600 !important;
+    }
 
     .baslik b, .baslik strong,
     .duyuru-baslik b, .duyuru-baslik strong { font-weight: inherit !important; }
@@ -315,8 +345,80 @@ session("ok") = false
     }
 </style>
 
-<script src="/js/duyuru-modal.js" type="text/javascript"></script>
-<script src="/js/duyuru-search.js" type="text/javascript"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(function() { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 15000);
+});
+document.addEventListener("DOMContentLoaded", function() {
+    var scrollTopBtn = document.getElementById("scrollTopBtn");
+    window.addEventListener("scroll", function() {
+        if (window.scrollY > 300) {
+            scrollTopBtn.style.visibility = "visible";
+            scrollTopBtn.style.opacity = "1";
+        } else {
+            scrollTopBtn.style.opacity = "0";
+            scrollTopBtn.style.visibility = "hidden";
+        }
+    });
+});
+function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+function normalize(txt) {
+    return txt.toLocaleLowerCase('tr-TR').normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '').replace(/[^\w\s]/g, '');
+}
+function debounce(fn, delay) {
+    var t;
+    return function() {
+        clearTimeout(t);
+        var args = arguments, ctx = this;
+        t = setTimeout(function() { fn.apply(ctx, args); }, delay);
+    };
+}
+function searchAnnouncements() {
+    var raw = document.getElementById('search-bar').value.trim();
+    var tokens = normalize(raw).split(/\s+/).filter(Boolean);
+    var rows = document.querySelectorAll('.announcements-table tr');
+    var noRow = document.getElementById('noMatchesRow');
+    if (tokens.length === 0) {
+        rows.forEach(function(r) { r.style.display = 'table-row'; });
+        if (noRow) noRow.style.display = 'none';
+        return;
+    }
+    rows.forEach(function(r) { r.style.display = 'none'; });
+    var matchFound = false;
+    document.querySelectorAll('.duyuru-baslik').forEach(function(td) {
+        var trBaslik = td.parentElement;
+        var trIcerik = trBaslik.nextElementSibling;
+        var trTarih = trIcerik ? trIcerik.nextElementSibling : null;
+        var combo = normalize(td.innerText + ' ' + (trIcerik ? trIcerik.innerText : ''));
+        var hit = tokens.every(function(tok) { return combo.indexOf(tok) !== -1; });
+        if (hit) {
+            [trBaslik, trIcerik, trTarih].forEach(function(r) { if (r) r.style.display = 'table-row'; });
+            matchFound = true;
+        }
+    });
+    if (noRow) noRow.style.display = matchFound ? 'none' : 'table-row';
+}
+document.addEventListener('DOMContentLoaded', function() {
+    var searchBar = document.getElementById('search-bar');
+    if (searchBar) searchBar.addEventListener('keyup', debounce(searchAnnouncements, 300));
+});
+
+function toggleImage(linkId, contentId) {
+    var link = document.getElementById(linkId);
+    var content = document.getElementById(contentId);
+    if (!link || !content) return;
+    var isOpen = content.classList.contains('show');
+    if (isOpen) {
+        content.classList.remove('show');
+        link.classList.remove('active');
+    } else {
+        content.classList.add('show');
+        link.classList.add('active');
+    }
+}
+</script>
 </head>
 
 <body>
@@ -446,7 +548,48 @@ session("ok") = false
                             End If
 
                             If Trim(icerik) <> "" Then
-                                Call YazDuyuruIcerik(icerik, gorsellerKapaliMi, gorselleriGoster, imageCounter)
+                                If InStr(LCase(icerik), "<img") > 0 Then
+                                    imageCounter = imageCounter + 1
+                                    Dim linkId, contentId, textContent, imageContent, imgPos
+                                    linkId = "imgLink" & imageCounter
+                                    contentId = "imgContent" & imageCounter
+                                    imgPos = InStr(LCase(icerik), "<img")
+                                    If imgPos > 1 Then
+                                        textContent = Left(icerik, imgPos - 1)
+                                        imageContent = Mid(icerik, imgPos)
+                                    Else
+                                        textContent = ""
+                                        imageContent = icerik
+                                    End If
+                                    Response.Write "<tr><td class='duyuru-icerik'>"
+                                    If Trim(textContent) <> "" Then Response.Write textContent
+                                    If gorselleriGoster Then
+                                        Response.Write imageContent
+                                    Else
+                                        Response.Write "<div class='image-toggle-link' id='" & linkId & "' onclick=""toggleImage('" & linkId & "', '" & contentId & "')"">"
+                                        Response.Write "Görseli Açmak İçin Tıklayınız"
+                                        Response.Write "</div>"
+                                        Response.Write "<div class='image-content' id='" & contentId & "'>"
+                                        Response.Write imageContent
+                                        Response.Write "</div>"
+                                    End If
+                                    Response.Write "</td></tr>"
+                                Else
+                                    Response.Write "<tr><td class='duyuru-icerik'>"
+                                    If gorsellerKapaliMi And InStr(LCase(icerik), "<table") = 0 Then
+                                        Dim linkId2, contentId2
+                                        imageCounter = imageCounter + 1
+                                        linkId2 = "imgLink" & imageCounter
+                                        contentId2 = "imgContent" & imageCounter
+                                        Response.Write "<div class='image-toggle-link' id='" & linkId2 & "' onclick=""toggleImage('" & linkId2 & "', '" & contentId2 & "')"">"
+                                        Response.Write "İçeriği Açmak İçin Tıklayınız"
+                                        Response.Write "</div>"
+                                        Response.Write "<div class='image-content' id='" & contentId2 & "'>" & icerik & "</div>"
+                                    Else
+                                        Response.Write icerik
+                                    End If
+                                    Response.Write "</td></tr>"
+                                End If
                             Else
                                 Response.Write "<tr><td style='height:5px;'></td></tr>"
                             End If
