@@ -110,38 +110,53 @@
           max-width: 100%;
           border-collapse: collapse;
           margin: 12px 0;
+          border: none;
           text-align: left;
+          font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           font-size: 12px;
           line-height: 1.6;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           font-weight: 400;
           color: #555;
-          border: 1px solid #ddd;
+          text-shadow: none;
+          background: #fff;
         }
         .duyuru-icerik table td,
         .duyuru-icerik table th {
-          border: 1px solid #ddd;
-          padding: 8px 12px;
+          border: none;
+          border-bottom: 1px solid #e5e5e5;
+          padding: 8px 10px;
           text-align: left !important;
+          font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           font-size: 12px;
           line-height: 1.6;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           font-weight: 400;
           color: #555;
-          vertical-align: top;
+          vertical-align: middle;
           word-break: break-word;
+          text-shadow: none;
         }
-        .duyuru-icerik table th,
-        .duyuru-icerik table tr:first-child td {
-          background-color: #f0f0f0;
+        .duyuru-icerik table tr:last-child td,
+        .duyuru-icerik table tr:last-child th {
+          border-bottom: none;
+        }
+        .duyuru-icerik table tr:first-child td,
+        .duyuru-icerik table tr:first-child th {
+          background-color: #f2f2f2;
           font-weight: 600;
           text-align: center !important;
+          border-bottom: 1px solid #e5e5e5;
         }
-        .duyuru-icerik table td:first-child {
+        .duyuru-icerik table tr:not(:first-child):nth-child(even) td {
+          background-color: #ffffff;
+        }
+        .duyuru-icerik table tr:not(:first-child):nth-child(odd) td {
+          background-color: #f9f9f9;
+        }
+        .duyuru-icerik table tr:not(:first-child) td:first-child {
           font-weight: 600;
-          width: 40%;
+          width: 42%;
         }
-        .duyuru-icerik table td:last-child {
+        .duyuru-icerik table tr:not(:first-child) td:last-child {
           font-weight: 400;
         }
         .duyuru-icerik table b,
@@ -149,7 +164,8 @@
           font-weight: 600 !important;
         }
         .duyuru-icerik .image-content.show table,
-        .duyuru-icerik > table {
+        .duyuru-icerik > table,
+        .duyuru-icerik table {
           display: table !important;
           visibility: visible !important;
           opacity: 1 !important;
