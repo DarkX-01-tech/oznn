@@ -9,7 +9,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v15-font-duzeltme -->
+<!-- tablo-guncelleme-20260618-v16-navbar-bosluk -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -53,15 +53,20 @@ session("ok") = false
         box-shadow: 0 12px 24px rgba(0,0,0,0.3);
     }
 
+    #Table_01 img {
+        display: block;
+        border: 0;
+    }
+
     .baslik {
         font-size: 24px;
         color: #850303;
         text-align: center;
-        margin: 25px 0;
-        font-weight: 600;
+        margin: -10px 0;
+        font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 1px;
-        padding-bottom: 12px;
+        padding: 10px 0;
         text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
         transition: color 0.3s, border-color 0.3s;
     }
@@ -72,9 +77,7 @@ session("ok") = false
         width: 725px;
         height: 2px;
         background-color: #343a40;
-        margin-top: 15px;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto;
     }
 
     .duyuru-baslik {
@@ -206,6 +209,72 @@ a:hover {
         transition: background 0.3s, box-shadow 0.3s;
     }
     #apDiv1:hover        { background:rgba(255,255,255,1); box-shadow:0 4px 8px rgba(0,0,0,0.4); }
+
+    .navbar {
+        width: 100%;
+        background-color: #ffffff;
+        border-bottom: 1px solid #ddd;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        padding-top: 10px;
+        padding-bottom: 10px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    .navbar ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        display: inline-block;
+    }
+    .navbar > ul > li {
+        position: relative;
+        display: inline-block;
+        margin-right: 15px;
+    }
+    .navbar > ul > li:last-child {
+        margin-right: 0;
+    }
+    .navbar > ul > li > a {
+        position: relative;
+        display: block;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+        background: #25abb9;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: background 0.3s ease, transform 0.2s ease;
+        text-decoration: none;
+        box-shadow: 0 4px 8px rgba(37,171,185,0.3);
+    }
+    .navbar > ul > li > a::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 200%;
+        height: 200%;
+        background: rgba(255,255,255,0.15);
+        transform: translate(-50%, -50%) rotate(45deg);
+        transition: all 0.75s ease;
+    }
+    .navbar > ul > li > a:hover::before {
+        width: 0;
+        height: 0;
+        opacity: 0;
+    }
+    .navbar > ul > li > a:hover {
+        background: #1e8c99;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 12px rgba(30,140,153,0.5);
+    }
+    .navbar > ul > li > a:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(37,171,185,0.3);
+    }
 
     .duyuru-container {
         max-height: 1220px;
@@ -910,7 +979,24 @@ document.addEventListener('DOMContentLoaded', function() {
 <div align="center" class="golgeliKutu">
     <table id="Table_01" width="900" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td colspan="3"><img src="images/muhst_06.png" width="900" height="165" alt=""></td>
+            <td colspan="3" style="padding:0;line-height:0;font-size:0;">
+                <img border="0" src="images/muhst_06.png" width="900" height="165" alt="">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <div class="navbar">
+                    <ul>
+                        <li><a href="https://dys.saglik.gov.tr/">DYS</a></li>
+                        <li><a href="http://10.201.64.42:8077">PAGO</a></li>
+                        <li><a href="https://eposta.saglik.gov.tr/owakontrol/">SB E-Posta</a></li>
+                        <li><a href="http://10.201.64.71:8040">Pendik HBYS Kur</a></li>
+                        <li><a href="http://10.231.96.71:8040">Bsb HBYS Kur</a></li>
+                        <li><a href="https://marmaraeah.saglik.gov.tr/">MÜ Pendik E.A.H.</a></li>
+                        <li><a href="http://10.210.122.20/default.php">HES Eğitim</a></li>
+                    </ul>
+                </div>
+            </td>
         </tr>
         <tr>
             <td bgcolor="#FFFFFF" width="166" height="604" valign="top">
