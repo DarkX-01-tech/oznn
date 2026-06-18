@@ -7,7 +7,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v13-index-css-birebir -->
+<!-- tablo-guncelleme-20260618-v14-db-html -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -105,64 +105,6 @@ session("ok") = false
 
     .announcement-group.search-hidden {
         display: none !important;
-    }
-
-  /* Tablo: index.asp ile birebir ayni */
-    .duyuru-icerik table {
-        width: 100% !important;
-        max-width: 100% !important;
-        border-collapse: collapse !important;
-        margin: 12px 0 !important;
-        border: 1px solid #e5e5e5 !important;
-        text-align: left !important;
-        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-        font-size: 12px !important;
-        line-height: 1.6 !important;
-        font-weight: 400 !important;
-        color: #555 !important;
-        text-shadow: none !important;
-        background: #fff !important;
-        display: table !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-    .duyuru-icerik table td,
-    .duyuru-icerik table th {
-        border: none !important;
-        border-bottom: 1px solid #e5e5e5 !important;
-        padding: 8px 12px !important;
-        text-align: left !important;
-        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-        font-size: 12px !important;
-        line-height: 1.6 !important;
-        font-weight: 400 !important;
-        color: #555 !important;
-        vertical-align: middle !important;
-        word-break: break-word !important;
-        text-shadow: none !important;
-        background-color: #ffffff !important;
-    }
-    .duyuru-icerik table tr:last-child td,
-    .duyuru-icerik table tr:last-child th {
-        border-bottom: none !important;
-    }
-    .duyuru-icerik table tr:first-child td,
-    .duyuru-icerik table tr:first-child th {
-        background-color: #f2f2f2 !important;
-        font-weight: 600 !important;
-        text-align: center !important;
-        border-bottom: 1px solid #e5e5e5 !important;
-    }
-    .duyuru-icerik table tr:not(:first-child) td:first-child {
-        font-weight: 600 !important;
-        width: 42% !important;
-    }
-    .duyuru-icerik table tr:not(:first-child) td:last-child {
-        font-weight: 400 !important;
-    }
-    .duyuru-icerik table b,
-    .duyuru-icerik table strong {
-        font-weight: 600 !important;
     }
 
     .baslik b, .baslik strong,
@@ -990,6 +932,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         rsDuy.Open sqld, conn, 1, 3
 
+                        Sub WriteGizlenebilirParca(parca, gorselleriGoster)
+                            Dim lid, cid
+                            If Len(Trim(parca & "")) = 0 Then Exit Sub
+                            If gorselleriGoster Or InStr(LCase(parca), "<img") = 0 Then
+                                Response.Write parca
+                            Else
+                                imageCounter = imageCounter + 1
+                                lid = "imgLink" & imageCounter
+                                cid = "imgContent" & imageCounter
+                                Response.Write "<div class='image-toggle-link' id='" & lid & "' onclick=""toggleImage('" & lid & "', '" & cid & "')"">"
+                                Response.Write "Görseli Açmak İçin Tıklayınız"
+                                Response.Write "</div>"
+                                Response.Write "<div class='image-content' id='" & cid & "'>"
+                                Response.Write parca
+                                Response.Write "</div>"
+                            End If
+                        End Sub
+
+                        Sub WriteIcerikTablolariAcik(html, gorselleriGoster)
+                            Dim kalan, tblPos, tblEnd, parca, tablo
+                            kalan = html & ""
+                            Do While InStr(LCase(kalan), "<table") > 0
+                                tblPos = InStr(LCase(kalan), "<table")
+                                parca = Left(kalan, tblPos - 1)
+                                Call WriteGizlenebilirParca(parca, gorselleriGoster)
+                                kalan = Mid(kalan, tblPos)
+                                tblEnd = InStr(LCase(kalan), "</table>")
+                                If tblEnd = 0 Then
+                                    Response.Write kalan
+                                    Exit Sub
+                                End If
+                                tablo = Left(kalan, tblEnd + Len("</table>") - 1)
+                                Response.Write tablo
+                                kalan = Mid(kalan, tblEnd + Len("</table>"))
+                            Loop
+                            Call WriteGizlenebilirParca(kalan, gorselleriGoster)
+                        End Sub
+
                         Do While Not rsDuy.EOF
                             Dim baslik, icerik, tarihVal
                             baslik = rsDuy("strd_baslik") & ""
@@ -1059,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             End If
 
                             If Trim(icerik) <> "" Then
-                                Dim icerikHtml, linkId, contentId, imgPos, textContent, imageContent
+                                Dim icerikHtml, linkId, contentId, imgPos
                                 icerikHtml = icerik
                                 icerikHtml = Replace(icerikHtml, "&lt;table", "<table", 1, -1, vbTextCompare)
                                 icerikHtml = Replace(icerikHtml, "&lt;/table>", "</table>", 1, -1, vbTextCompare)
@@ -1069,32 +1049,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                                 Response.Write "<tr><td class='duyuru-icerik'>"
 
-                                If InStr(LCase(icerikHtml), "<table") > 0 Then
-                                    Response.Write icerikHtml
-                                ElseIf InStr(LCase(icerikHtml), "<img") > 0 Then
-                                    imageCounter = imageCounter + 1
-                                    linkId = "imgLink" & imageCounter
-                                    contentId = "imgContent" & imageCounter
+                                If InStr(LCase(icerikHtml), "<img") > 0 Then
                                     imgPos = InStr(LCase(icerikHtml), "<img")
-                                    If imgPos > 1 Then
-                                        textContent = Left(icerikHtml, imgPos - 1)
-                                        imageContent = Mid(icerikHtml, imgPos)
-                                    Else
-                                        textContent = ""
-                                        imageContent = icerikHtml
-                                    End If
-                                    If Trim(textContent) <> "" Then Response.Write textContent
-                                    If gorselleriGoster Then
-                                        Response.Write imageContent
-                                    Else
-                                        Response.Write "<div class='image-toggle-link' id='" & linkId & "' onclick=""toggleImage('" & linkId & "', '" & contentId & "')"">"
-                                        Response.Write "Görseli Açmak İçin Tıklayınız"
-                                        Response.Write "</div>"
-                                        Response.Write "<div class='image-content' id='" & contentId & "'>"
-                                        Response.Write imageContent
-                                        Response.Write "</div>"
-                                    End If
-                                ElseIf gorsellerKapaliMi Then
+                                    If imgPos > 1 Then Response.Write Left(icerikHtml, imgPos - 1)
+                                    Call WriteIcerikTablolariAcik(Mid(icerikHtml, imgPos), gorselleriGoster)
+                                ElseIf gorsellerKapaliMi And InStr(LCase(icerikHtml), "<table") = 0 Then
                                     imageCounter = imageCounter + 1
                                     linkId = "imgLink" & imageCounter
                                     contentId = "imgContent" & imageCounter
@@ -1103,7 +1062,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     Response.Write "</div>"
                                     Response.Write "<div class='image-content' id='" & contentId & "'>" & icerikHtml & "</div>"
                                 Else
-                                    Response.Write icerikHtml
+                                    Call WriteIcerikTablolariAcik(icerikHtml, gorselleriGoster)
                                 End If
 
                                 Response.Write "</td></tr>"
