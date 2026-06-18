@@ -7,7 +7,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v9-arama-tablo -->
+<!-- tablo-guncelleme-20260618-v10-tbody -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -102,6 +102,10 @@ session("ok") = false
     }
     .duyuru-icerik b,
     .duyuru-icerik strong  { font-weight: 800 !important; }
+
+    .announcement-group.search-hidden {
+        display: none !important;
+    }
 
     .duyuru-tablo-gorunur {
         display: block !important;
@@ -833,41 +837,33 @@ function stripHtml(html) {
     return (html || '').replace(/<[^>]+>/g, ' ');
 }
 
-function getRowSearchText(row) {
+function getGroupSearchText(group) {
     var text = '';
-    if (row.innerText) text += ' ' + row.innerText;
-    if (row.textContent) text += ' ' + row.textContent;
-    row.querySelectorAll('.duyuru-icerik').forEach(function(cell) {
+    if (group.innerText) text += ' ' + group.innerText;
+    group.querySelectorAll('.duyuru-icerik').forEach(function(cell) {
         if (cell.innerHTML) text += ' ' + stripHtml(cell.innerHTML);
     });
     return normalize(text);
 }
 
-function expandHiddenContentInRows(rows) {
-    rows.forEach(function(row) {
-        row.querySelectorAll('.image-content').forEach(function(box) {
-            box.classList.add('show', 'search-open');
-            box.style.maxHeight = 'none';
-            box.style.opacity = '1';
-            box.style.overflow = 'visible';
-            box.style.display = 'block';
-            box.setAttribute('data-search-open', '1');
-            var toggle = box.previousElementSibling;
-            if (toggle && toggle.classList.contains('image-toggle-link')) {
-                toggle.classList.add('active');
-            }
-        });
-        row.querySelectorAll('.duyuru-tablo-gorunur, table').forEach(function(el) {
-            if (el.tagName === 'TABLE') {
-                el.style.display = 'table';
-            } else {
-                el.style.display = 'block';
-            }
-            el.style.visibility = 'visible';
-            el.style.opacity = '1';
-            el.style.maxHeight = 'none';
-            el.style.overflow = 'visible';
-        });
+function expandAnnouncementGroup(group) {
+    if (!group) return;
+    group.querySelectorAll('.image-content').forEach(function(box) {
+        box.classList.add('show', 'search-open');
+        box.style.maxHeight = 'none';
+        box.style.opacity = '1';
+        box.style.overflow = 'visible';
+        box.style.display = 'block';
+        box.setAttribute('data-search-open', '1');
+        var toggle = box.previousElementSibling;
+        if (toggle && toggle.classList.contains('image-toggle-link')) {
+            toggle.classList.add('active');
+        }
+    });
+    group.querySelectorAll('table').forEach(function(tbl) {
+        tbl.style.display = 'table';
+        tbl.style.visibility = 'visible';
+        tbl.style.opacity = '1';
     });
 }
 
@@ -880,71 +876,43 @@ function resetSearchExpanded() {
         box.style.display = '';
         box.removeAttribute('data-search-open');
     });
-    document.querySelectorAll('.duyuru-icerik table, .duyuru-tablo-gorunur').forEach(function(el) {
-        el.style.display = '';
-        el.style.visibility = '';
-        el.style.opacity = '';
-        el.style.maxHeight = '';
-        el.style.overflow = '';
+    document.querySelectorAll('.duyuru-icerik table').forEach(function(tbl) {
+        tbl.style.display = '';
+        tbl.style.visibility = '';
+        tbl.style.opacity = '';
     });
-}
-
-function getAnnouncementRows(trBaslik) {
-    var rows = [trBaslik];
-    var tr = trBaslik.nextElementSibling;
-    while (tr && !tr.querySelector('.duyuru-baslik')) {
-        rows.push(tr);
-        tr = tr.nextElementSibling;
-    }
-    return rows;
 }
 
 function searchAnnouncements() {
     var raw = document.getElementById('search-bar').value.trim();
     var tokens = normalize(raw).split(/\s+/).filter(Boolean);
-    var rows = document.querySelectorAll('.announcements-table tr');
+    var groups = document.querySelectorAll('.announcement-group');
     var noRow = document.getElementById('noMatchesRow');
 
     resetSearchExpanded();
 
     if (tokens.length === 0) {
-        rows.forEach(function(r) { r.style.display = 'table-row'; });
+        groups.forEach(function(g) { g.classList.remove('search-hidden'); });
         if (noRow) noRow.style.display = 'none';
         return;
     }
 
-    rows.forEach(function(r) { r.style.display = 'none'; });
     var matchFound = false;
 
-    document.querySelectorAll('.duyuru-baslik').forEach(function(td) {
-        var trBaslik = td.parentElement;
-        var announcementRows = getAnnouncementRows(trBaslik);
-        var combo = '';
-        announcementRows.forEach(function(r) {
-            combo += ' ' + getRowSearchText(r);
-        });
+    groups.forEach(function(group) {
+        var combo = getGroupSearchText(group);
         var hit = tokens.every(function(tok) { return combo.indexOf(tok) !== -1; });
 
         if (hit) {
-            announcementRows.forEach(function(r) {
-                r.style.display = 'table-row';
-            });
-            expandHiddenContentInRows(announcementRows);
+            group.classList.remove('search-hidden');
+            expandAnnouncementGroup(group);
             matchFound = true;
+        } else {
+            group.classList.add('search-hidden');
         }
     });
 
     if (noRow) noRow.style.display = matchFound ? 'none' : 'table-row';
-
-    if (matchFound) {
-        setTimeout(function() {
-            document.querySelectorAll('.duyuru-icerik table, .duyuru-tablo-gorunur table').forEach(function(tbl) {
-                tbl.style.display = 'table';
-                tbl.style.visibility = 'visible';
-                tbl.style.opacity = '1';
-            });
-        }, 0);
-    }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1034,50 +1002,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         rsDuy.Open sqld, conn, 1, 3
 
-                        Sub WriteGizlenebilirParca(parca, gorselleriGoster)
-                            Dim lid, cid
-                            If Len(Trim(parca & "")) = 0 Then Exit Sub
-                            If gorselleriGoster Or InStr(LCase(parca), "<img") = 0 Then
-                                Response.Write parca
-                            Else
-                                imageCounter = imageCounter + 1
-                                lid = "imgLink" & imageCounter
-                                cid = "imgContent" & imageCounter
-                                Response.Write "<div class='image-toggle-link' id='" & lid & "' onclick=""toggleImage('" & lid & "', '" & cid & "')"">"
-                                Response.Write "Görseli Açmak İçin Tıklayınız"
-                                Response.Write "</div>"
-                                Response.Write "<div class='image-content' id='" & cid & "'>"
-                                Response.Write parca
-                                Response.Write "</div>"
-                            End If
-                        End Sub
-
-                        Sub WriteIcerikTabloDisarida(html, gorselleriGoster)
-                            Dim kalan, tblPos, tblEnd, parca, tablo
-                            kalan = html & ""
-                            Do While InStr(LCase(kalan), "<table") > 0
-                                tblPos = InStr(LCase(kalan), "<table")
-                                parca = Left(kalan, tblPos - 1)
-                                Call WriteGizlenebilirParca(parca, gorselleriGoster)
-                                kalan = Mid(kalan, tblPos)
-                                tblEnd = InStr(LCase(kalan), "</table>")
-                                If tblEnd = 0 Then
-                                    Response.Write "<div class='duyuru-tablo-gorunur'>" & kalan & "</div>"
-                                    Exit Sub
-                                End If
-                                tablo = Left(kalan, tblEnd + Len("</table>") - 1)
-                                Response.Write "<div class='duyuru-tablo-gorunur'>" & tablo & "</div>"
-                                kalan = Mid(kalan, tblEnd + Len("</table>"))
-                            Loop
-                            Call WriteGizlenebilirParca(kalan, gorselleriGoster)
-                        End Sub
-
                         Do While Not rsDuy.EOF
                             Dim baslik, icerik, tarihVal
                             baslik = rsDuy("strd_baslik") & ""
                             icerik = rsDuy("strd_duyuru") & ""
 
                             If Not IsNull(rsDuy("strd_tarih")) Then tarihVal = rsDuy("strd_tarih") Else tarihVal = ""
+
+                            Response.Write "<tbody class=""announcement-group"">"
 
                             If Trim(baslik) <> "" Then
                                 Response.Write "<tr><td class='duyuru-baslik'>" & baslik & "</td></tr>"
@@ -1139,7 +1071,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             End If
 
                             If Trim(icerik) <> "" Then
-                                Dim icerikHtml
+                                Dim icerikHtml, linkId, contentId, imgPos, textContent, imageContent
                                 icerikHtml = icerik
                                 icerikHtml = Replace(icerikHtml, "&lt;table", "<table", 1, -1, vbTextCompare)
                                 icerikHtml = Replace(icerikHtml, "&lt;/table>", "</table>", 1, -1, vbTextCompare)
@@ -1149,22 +1081,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
                                 Response.Write "<tr><td class='duyuru-icerik'>"
 
-                                If InStr(LCase(icerikHtml), "<img") > 0 Then
-                                    Dim imgPos
-                                    imgPos = InStr(LCase(icerikHtml), "<img")
-                                    If imgPos > 1 Then Response.Write Left(icerikHtml, imgPos - 1)
-                                    Call WriteIcerikTabloDisarida(Mid(icerikHtml, imgPos), gorselleriGoster)
-                                ElseIf gorsellerKapaliMi And InStr(LCase(icerikHtml), "<table") = 0 Then
-                                    Dim linkId2, contentId2
+                                If InStr(LCase(icerikHtml), "<table") > 0 Then
+                                    Response.Write icerikHtml
+                                ElseIf InStr(LCase(icerikHtml), "<img") > 0 Then
                                     imageCounter = imageCounter + 1
-                                    linkId2 = "imgLink" & imageCounter
-                                    contentId2 = "imgContent" & imageCounter
-                                    Response.Write "<div class='image-toggle-link' id='" & linkId2 & "' onclick=""toggleImage('" & linkId2 & "', '" & contentId2 & "')"">"
+                                    linkId = "imgLink" & imageCounter
+                                    contentId = "imgContent" & imageCounter
+                                    imgPos = InStr(LCase(icerikHtml), "<img")
+                                    If imgPos > 1 Then
+                                        textContent = Left(icerikHtml, imgPos - 1)
+                                        imageContent = Mid(icerikHtml, imgPos)
+                                    Else
+                                        textContent = ""
+                                        imageContent = icerikHtml
+                                    End If
+                                    If Trim(textContent) <> "" Then Response.Write textContent
+                                    If gorselleriGoster Then
+                                        Response.Write imageContent
+                                    Else
+                                        Response.Write "<div class='image-toggle-link' id='" & linkId & "' onclick=""toggleImage('" & linkId & "', '" & contentId & "')"">"
+                                        Response.Write "Görseli Açmak İçin Tıklayınız"
+                                        Response.Write "</div>"
+                                        Response.Write "<div class='image-content' id='" & contentId & "'>"
+                                        Response.Write imageContent
+                                        Response.Write "</div>"
+                                    End If
+                                ElseIf gorsellerKapaliMi Then
+                                    imageCounter = imageCounter + 1
+                                    linkId = "imgLink" & imageCounter
+                                    contentId = "imgContent" & imageCounter
+                                    Response.Write "<div class='image-toggle-link' id='" & linkId & "' onclick=""toggleImage('" & linkId & "', '" & contentId & "')"">"
                                     Response.Write "İçeriği Açmak İçin Tıklayınız"
                                     Response.Write "</div>"
-                                    Response.Write "<div class='image-content' id='" & contentId2 & "'>" & icerikHtml & "</div>"
+                                    Response.Write "<div class='image-content' id='" & contentId & "'>" & icerikHtml & "</div>"
                                 Else
-                                    Call WriteIcerikTabloDisarida(icerikHtml, gorselleriGoster)
+                                    Response.Write icerikHtml
                                 End If
 
                                 Response.Write "</td></tr>"
@@ -1180,6 +1131,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             Else
                                 Response.Write "<tr><td style='height:5px;'></td></tr>"
                             End If
+
+                            Response.Write "</tbody>"
 
                             rsDuy.MoveNext
                         Loop
