@@ -765,15 +765,43 @@ Response.Write "**********"
                             Response.End
                         End If
 
+                        Function FindTableEnd(s, startPos)
+                            Dim depth, pos, nextOpen, nextClose, sLower
+                            sLower = LCase(s & "")
+                            depth = 1
+                            pos = startPos + 6
+                            Do While depth > 0
+                                nextOpen = InStr(pos, sLower, "<table")
+                                nextClose = InStr(pos, sLower, "</table")
+                                If nextClose = 0 Then
+                                    FindTableEnd = 0
+                                    Exit Function
+                                End If
+                                If nextOpen > 0 And nextOpen < nextClose Then
+                                    depth = depth + 1
+                                    pos = nextOpen + 6
+                                Else
+                                    depth = depth - 1
+                                    If depth = 0 Then
+                                        FindTableEnd = nextClose + Len("</table>")
+                                        Exit Function
+                                    End If
+                                    pos = nextClose + Len("</table>")
+                                End If
+                            Loop
+                            FindTableEnd = 0
+                        End Function
+
                         Function ExtractTables(html)
                             Dim result, pos, endPos, block, s
                             s = html & ""
+                            s = Replace(s, "&lt;table", "<table", 1, -1, vbTextCompare)
+                            s = Replace(s, "&lt;/table", "</table", 1, -1, vbTextCompare)
                             result = ""
                             Do While InStr(LCase(s), "<table") > 0
                                 pos = InStr(LCase(s), "<table")
-                                endPos = InStr(pos, LCase(s), "</table>")
+                                endPos = FindTableEnd(s, pos)
                                 If endPos = 0 Then Exit Do
-                                endPos = endPos + Len("</table>")
                                 block = Mid(s, pos, endPos - pos)
                                 result = result & block
                                 s = Left(s, pos - 1) & Mid(s, endPos)
@@ -784,11 +812,12 @@ Response.Write "**********"
                         Function RemoveTables(html)
                             Dim result, pos, endPos
                             result = html & ""
+                            result = Replace(result, "&lt;table", "<table", 1, -1, vbTextCompare)
+                            result = Replace(result, "&lt;/table", "</table", 1, -1, vbTextCompare)
                             Do While InStr(LCase(result), "<table") > 0
                                 pos = InStr(LCase(result), "<table")
-                                endPos = InStr(pos, LCase(result), "</table>")
+                                endPos = FindTableEnd(result, pos)
                                 If endPos = 0 Then Exit Do
-                                endPos = endPos + Len("</table>")
                                 result = Left(result, pos - 1) & Mid(result, endPos)
                             Loop
                             RemoveTables = result
@@ -866,7 +895,11 @@ Response.Write "**********"
                                 If Trim(icerik) <> "" Then
                                     Dim tablesAlways, bodyContent
                                     tablesAlways = ExtractTables(icerik)
-                                    bodyContent = RemoveTables(icerik)
+                                    If Len(tablesAlways) > 0 Then
+                                        bodyContent = RemoveTables(icerik)
+                                    Else
+                                        bodyContent = icerik
+                                    End If
 
                                     Response.Write "<tr><td class='duyuru-icerik'>"
 
@@ -882,6 +915,15 @@ Response.Write "**********"
                                         Else
                                             textContent = ""
                                             imageContent = bodyContent
+                                        End If
+
+                                        If Len(tablesAlways) = 0 And InStr(LCase(imageContent), "<table") > 0 Then
+                                            tablesAlways = ExtractTables(imageContent)
+                                            If Len(tablesAlways) > 0 Then
+                                                imageContent = RemoveTables(imageContent)
+                                            Else
+                                                gorselleriGoster = True
+                                            End If
                                         End If
 
                                         If Trim(textContent) <> "" Then Response.Write textContent
@@ -900,7 +942,7 @@ Response.Write "**********"
                                         End If
                                     Else
                                         If Trim(bodyContent) <> "" Then
-                                            If gorsellerKapaliMi Then
+                                            If gorsellerKapaliMi And Len(tablesAlways) = 0 And InStr(LCase(bodyContent), "<table") = 0 Then
                                                 imageCounter = imageCounter + 1
                                                 Dim linkId2, contentId2
                                                 linkId2 = "imgLink" & imageCounter
