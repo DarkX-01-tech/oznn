@@ -7,7 +7,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v2 -->
+<!-- tablo-guncelleme-20260618-v3 -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -965,6 +965,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         rsDuy.Open sqld, conn, 1, 3
 
+                        Function ExtractTables(html)
+                            Dim result, pos, endPos, block, s
+                            s = html & ""
+                            result = ""
+                            Do While InStr(LCase(s), "<table") > 0
+                                pos = InStr(LCase(s), "<table")
+                                endPos = InStr(pos, LCase(s), "</table>")
+                                If endPos = 0 Then Exit Do
+                                endPos = endPos + Len("</table>")
+                                block = Mid(s, pos, endPos - pos)
+                                result = result & block
+                                s = Left(s, pos - 1) & Mid(s, endPos)
+                            Loop
+                            ExtractTables = result
+                        End Function
+
+                        Function RemoveTables(html)
+                            Dim result, pos, endPos
+                            result = html & ""
+                            Do While InStr(LCase(result), "<table") > 0
+                                pos = InStr(LCase(result), "<table")
+                                endPos = InStr(pos, LCase(result), "</table>")
+                                If endPos = 0 Then Exit Do
+                                endPos = endPos + Len("</table>")
+                                result = Left(result, pos - 1) & Mid(result, endPos)
+                            Loop
+                            RemoveTables = result
+                        End Function
+
                         Do While Not rsDuy.EOF
                             Dim baslik, icerik, tarihVal
                             baslik = rsDuy("strd_baslik") & ""
@@ -1045,8 +1074,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                         textContent = ""
                                         imageContent = icerik
                                     End If
+
+                                    Dim tablesAlways
+                                    tablesAlways = ExtractTables(icerik)
+                                    If Len(tablesAlways) > 0 Then
+                                        textContent = RemoveTables(textContent)
+                                        imageContent = RemoveTables(imageContent)
+                                    End If
+
                                     Response.Write "<tr><td class='duyuru-icerik'>"
                                     If Trim(textContent) <> "" Then Response.Write textContent
+                                    If Len(tablesAlways) > 0 Then Response.Write tablesAlways
                                     If gorselleriGoster Then
                                         Response.Write imageContent
                                     Else

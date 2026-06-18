@@ -734,6 +734,35 @@ Response.Write "**********"
                             Response.End
                         End If
 
+                        Function ExtractTables(html)
+                            Dim result, pos, endPos, block, s
+                            s = html & ""
+                            result = ""
+                            Do While InStr(LCase(s), "<table") > 0
+                                pos = InStr(LCase(s), "<table")
+                                endPos = InStr(pos, LCase(s), "</table>")
+                                If endPos = 0 Then Exit Do
+                                endPos = endPos + Len("</table>")
+                                block = Mid(s, pos, endPos - pos)
+                                result = result & block
+                                s = Left(s, pos - 1) & Mid(s, endPos)
+                            Loop
+                            ExtractTables = result
+                        End Function
+
+                        Function RemoveTables(html)
+                            Dim result, pos, endPos
+                            result = html & ""
+                            Do While InStr(LCase(result), "<table") > 0
+                                pos = InStr(LCase(result), "<table")
+                                endPos = InStr(pos, LCase(result), "</table>")
+                                If endPos = 0 Then Exit Do
+                                endPos = endPos + Len("</table>")
+                                result = Left(result, pos - 1) & Mid(result, endPos)
+                            Loop
+                            RemoveTables = result
+                        End Function
+
                         If Not rsDuyuru.EOF Then
                             Do While Not rsDuyuru.EOF
                                 baslik = rsDuyuru("strd_baslik") & ""
@@ -817,8 +846,17 @@ Response.Write "**********"
                                             textContent = ""
                                             imageContent = icerik
                                         End If
+
+                                        Dim tablesAlways
+                                        tablesAlways = ExtractTables(icerik)
+                                        If Len(tablesAlways) > 0 Then
+                                            textContent = RemoveTables(textContent)
+                                            imageContent = RemoveTables(imageContent)
+                                        End If
+
                                         Response.Write "<tr><td class='duyuru-icerik'>"
                                         If Trim(textContent) <> "" Then Response.Write textContent
+                                        If Len(tablesAlways) > 0 Then Response.Write tablesAlways
                                         If gorselleriGoster Then
                                             Response.Write imageContent
                                         Else
