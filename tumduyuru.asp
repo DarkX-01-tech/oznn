@@ -3,11 +3,13 @@ session("ok") = false
 %>
 <!-- #include file="admin/database/Connection.asp" -->
 <!-- #include file="ayarlar.asp" -->
+<!DOCTYPE html>
+<html>
 <head>
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v14-db-html -->
+<!-- tablo-guncelleme-20260618-v15-font-duzeltme -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -89,6 +91,7 @@ session("ok") = false
     .duyuru-baslik:hover   { color:#850303; border-color:#343a40; }
 
     .duyuru-icerik {
+        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: 12px;
         color: #555;
         font-weight: 600;
@@ -102,6 +105,21 @@ session("ok") = false
     }
     .duyuru-icerik b,
     .duyuru-icerik strong  { font-weight: 800 !important; }
+
+    /* Tablo: ust sinifin kaba font etkisini kaldir, DB stillerini koru */
+    .duyuru-icerik table,
+    .duyuru-icerik table td,
+    .duyuru-icerik table th {
+        font-family: inherit;
+        font-weight: 400;
+        text-align: left;
+        text-shadow: none;
+        color: #555;
+    }
+    .duyuru-icerik table b,
+    .duyuru-icerik table strong {
+        font-weight: 600;
+    }
 
     .announcement-group.search-hidden {
         display: none !important;

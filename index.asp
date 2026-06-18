@@ -91,6 +91,7 @@
         .duyuru-baslik:hover { color: #850303; border-color: #343a40; }
 
         .duyuru-icerik {
+          font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           font-size: 12px;
           color: #555;
           font-weight: 600;
@@ -104,6 +105,20 @@
         }
         .duyuru-icerik b,
         .duyuru-icerik strong { font-weight: 800 !important; }
+
+        .duyuru-icerik table,
+        .duyuru-icerik table td,
+        .duyuru-icerik table th {
+          font-family: inherit;
+          font-weight: 400;
+          text-align: left;
+          text-shadow: none;
+          color: #555;
+        }
+        .duyuru-icerik table b,
+        .duyuru-icerik table strong {
+          font-weight: 600;
+        }
 
         .duyuru-tarih {
           font-size: 12px;
