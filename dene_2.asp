@@ -968,7 +968,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         Dim searchTerm
                         searchTerm = Trim(Request("q"))
 
-                        Dim sqld, rsDuy
+                        Dim sqld, rsDuy, imageCounter
+                        imageCounter = 0
                         Set rsDuy = Server.CreateObject("ADODB.RecordSet")
 
                         If searchTerm <> "" Then
