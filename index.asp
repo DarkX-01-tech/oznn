@@ -815,7 +815,9 @@ Response.Write "**********"
                                         Response.Write "</td></tr>"
                                     Else
                                         Response.Write "<tr><td class='duyuru-icerik'>"
-                                        If gorsellerKapaliMi And InStr(LCase(icerik), "<table") = 0 Then
+                                        If InStr(LCase(icerik), "<table") > 0 Then
+                                            Response.Write icerik
+                                        ElseIf gorsellerKapaliMi Then
                                             imageCounter = imageCounter + 1
                                             Dim linkId2, contentId2
                                             linkId2 = "imgLink" & imageCounter

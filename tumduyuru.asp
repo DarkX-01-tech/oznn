@@ -7,6 +7,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
+<!-- tablo-guncelleme-20260618 -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -103,14 +104,17 @@ session("ok") = false
     .duyuru-icerik strong  { font-weight: 800 !important; }
 
     .duyuru-icerik table {
-        width: 100%;
-        max-width: 100%;
-        border-collapse: collapse;
-        margin: 12px 0;
-        text-align: left;
-        font-weight: 400;
-        border: 1px solid #ddd;
-        table-layout: auto;
+        width: 100% !important;
+        max-width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 12px 0 !important;
+        text-align: left !important;
+        font-weight: 400 !important;
+        border: 1px solid #ddd !important;
+        table-layout: auto !important;
+        display: table !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     .duyuru-icerik table td,
     .duyuru-icerik table th {
@@ -1004,7 +1008,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                     Response.Write "</td></tr>"
                                 Else
                                     Response.Write "<tr><td class='duyuru-icerik'>"
-                                    If gorsellerKapaliMi And InStr(LCase(icerik), "<table") = 0 Then
+                                    If InStr(LCase(icerik), "<table") > 0 Then
+                                        Response.Write icerik
+                                    ElseIf gorsellerKapaliMi Then
                                         Dim linkId2, contentId2
                                         imageCounter = imageCounter + 1
                                         linkId2 = "imgLink" & imageCounter
