@@ -9,7 +9,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v19-v15-restore -->
+<!-- tablo-guncelleme-20260618-v20-toggle-arama -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -533,10 +533,17 @@ a:hover {
         opacity 0.25s ease,
         margin 0.25s ease;
 }
-.image-content.show,
-.image-content.search-open {
-    max-height: 1200px; /* gerekirse 1500 yapabilirsin */
+.image-content.show {
+    max-height: 1200px;
     opacity: 1;
+    margin: 10px 0 5px 0;
+}
+/* Arama esnasinda gecici acma - show ile karistirma */
+.image-content.search-open {
+    max-height: none !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+    display: block !important;
     margin: 10px 0 5px 0;
 }
 </style>
@@ -597,11 +604,7 @@ function getGroupSearchText(group) {
 function expandAnnouncementGroup(group) {
     if (!group) return;
     group.querySelectorAll('.image-content').forEach(function(box) {
-        box.classList.add('show', 'search-open');
-        box.style.maxHeight = 'none';
-        box.style.opacity = '1';
-        box.style.overflow = 'visible';
-        box.style.display = 'block';
+        box.classList.add('search-open');
         box.setAttribute('data-search-open', '1');
         var toggle = box.previousElementSibling;
         if (toggle && toggle.classList.contains('image-toggle-link')) {
@@ -617,12 +620,14 @@ function expandAnnouncementGroup(group) {
 
 function resetSearchExpanded() {
     document.querySelectorAll('.image-content[data-search-open]').forEach(function(box) {
-        box.classList.remove('show', 'search-open');
-        box.style.maxHeight = '';
-        box.style.opacity = '';
-        box.style.overflow = '';
-        box.style.display = '';
+        box.classList.remove('search-open');
         box.removeAttribute('data-search-open');
+        var toggle = box.previousElementSibling;
+        if (toggle && toggle.classList.contains('image-toggle-link')) {
+            if (!box.classList.contains('show')) {
+                toggle.classList.remove('active');
+            }
+        }
     });
     document.querySelectorAll('.duyuru-icerik table').forEach(function(tbl) {
         tbl.style.display = '';
@@ -641,6 +646,12 @@ function searchAnnouncements() {
 
     if (tokens.length === 0) {
         groups.forEach(function(g) { g.classList.remove('search-hidden'); });
+        document.querySelectorAll('.image-content:not(.show)').forEach(function(box) {
+            var toggle = box.previousElementSibling;
+            if (toggle && toggle.classList.contains('image-toggle-link')) {
+                toggle.classList.remove('active');
+            }
+        });
         if (noRow) noRow.style.display = 'none';
         return;
     }
@@ -964,12 +975,14 @@ function toggleImage(linkId, contentId) {
     var isOpen = content.classList.contains('show');
 
     if (isOpen) {
-        // Kapat
         content.classList.remove('show');
+        content.classList.remove('search-open');
+        content.removeAttribute('data-search-open');
         link.classList.remove('active');
     } else {
-        // Aç
         content.classList.add('show');
+        content.classList.remove('search-open');
+        content.removeAttribute('data-search-open');
         link.classList.add('active');
     }
 }
