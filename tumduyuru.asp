@@ -7,7 +7,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v24-tablo-index -->
+<!-- tablo-guncelleme-20260618-v25-db-html -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -102,64 +102,6 @@ session("ok") = false
     }
     .duyuru-icerik b,
     .duyuru-icerik strong  { font-weight: 800 !important; }
-
-    /* Tablo: index.asp (ANASAYFA) ile birebir ayni */
-    .duyuru-icerik table {
-        width: 100% !important;
-        max-width: 100% !important;
-        border-collapse: collapse !important;
-        margin: 12px 0 !important;
-        border: 1px solid #e5e5e5 !important;
-        text-align: left !important;
-        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-        font-size: 12px !important;
-        line-height: 1.6 !important;
-        font-weight: 400 !important;
-        color: #555 !important;
-        text-shadow: none !important;
-        background: #fff !important;
-        display: table !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
-    .duyuru-icerik table td,
-    .duyuru-icerik table th {
-        border: none !important;
-        border-bottom: 1px solid #e5e5e5 !important;
-        padding: 8px 12px !important;
-        text-align: left !important;
-        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-        font-size: 12px !important;
-        line-height: 1.6 !important;
-        font-weight: 400 !important;
-        color: #555 !important;
-        vertical-align: middle !important;
-        word-break: break-word !important;
-        text-shadow: none !important;
-        background-color: #ffffff !important;
-    }
-    .duyuru-icerik table tr:last-child td,
-    .duyuru-icerik table tr:last-child th {
-        border-bottom: none !important;
-    }
-    .duyuru-icerik table tr:first-child td,
-    .duyuru-icerik table tr:first-child th {
-        background-color: #f2f2f2 !important;
-        font-weight: 600 !important;
-        text-align: center !important;
-        border-bottom: 1px solid #e5e5e5 !important;
-    }
-    .duyuru-icerik table tr:not(:first-child) td:first-child {
-        font-weight: 600 !important;
-        width: 42% !important;
-    }
-    .duyuru-icerik table tr:not(:first-child) td:last-child {
-        font-weight: 400 !important;
-    }
-    .duyuru-icerik table b,
-    .duyuru-icerik table strong {
-        font-weight: 600 !important;
-    }
 
     .baslik b,
     .baslik strong,
