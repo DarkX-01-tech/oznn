@@ -7,7 +7,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v22-orijinal-taban -->
+<!-- tablo-guncelleme-20260618-v23-tablo-geri -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -89,8 +89,9 @@ session("ok") = false
     .duyuru-baslik:hover   { color:#850303; border-color:#343a40; }
 
     .duyuru-icerik {
+        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: 12px;
-        color: #555;    
+        color: #555;
         font-weight: 600;
         line-height: 1.6;
         margin-bottom: 10px;
@@ -102,6 +103,21 @@ session("ok") = false
     }
     .duyuru-icerik b,
     .duyuru-icerik strong  { font-weight: 800 !important; }
+
+    /* Tablo: ust sinifin kaba font etkisini kaldir, DB stillerini koru */
+    .duyuru-icerik table,
+    .duyuru-icerik table td,
+    .duyuru-icerik table th {
+        font-family: inherit;
+        font-weight: 400;
+        text-align: left;
+        text-shadow: none;
+        color: #555;
+    }
+    .duyuru-icerik table b,
+    .duyuru-icerik table strong {
+        font-weight: 600 !important;
+    }
 
     .baslik b,
     .baslik strong,
@@ -976,6 +992,44 @@ function toggleImage(linkId, contentId) {
 
                         rsDuy.Open sqld, conn, 1, 3
 
+                        Sub WriteGizlenebilirParca(parca, gorselleriGoster)
+                            Dim lid, cid
+                            If Len(Trim(parca & "")) = 0 Then Exit Sub
+                            If gorselleriGoster Or InStr(LCase(parca), "<img") = 0 Then
+                                Response.Write parca
+                            Else
+                                imageCounter = imageCounter + 1
+                                lid = "imgLink" & imageCounter
+                                cid = "imgContent" & imageCounter
+                                Response.Write "<div class='image-toggle-link' id='" & lid & "' onclick=""toggleImage('" & lid & "', '" & cid & "')"">"
+                                Response.Write "Görseli Açmak İçin Tıklayınız"
+                                Response.Write "</div>"
+                                Response.Write "<div class='image-content' id='" & cid & "'>"
+                                Response.Write parca
+                                Response.Write "</div>"
+                            End If
+                        End Sub
+
+                        Sub WriteIcerikTablolariAcik(html, gorselleriGoster)
+                            Dim kalan, tblPos, tblEnd, parca, tablo
+                            kalan = html & ""
+                            Do While InStr(LCase(kalan), "<table") > 0
+                                tblPos = InStr(LCase(kalan), "<table")
+                                parca = Left(kalan, tblPos - 1)
+                                Call WriteGizlenebilirParca(parca, gorselleriGoster)
+                                kalan = Mid(kalan, tblPos)
+                                tblEnd = InStr(LCase(kalan), "</table>")
+                                If tblEnd = 0 Then
+                                    Response.Write kalan
+                                    Exit Sub
+                                End If
+                                tablo = Left(kalan, tblEnd + Len("</table>") - 1)
+                                Response.Write tablo
+                                kalan = Mid(kalan, tblEnd + Len("</table>"))
+                            Loop
+                            Call WriteGizlenebilirParca(kalan, gorselleriGoster)
+                        End Sub
+
                         Do While Not rsDuy.EOF
                             Dim baslik, icerik, tarihVal
                             baslik = rsDuy("strd_baslik") & ""
@@ -1092,36 +1146,35 @@ End If
 ' ================================================================                    
                             
 If Trim(icerik) <> "" Then
-    ' İçerikte resim var mı? 
-    If InStr(LCase(icerik), "<img") > 0 Then
-        Dim linkId, contentId, textContent, imageContent, imgPos
-        imageCounter = imageCounter + 1
+    Dim icerikHtml, linkId, contentId, imgPos
+    icerikHtml = icerik
 
-        linkId = "imgLink" & imageCounter
-        contentId = "imgContent" & imageCounter
-
-        imgPos = InStr(LCase(icerik), "<img")
+    ' İçerikte resim var mı?
+    If InStr(LCase(icerikHtml), "<img") > 0 Then
+        Dim textContent, imageContent
+        imgPos = InStr(LCase(icerikHtml), "<img")
 
         If imgPos > 1 Then
-            textContent = Left(icerik, imgPos - 1)
-            imageContent = Mid(icerik, imgPos)
+            textContent = Left(icerikHtml, imgPos - 1)
+            imageContent = Mid(icerikHtml, imgPos)
         Else
             textContent = ""
-            imageContent = icerik
+            imageContent = icerikHtml
         End If
 
         Response.Write "<tr>"
         Response.Write " <td class='duyuru-icerik'>"
 
-' Metin kısmını her zaman göster
         If Trim(textContent) <> "" Then
-            Response.Write textContent
+            Call WriteIcerikTablolariAcik(textContent, gorselleriGoster)
         End If
 
-        ' ========== SADECE GÖRSEL İÇİN KONTROL ==========
         If gorselleriGoster Then
             Response.Write imageContent
         Else
+            imageCounter = imageCounter + 1
+            linkId = "imgLink" & imageCounter
+            contentId = "imgContent" & imageCounter
             Response.Write "<div class='image-toggle-link' id='" & linkId & "' onclick=""toggleImage('" & linkId & "', '" & contentId & "')"">"
             Response.Write "Görseli Açmak İçin Tıklayınız"
             Response.Write "</div>"
@@ -1129,23 +1182,22 @@ If Trim(icerik) <> "" Then
             Response.Write imageContent
             Response.Write "</div>"
         End If
-        ' ==================================================
 
         Response.Write " </td>"
         Response.Write "</tr>"
 Else
         Response.Write "<tr><td class='duyuru-icerik'>"
-        If gorsellerKapaliMi Then
-            Dim linkId2, contentId2
+        If gorsellerKapaliMi And InStr(LCase(icerikHtml), "<table") = 0 Then
             imageCounter = imageCounter + 1
+            Dim linkId2, contentId2
             linkId2 = "imgLink" & imageCounter
             contentId2 = "imgContent" & imageCounter
             Response.Write "<div class='image-toggle-link' id='" & linkId2 & "' onclick=""toggleImage('" & linkId2 & "', '" & contentId2 & "')"">"
             Response.Write "İçeriği Açmak İçin Tıklayınız"
             Response.Write "</div>"
-            Response.Write "<div class='image-content' id='" & contentId2 & "'>" & icerik & "</div>"
+            Response.Write "<div class='image-content' id='" & contentId2 & "'>" & icerikHtml & "</div>"
         Else
-            Response.Write icerik
+            Call WriteIcerikTablolariAcik(icerikHtml, gorselleriGoster)
         End If
         Response.Write "</td></tr>"
     End If
