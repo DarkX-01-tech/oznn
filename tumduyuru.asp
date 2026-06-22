@@ -7,7 +7,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v17-orijinal-tabanli -->
+<!-- tablo-guncelleme-20260618-v18-tablo-font -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -89,7 +89,6 @@ session("ok") = false
     .duyuru-baslik:hover   { color:#850303; border-color:#343a40; }
 
     .duyuru-icerik {
-        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: 12px;
         color: #555;    
         font-weight: 600;
@@ -104,19 +103,32 @@ session("ok") = false
     .duyuru-icerik b,
     .duyuru-icerik strong  { font-weight: 800 !important; }
 
-    /* Tablo: ust sinifin kaba font etkisini kaldir, DB HTML stillerini koru */
-    .duyuru-icerik table,
+    /* Tablo: index.asp ile ayni - 800!important tabloya yansimasin */
+    .duyuru-icerik table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0;
+        font-size: 12px;
+        line-height: 1.6;
+        font-weight: 400 !important;
+        text-align: left !important;
+        text-shadow: none !important;
+        color: #555;
+    }
     .duyuru-icerik table td,
     .duyuru-icerik table th {
-        font-family: inherit;
-        font-weight: 400;
-        text-align: left;
-        text-shadow: none;
+        font-size: 12px;
+        line-height: 1.6;
+        font-weight: 400 !important;
+        text-align: left !important;
+        text-shadow: none !important;
         color: #555;
+        vertical-align: top;
+        padding: 8px 10px;
     }
     .duyuru-icerik table b,
     .duyuru-icerik table strong {
-        font-weight: 600;
+        font-weight: 600 !important;
     }
 
     .announcement-group.search-hidden {
