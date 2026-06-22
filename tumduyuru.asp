@@ -3,13 +3,11 @@ session("ok") = false
 %>
 <!-- #include file="admin/database/Connection.asp" -->
 <!-- #include file="ayarlar.asp" -->
-<!DOCTYPE html>
-<html>
 <head>
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v21-3gun-toggle -->
+<!-- tablo-guncelleme-20260618-v22-orijinal-taban -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -91,9 +89,8 @@ session("ok") = false
     .duyuru-baslik:hover   { color:#850303; border-color:#343a40; }
 
     .duyuru-icerik {
-        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: 12px;
-        color: #555;
+        color: #555;    
         font-weight: 600;
         line-height: 1.6;
         margin-bottom: 10px;
@@ -105,25 +102,6 @@ session("ok") = false
     }
     .duyuru-icerik b,
     .duyuru-icerik strong  { font-weight: 800 !important; }
-
-    /* Tablo: ust sinifin kaba font etkisini kaldir, DB stillerini koru */
-    .duyuru-icerik table,
-    .duyuru-icerik table td,
-    .duyuru-icerik table th {
-        font-family: inherit;
-        font-weight: 400;
-        text-align: left;
-        text-shadow: none;
-        color: #555;
-    }
-    .duyuru-icerik table b,
-    .duyuru-icerik table strong {
-        font-weight: 600 !important;
-    }
-
-    .announcement-group.search-hidden {
-        display: none !important;
-    }
 
     .baslik b,
     .baslik strong,
@@ -219,6 +197,9 @@ a:hover {
         text-align: left;
         padding: 10px;
         background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
     .duyuru-container::-webkit-scrollbar        { width:6px; }
     .duyuru-container::-webkit-scrollbar-track  { background:#ffffff; }
@@ -534,16 +515,8 @@ a:hover {
         margin 0.25s ease;
 }
 .image-content.show {
-    max-height: 1200px;
+    max-height: 1200px; /* gerekirse 1500 yapabilirsin */
     opacity: 1;
-    margin: 10px 0 5px 0;
-}
-/* Arama esnasinda gecici acma - show ile karistirma */
-.image-content.search-open {
-    max-height: none !important;
-    opacity: 1 !important;
-    overflow: visible !important;
-    display: block !important;
     margin: 10px 0 5px 0;
 }
 </style>
@@ -579,97 +552,37 @@ function normalize(txt) {
         .replace(/[^\w\s]/g, '');
 }
 function debounce(fn, delay) {
-    var t;
-    return function() {
-        clearTimeout(t);
-        var args = arguments;
-        var ctx = this;
-        t = setTimeout(function() { fn.apply(ctx, args); }, delay);
-    };
-}
-
-function stripHtml(html) {
-    return (html || '').replace(/<[^>]+>/g, ' ');
-}
-
-function getGroupSearchText(group) {
-    var text = '';
-    group.querySelectorAll('.duyuru-baslik, .duyuru-icerik').forEach(function(el) {
-        if (el.innerText) text += ' ' + el.innerText;
-        el.querySelectorAll('.image-content').forEach(function(box) {
-            if (box.innerHTML) text += ' ' + stripHtml(box.innerHTML);
-        });
-    });
-    return normalize(text);
-}
-
-function expandAnnouncementGroup(group) {
-    if (!group) return;
-    group.querySelectorAll('.image-content').forEach(function(box) {
-        box.classList.add('search-open');
-        box.setAttribute('data-search-open', '1');
-        var toggle = box.previousElementSibling;
-        if (toggle && toggle.classList.contains('image-toggle-link')) {
-            toggle.classList.add('active');
-        }
-    });
-    group.querySelectorAll('table').forEach(function(tbl) {
-        tbl.style.display = 'table';
-        tbl.style.visibility = 'visible';
-        tbl.style.opacity = '1';
-    });
-}
-
-function resetSearchExpanded() {
-    document.querySelectorAll('.image-content[data-search-open]').forEach(function(box) {
-        box.classList.remove('search-open');
-        box.removeAttribute('data-search-open');
-        var toggle = box.previousElementSibling;
-        if (toggle && toggle.classList.contains('image-toggle-link')) {
-            if (!box.classList.contains('show')) {
-                toggle.classList.remove('active');
-            }
-        }
-    });
-    document.querySelectorAll('.duyuru-icerik table').forEach(function(tbl) {
-        tbl.style.display = '';
-        tbl.style.visibility = '';
-        tbl.style.opacity = '';
-    });
+    let t; return function() { clearTimeout(t); t = setTimeout(() => fn.apply(this, arguments), delay); };
 }
 
 function searchAnnouncements() {
-    var raw = document.getElementById('search-bar').value.trim();
-    var tokens = normalize(raw).split(/\s+/).filter(Boolean);
-    var groups = document.querySelectorAll('.announcement-group');
-    var noRow = document.getElementById('noMatchesRow');
-
-    resetSearchExpanded();
+    const raw     = document.getElementById('search-bar').value.trim();
+    const tokens  = normalize(raw).split(/\s+/).filter(Boolean);
+    const rows    = document.querySelectorAll('.announcements-table tr');
+    const noRow   = document.getElementById('noMatchesRow');
 
     if (tokens.length === 0) {
-        groups.forEach(function(g) { g.classList.remove('search-hidden'); });
-        document.querySelectorAll('.image-content:not(.show)').forEach(function(box) {
-            var toggle = box.previousElementSibling;
-            if (toggle && toggle.classList.contains('image-toggle-link')) {
-                toggle.classList.remove('active');
-            }
-        });
+        rows.forEach(r => r.style.display = 'table-row');
         if (noRow) noRow.style.display = 'none';
         return;
     }
 
-    var matchFound = false;
+    rows.forEach(r => r.style.display = 'none');
 
-    groups.forEach(function(group) {
-        var combo = getGroupSearchText(group);
-        var hit = tokens.every(function(tok) { return combo.indexOf(tok) !== -1; });
+    let matchFound = false;
+
+    document.querySelectorAll('.duyuru-baslik').forEach(td => {
+        const trBaslik = td.parentElement;
+        const trIcerik = trBaslik.nextElementSibling;
+        const trTarih  = trIcerik ? trIcerik.nextElementSibling : null;
+
+        const combo    = normalize(td.innerText + ' ' + (trIcerik?.innerText || ''));
+
+        const hit      = tokens.every(tok => combo.includes(tok));
 
         if (hit) {
-            group.classList.remove('search-hidden');
-            expandAnnouncementGroup(group);
+            [trBaslik, trIcerik, trTarih].forEach(r => { if (r) r.style.display = 'table-row'; });
             matchFound = true;
-        } else {
-            group.classList.add('search-hidden');
         }
     });
 
@@ -677,11 +590,7 @@ function searchAnnouncements() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    var searchBar = document.getElementById('search-bar');
-    if (searchBar) {
-        searchBar.addEventListener('keyup', debounce(searchAnnouncements, 300));
-        searchBar.addEventListener('input', debounce(searchAnnouncements, 300));
-    }
+    document.getElementById('search-bar').addEventListener('keyup', debounce(searchAnnouncements, 300));
 });
 </script>
 
@@ -977,14 +886,12 @@ function toggleImage(linkId, contentId) {
     var isOpen = content.classList.contains('show');
 
     if (isOpen) {
+        // Kapat
         content.classList.remove('show');
-        content.classList.remove('search-open');
-        content.removeAttribute('data-search-open');
         link.classList.remove('active');
     } else {
+        // Aç
         content.classList.add('show');
-        content.classList.remove('search-open');
-        content.removeAttribute('data-search-open');
         link.classList.add('active');
     }
 }
@@ -1069,44 +976,6 @@ function toggleImage(linkId, contentId) {
 
                         rsDuy.Open sqld, conn, 1, 3
 
-                        Sub WriteGizlenebilirParca(parca, gorselleriGoster)
-                            Dim lid, cid
-                            If Len(Trim(parca & "")) = 0 Then Exit Sub
-                            If gorselleriGoster Or InStr(LCase(parca), "<img") = 0 Then
-                                Response.Write parca
-                            Else
-                                imageCounter = imageCounter + 1
-                                lid = "imgLink" & imageCounter
-                                cid = "imgContent" & imageCounter
-                                Response.Write "<div class='image-toggle-link' id='" & lid & "' onclick=""toggleImage('" & lid & "', '" & cid & "')"">"
-                                Response.Write "Görseli Açmak İçin Tıklayınız"
-                                Response.Write "</div>"
-                                Response.Write "<div class='image-content' id='" & cid & "'>"
-                                Response.Write parca
-                                Response.Write "</div>"
-                            End If
-                        End Sub
-
-                        Sub WriteIcerikTablolariAcik(html, gorselleriGoster)
-                            Dim kalan, tblPos, tblEnd, parca, tablo
-                            kalan = html & ""
-                            Do While InStr(LCase(kalan), "<table") > 0
-                                tblPos = InStr(LCase(kalan), "<table")
-                                parca = Left(kalan, tblPos - 1)
-                                Call WriteGizlenebilirParca(parca, gorselleriGoster)
-                                kalan = Mid(kalan, tblPos)
-                                tblEnd = InStr(LCase(kalan), "</table>")
-                                If tblEnd = 0 Then
-                                    Response.Write kalan
-                                    Exit Sub
-                                End If
-                                tablo = Left(kalan, tblEnd + Len("</table>") - 1)
-                                Response.Write tablo
-                                kalan = Mid(kalan, tblEnd + Len("</table>"))
-                            Loop
-                            Call WriteGizlenebilirParca(kalan, gorselleriGoster)
-                        End Sub
-
                         Do While Not rsDuy.EOF
                             Dim baslik, icerik, tarihVal
                             baslik = rsDuy("strd_baslik") & ""
@@ -1117,8 +986,6 @@ function toggleImage(linkId, contentId) {
                             Else
                                 tarihVal = ""
                             End If
-
-                            Response.Write "<tbody class=""announcement-group"">"
 
                             If Trim(baslik) <> "" Then
                                 Response.Write "<tr>"
@@ -1184,6 +1051,11 @@ End If
 
 ' Artık icerik yerine tumIcerik kullanacağız
 icerik = tumIcerik
+icerik = Replace(icerik, "&lt;table", "<table", 1, -1, vbTextCompare)
+icerik = Replace(icerik, "&lt;/table>", "</table>", 1, -1, vbTextCompare)
+icerik = Replace(icerik, "&lt;tr", "<tr", 1, -1, vbTextCompare)
+icerik = Replace(icerik, "&lt;td", "<td", 1, -1, vbTextCompare)
+icerik = Replace(icerik, "&lt;th", "<th", 1, -1, vbTextCompare)
 
 ' ========== 3 GÜN + ÖZEL GÜN + GÖRSELLER KAPALI KONTROLÜ ==========
 Dim yayinTarihi, gunFarki, gorselleriGoster, ozelGunMu, gorsellerKapaliMi
@@ -1214,48 +1086,42 @@ If gorsellerKapaliMi Then
     gorselleriGoster = False
 ElseIf ozelGunMu Then
     gorselleriGoster = True
-ElseIf gunFarki < 3 Then
-    gorselleriGoster = True
 Else
-    gorselleriGoster = False
+    gorselleriGoster = (gunFarki < 3)
 End If
 ' ================================================================                    
                             
 If Trim(icerik) <> "" Then
-    Dim icerikHtml, linkId, contentId, imgPos
-    icerikHtml = icerik
-    icerikHtml = Replace(icerikHtml, "&lt;table", "<table", 1, -1, vbTextCompare)
-    icerikHtml = Replace(icerikHtml, "&lt;/table>", "</table>", 1, -1, vbTextCompare)
-    icerikHtml = Replace(icerikHtml, "&lt;tr", "<tr", 1, -1, vbTextCompare)
-    icerikHtml = Replace(icerikHtml, "&lt;td", "<td", 1, -1, vbTextCompare)
-    icerikHtml = Replace(icerikHtml, "&lt;th", "<th", 1, -1, vbTextCompare)
+    ' İçerikte resim var mı? 
+    If InStr(LCase(icerik), "<img") > 0 Then
+        Dim linkId, contentId, textContent, imageContent, imgPos
+        imageCounter = imageCounter + 1
 
-    ' İçerikte resim var mı?
-    If InStr(LCase(icerikHtml), "<img") > 0 Then
-        Dim textContent, imageContent
-        imgPos = InStr(LCase(icerikHtml), "<img")
+        linkId = "imgLink" & imageCounter
+        contentId = "imgContent" & imageCounter
+
+        imgPos = InStr(LCase(icerik), "<img")
 
         If imgPos > 1 Then
-            textContent = Left(icerikHtml, imgPos - 1)
-            imageContent = Mid(icerikHtml, imgPos)
+            textContent = Left(icerik, imgPos - 1)
+            imageContent = Mid(icerik, imgPos)
         Else
             textContent = ""
-            imageContent = icerikHtml
+            imageContent = icerik
         End If
 
         Response.Write "<tr>"
         Response.Write " <td class='duyuru-icerik'>"
 
+' Metin kısmını her zaman göster
         If Trim(textContent) <> "" Then
-            Call WriteIcerikTablolariAcik(textContent, gorselleriGoster)
+            Response.Write textContent
         End If
 
+        ' ========== SADECE GÖRSEL İÇİN KONTROL ==========
         If gorselleriGoster Then
             Response.Write imageContent
         Else
-            imageCounter = imageCounter + 1
-            linkId = "imgLink" & imageCounter
-            contentId = "imgContent" & imageCounter
             Response.Write "<div class='image-toggle-link' id='" & linkId & "' onclick=""toggleImage('" & linkId & "', '" & contentId & "')"">"
             Response.Write "Görseli Açmak İçin Tıklayınız"
             Response.Write "</div>"
@@ -1263,22 +1129,23 @@ If Trim(icerik) <> "" Then
             Response.Write imageContent
             Response.Write "</div>"
         End If
+        ' ==================================================
 
         Response.Write " </td>"
         Response.Write "</tr>"
 Else
         Response.Write "<tr><td class='duyuru-icerik'>"
-        If gorsellerKapaliMi And InStr(LCase(icerikHtml), "<table") = 0 Then
-            imageCounter = imageCounter + 1
+        If gorsellerKapaliMi Then
             Dim linkId2, contentId2
+            imageCounter = imageCounter + 1
             linkId2 = "imgLink" & imageCounter
             contentId2 = "imgContent" & imageCounter
             Response.Write "<div class='image-toggle-link' id='" & linkId2 & "' onclick=""toggleImage('" & linkId2 & "', '" & contentId2 & "')"">"
             Response.Write "İçeriği Açmak İçin Tıklayınız"
             Response.Write "</div>"
-            Response.Write "<div class='image-content' id='" & contentId2 & "'>" & icerikHtml & "</div>"
+            Response.Write "<div class='image-content' id='" & contentId2 & "'>" & icerik & "</div>"
         Else
-            Call WriteIcerikTablolariAcik(icerikHtml, gorselleriGoster)
+            Response.Write icerik
         End If
         Response.Write "</td></tr>"
     End If
@@ -1296,8 +1163,6 @@ End If
                             Else
                                 Response.Write "<tr><td style='height:5px;'></td></tr>"
                             End If
-
-                            Response.Write "</tbody>"
 
                             rsDuy.MoveNext
                         Loop
