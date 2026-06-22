@@ -118,33 +118,6 @@
           font-weight: 800 !important;
         }
 
-        .duyuru-icerik table {
-          width: 100%;
-          border-collapse: collapse;
-          margin: 12px 0;
-          font-size: 12px;
-          line-height: 1.6;
-          font-weight: 400 !important;
-          text-align: left !important;
-          text-shadow: none !important;
-          color: #555;
-        }
-        .duyuru-icerik table td,
-        .duyuru-icerik table th {
-          font-size: 12px;
-          line-height: 1.6;
-          font-weight: 400 !important;
-          text-align: left !important;
-          text-shadow: none !important;
-          color: #555;
-          vertical-align: top;
-          padding: 8px 10px;
-        }
-        .duyuru-icerik table b,
-        .duyuru-icerik table strong {
-          font-weight: 600 !important;
-        }
-
         .duyuru-tarih {
           font-size: 12px;
           color: #888;
