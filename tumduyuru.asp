@@ -9,7 +9,7 @@ session("ok") = false
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v20-toggle-arama -->
+<!-- tablo-guncelleme-20260618-v21-3gun-toggle -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -594,9 +594,11 @@ function stripHtml(html) {
 
 function getGroupSearchText(group) {
     var text = '';
-    if (group.innerText) text += ' ' + group.innerText;
-    group.querySelectorAll('.duyuru-icerik').forEach(function(cell) {
-        if (cell.innerHTML) text += ' ' + stripHtml(cell.innerHTML);
+    group.querySelectorAll('.duyuru-baslik, .duyuru-icerik').forEach(function(el) {
+        if (el.innerText) text += ' ' + el.innerText;
+        el.querySelectorAll('.image-content').forEach(function(box) {
+            if (box.innerHTML) text += ' ' + stripHtml(box.innerHTML);
+        });
     });
     return normalize(text);
 }
@@ -1212,8 +1214,10 @@ If gorsellerKapaliMi Then
     gorselleriGoster = False
 ElseIf ozelGunMu Then
     gorselleriGoster = True
+ElseIf gunFarki < 3 Then
+    gorselleriGoster = True
 Else
-    gorselleriGoster = (gunFarki < 3)
+    gorselleriGoster = False
 End If
 ' ================================================================                    
                             
@@ -1226,20 +1230,39 @@ If Trim(icerik) <> "" Then
     icerikHtml = Replace(icerikHtml, "&lt;td", "<td", 1, -1, vbTextCompare)
     icerikHtml = Replace(icerikHtml, "&lt;th", "<th", 1, -1, vbTextCompare)
 
-    ' İçerikte resim var mı? 
+    ' İçerikte resim var mı?
     If InStr(LCase(icerikHtml), "<img") > 0 Then
-        linkId = "imgLink" & imageCounter
-        contentId = "imgContent" & imageCounter
+        Dim textContent, imageContent
         imgPos = InStr(LCase(icerikHtml), "<img")
+
+        If imgPos > 1 Then
+            textContent = Left(icerikHtml, imgPos - 1)
+            imageContent = Mid(icerikHtml, imgPos)
+        Else
+            textContent = ""
+            imageContent = icerikHtml
+        End If
 
         Response.Write "<tr>"
         Response.Write " <td class='duyuru-icerik'>"
 
-        If imgPos > 1 Then
-            Response.Write Left(icerikHtml, imgPos - 1)
+        If Trim(textContent) <> "" Then
+            Call WriteIcerikTablolariAcik(textContent, gorselleriGoster)
         End If
 
-        Call WriteIcerikTablolariAcik(Mid(icerikHtml, imgPos), gorselleriGoster)
+        If gorselleriGoster Then
+            Response.Write imageContent
+        Else
+            imageCounter = imageCounter + 1
+            linkId = "imgLink" & imageCounter
+            contentId = "imgContent" & imageCounter
+            Response.Write "<div class='image-toggle-link' id='" & linkId & "' onclick=""toggleImage('" & linkId & "', '" & contentId & "')"">"
+            Response.Write "Görseli Açmak İçin Tıklayınız"
+            Response.Write "</div>"
+            Response.Write "<div class='image-content' id='" & contentId & "'>"
+            Response.Write imageContent
+            Response.Write "</div>"
+        End If
 
         Response.Write " </td>"
         Response.Write "</tr>"
