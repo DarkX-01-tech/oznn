@@ -5,9 +5,9 @@ session("ok") = false
 <!-- #include file="ayarlar.asp" -->
 <head>
 <meta http-equiv="Content-Language" content="tr">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v27-geri-duzelt -->
+<!-- tablo-guncelleme-20260618-v28-index-tablo-css -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -102,6 +102,64 @@ session("ok") = false
     }
     .duyuru-icerik b,
     .duyuru-icerik strong  { font-weight: 800 !important; }
+
+    /* Tablo: index.asp ANASAYFA ile ayni (git 0b34ffa) */
+    .duyuru-icerik table {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 12px 0 !important;
+        border: 1px solid #e5e5e5 !important;
+        text-align: left !important;
+        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        font-size: 12px !important;
+        line-height: 1.6 !important;
+        font-weight: 400 !important;
+        color: #555 !important;
+        text-shadow: none !important;
+        background: #fff !important;
+        display: table !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    .duyuru-icerik table td,
+    .duyuru-icerik table th {
+        border: none !important;
+        border-bottom: 1px solid #e5e5e5 !important;
+        padding: 8px 12px !important;
+        text-align: left !important;
+        font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        font-size: 12px !important;
+        line-height: 1.6 !important;
+        font-weight: 400 !important;
+        color: #555 !important;
+        vertical-align: middle !important;
+        word-break: break-word !important;
+        text-shadow: none !important;
+        background-color: #ffffff !important;
+    }
+    .duyuru-icerik table tr:last-child td,
+    .duyuru-icerik table tr:last-child th {
+        border-bottom: none !important;
+    }
+    .duyuru-icerik table tr:first-child td,
+    .duyuru-icerik table tr:first-child th {
+        background-color: #f2f2f2 !important;
+        font-weight: 600 !important;
+        text-align: center !important;
+        border-bottom: 1px solid #e5e5e5 !important;
+    }
+    .duyuru-icerik table tr:not(:first-child) td:first-child {
+        font-weight: 600 !important;
+        width: 42% !important;
+    }
+    .duyuru-icerik table tr:not(:first-child) td:last-child {
+        font-weight: 400 !important;
+    }
+    .duyuru-icerik table b,
+    .duyuru-icerik table strong {
+        font-weight: 600 !important;
+    }
 
     .baslik b,
     .baslik strong,
@@ -1089,11 +1147,9 @@ End If
 
 ' Artık icerik yerine tumIcerik kullanacağız
 icerik = tumIcerik
-icerik = Replace(icerik, "&lt;table", "<table", 1, -1, vbTextCompare)
-icerik = Replace(icerik, "&lt;/table>", "</table>", 1, -1, vbTextCompare)
-icerik = Replace(icerik, "&lt;tr", "<tr", 1, -1, vbTextCompare)
-icerik = Replace(icerik, "&lt;td", "<td", 1, -1, vbTextCompare)
-icerik = Replace(icerik, "&lt;th", "<th", 1, -1, vbTextCompare)
+If InStr(icerik, "&lt;table") > 0 Then
+    icerik = Server.HTMLDecode(icerik)
+End If
 
 ' ========== 3 GÜN + ÖZEL GÜN + GÖRSELLER KAPALI KONTROLÜ ==========
 Dim yayinTarihi, gunFarki, gorselleriGoster, ozelGunMu, gorsellerKapaliMi
