@@ -3,13 +3,11 @@ session("ok") = false
 %>
 <!-- #include file="admin/database/Connection.asp" -->
 <!-- #include file="ayarlar.asp" -->
-<!DOCTYPE html>
-<html>
 <head>
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
 <title>MÜ Pendik E.A.H. Portal</title>
-<!-- tablo-guncelleme-20260618-v16-navbar-bosluk -->
+<!-- tablo-guncelleme-20260618-v17-orijinal-tabanli -->
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 
 <style type="text/css">
@@ -53,21 +51,16 @@ session("ok") = false
         box-shadow: 0 12px 24px rgba(0,0,0,0.3);
     }
 
-    #Table_01 img {
-        display: block;
-        border: 0;
-    }
-
     .baslik {
         font-size: 24px;
         color: #850303;
         text-align: center;
-        margin: -10px 0;
-        font-weight: 800;
+        margin: 25px 0;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 1px;
-        padding: 10px 0;
-        text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+        padding-bottom: 12px;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.3); 
         transition: color 0.3s, border-color 0.3s;
     }
     .baslik:hover          { color:#343a40; border-color:#c70039; }
@@ -77,7 +70,9 @@ session("ok") = false
         width: 725px;
         height: 2px;
         background-color: #343a40;
-        margin: 0 auto;
+        margin-top: 15px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .duyuru-baslik {
@@ -96,7 +91,7 @@ session("ok") = false
     .duyuru-icerik {
         font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         font-size: 12px;
-        color: #555;
+        color: #555;    
         font-weight: 600;
         line-height: 1.6;
         margin-bottom: 10px;
@@ -109,7 +104,7 @@ session("ok") = false
     .duyuru-icerik b,
     .duyuru-icerik strong  { font-weight: 800 !important; }
 
-    /* Tablo: ust sinifin kaba font etkisini kaldir, DB stillerini koru */
+    /* Tablo: ust sinifin kaba font etkisini kaldir, DB HTML stillerini koru */
     .duyuru-icerik table,
     .duyuru-icerik table td,
     .duyuru-icerik table th {
@@ -128,8 +123,10 @@ session("ok") = false
         display: none !important;
     }
 
-    .baslik b, .baslik strong,
-    .duyuru-baslik b, .duyuru-baslik strong { font-weight: inherit !important; }
+    .baslik b,
+    .baslik strong,
+    .duyuru-baslik b,
+    .duyuru-baslik strong { font-weight: inherit !important; }
 
     .duyuru-tarih {
         font-size: 12px;
@@ -210,72 +207,6 @@ a:hover {
     }
     #apDiv1:hover        { background:rgba(255,255,255,1); box-shadow:0 4px 8px rgba(0,0,0,0.4); }
 
-    .navbar {
-        width: 100%;
-        background-color: #ffffff;
-        border-bottom: 1px solid #ddd;
-        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        padding-top: 10px;
-        padding-bottom: 10px;
-        box-sizing: border-box;
-        text-align: center;
-    }
-    .navbar ul {
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        display: inline-block;
-    }
-    .navbar > ul > li {
-        position: relative;
-        display: inline-block;
-        margin-right: 15px;
-    }
-    .navbar > ul > li:last-child {
-        margin-right: 0;
-    }
-    .navbar > ul > li > a {
-        position: relative;
-        display: block;
-        padding: 8px 16px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #fff;
-        background: #25abb9;
-        border: none;
-        border-radius: 15px;
-        cursor: pointer;
-        overflow: hidden;
-        transition: background 0.3s ease, transform 0.2s ease;
-        text-decoration: none;
-        box-shadow: 0 4px 8px rgba(37,171,185,0.3);
-    }
-    .navbar > ul > li > a::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 200%;
-        height: 200%;
-        background: rgba(255,255,255,0.15);
-        transform: translate(-50%, -50%) rotate(45deg);
-        transition: all 0.75s ease;
-    }
-    .navbar > ul > li > a:hover::before {
-        width: 0;
-        height: 0;
-        opacity: 0;
-    }
-    .navbar > ul > li > a:hover {
-        background: #1e8c99;
-        transform: translateY(-1px);
-        box-shadow: 0 6px 12px rgba(30,140,153,0.5);
-    }
-    .navbar > ul > li > a:active {
-        transform: translateY(0);
-        box-shadow: 0 2px 4px rgba(37,171,185,0.3);
-    }
-
     .duyuru-container {
         max-height: 1220px;
         overflow-y: auto;
@@ -286,6 +217,9 @@ a:hover {
         text-align: left;
         padding: 10px;
         background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
     .duyuru-container::-webkit-scrollbar        { width:6px; }
     .duyuru-container::-webkit-scrollbar-track  { background:#ffffff; }
@@ -301,7 +235,12 @@ a:hover {
         padding: 25px 0;
     }
 
-    .image-wrapper { position: relative; display: block; margin: 10px 0; }
+    .image-wrapper {
+        position: relative;
+        display: block;
+        margin: 10px 0;
+    }
+
     .image-tooltip {
         position: absolute;
         bottom: 20px;
@@ -362,13 +301,19 @@ a:hover {
         display: none;
         position: fixed;
         z-index: 10000;
-        left: 0; top: 0;
-        width: 100%; height: 100%;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
         background-color: rgba(0, 0, 0, 0.92);
         opacity: 0;
         transition: opacity 0.3s ease;
     }
-    .image-modal.show { opacity: 1; }
+
+    .image-modal.show {
+        opacity: 1;
+    }
+
     .modal-content {
         margin: auto;
         display: block;
@@ -392,10 +337,12 @@ a:hover {
     .modal-content.zoomed {
         cursor: move;
     }
+
     .image-modal.show .modal-content {
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
     }
+
     .modal-close {
         position: absolute;
         top: 20px;
@@ -441,8 +388,15 @@ a:hover {
         justify-content: center;
         border: 2px solid rgba(255,255,255,0.2);
     }
-    .modal-next { right: 25px; }
-    .modal-prev { left: 25px; }
+
+    .modal-next {
+        right: 25px;
+    }
+
+    .modal-prev {
+        left: 25px;
+    }
+
     .modal-prev:hover, .modal-next:hover {
         background: rgba(37, 171, 185, 1);
         transform: scale(1.1);
@@ -543,12 +497,14 @@ a:hover {
         transition: opacity 0.3s ease;
         pointer-events: none;
     }
-    .zoom-indicator.show { opacity: 1; }
 
+    .zoom-indicator.show {
+        opacity: 1;
+    }
     /* --- Resim aç / kapa butonu --- */
 .image-toggle-link {
   display: inline-block;
-  color: #1e8b99;
+  color: #1e8b99;  /* ‹ YENİ: Daha koyu */
   font-size: 13px;
   font-weight: 600;
   margin: 8px 0;
@@ -556,13 +512,13 @@ a:hover {
   cursor: pointer;
   user-select: none;
   transition: all 0.2s ease;
-  border-left: 3px solid #1e8b99;
+  border-left: 3px solid #1e8b99;  /* ‹ YENİ: Koyu kenarlık */
   background: linear-gradient(90deg, rgba(30,139,153,0.12) 0%, transparent 100%);
   border-radius: 0 6px 6px 0;
 }
 
 .image-toggle-link:hover {
-  color: #0d5f6b;
+  color: #0d5f6b;  /* ‹ YENİ: Çok koyu hover */
   border-left-color: #0d5f6b;
   padding-left: 12px;
 }
@@ -580,258 +536,35 @@ a:hover {
 }
 .image-content.show,
 .image-content.search-open {
-    max-height: none !important;
-    opacity: 1 !important;
-    overflow: visible !important;
-    display: block !important;
+    max-height: 1200px; /* gerekirse 1500 yapabilirsin */
+    opacity: 1;
     margin: 10px 0 5px 0;
 }
 </style>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    setTimeout(function() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 15000);
+    setTimeout(function() { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 15000);
 });
+</script>
 
+<script>
 document.addEventListener("DOMContentLoaded", function() {
     var scrollTopBtn = document.getElementById("scrollTopBtn");
-    if (!scrollTopBtn) return;
     window.addEventListener("scroll", function() {
         if (window.scrollY > 300) {
             scrollTopBtn.style.visibility = "visible";
-            scrollTopBtn.style.opacity = "1";
+            scrollTopBtn.style.opacity    = "1";
         } else {
-            scrollTopBtn.style.opacity = "0";
+            scrollTopBtn.style.opacity    = "0";
             scrollTopBtn.style.visibility = "hidden";
         }
     });
 });
+function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
+</script>
 
-function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-var currentImageIndex = 0;
-var currentAnnouncementImages = [];
-var currentZoom = 1;
-var isDragging = false;
-var startX, startY;
-var translateX = 0, translateY = 0;
-var zoomIndicatorTimeout;
-
-document.addEventListener("DOMContentLoaded", function() {
-    setTimeout(function() {
-        attachImageModalEvents();
-    }, 500);
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeModal();
-    });
-
-    document.addEventListener('keydown', function(e) {
-        var modal = document.getElementById('imageModal');
-        if (modal && modal.style.display === 'block') {
-            if (e.key === 'ArrowLeft') changeImage(-1);
-            else if (e.key === 'ArrowRight') changeImage(1);
-            else if (e.key === '+' || e.key === '=') zoomIn();
-            else if (e.key === '-' || e.key === '_') zoomOut();
-            else if (e.key === '0') resetZoom();
-        }
-    });
-
-    document.addEventListener('wheel', function(e) {
-        var modal = document.getElementById('imageModal');
-        if (modal && modal.style.display === 'block') {
-            e.preventDefault();
-            if (e.deltaY < 0) zoomIn();
-            else zoomOut();
-        }
-    }, { passive: false });
-});
-
-function attachImageModalEvents() {
-    document.querySelectorAll('.duyuru-icerik').forEach(function(announcement) {
-        var images = announcement.querySelectorAll('img');
-        if (images.length === 0) return;
-
-        var announcementImages = Array.from(images);
-        images.forEach(function(img, localIndex) {
-            if (!img.parentElement.classList.contains('image-wrapper')) {
-                var wrapper = document.createElement('div');
-                wrapper.className = 'image-wrapper';
-                img.parentNode.insertBefore(wrapper, img);
-                wrapper.appendChild(img);
-
-                var tooltip = document.createElement('div');
-                tooltip.className = 'image-tooltip';
-                tooltip.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="10" cy="10" r="7"/><path d="M15 15L21 21"/></svg><span>Detaylı Görüntüle</span>';
-                wrapper.appendChild(tooltip);
-            }
-
-            img.onclick = function() {
-                currentAnnouncementImages = announcementImages;
-                openModal(localIndex);
-            };
-        });
-    });
-}
-
-function openModal(index) {
-    if (currentAnnouncementImages.length === 0) return;
-    currentImageIndex = index;
-    resetZoom();
-
-    var modal = document.getElementById('imageModal');
-    var modalImg = document.getElementById('modalImage');
-    var zoomControls = document.getElementById('zoomControls');
-
-    modal.style.display = "block";
-    document.body.style.overflow = "hidden";
-    setTimeout(function() { modal.classList.add('show'); }, 10);
-    modalImg.src = currentAnnouncementImages[index].src;
-    modalImg.onload = function() {
-        fitImageToScreen();
-        zoomControls.style.display = 'flex';
-    };
-    updateNavigationButtons();
-    setupImageDragging();
-}
-
-function closeModal() {
-    var modal = document.getElementById('imageModal');
-    var zoomControls = document.getElementById('zoomControls');
-    modal.classList.remove('show');
-    zoomControls.style.display = 'none';
-    setTimeout(function() {
-        modal.style.display = "none";
-        document.body.style.overflow = "auto";
-        resetZoom();
-    }, 300);
-}
-
-function changeImage(direction) {
-    currentImageIndex += direction;
-    if (currentImageIndex >= currentAnnouncementImages.length) currentImageIndex = 0;
-    else if (currentImageIndex < 0) currentImageIndex = currentAnnouncementImages.length - 1;
-
-    var modalImg = document.getElementById('modalImage');
-    var modal = document.getElementById('imageModal');
-    modal.classList.remove('show');
-    resetZoom();
-    setTimeout(function() {
-        modalImg.src = currentAnnouncementImages[currentImageIndex].src;
-        modalImg.onload = function() { fitImageToScreen(); };
-        modal.classList.add('show');
-    }, 200);
-}
-
-function updateNavigationButtons() {
-    var prevBtn = document.getElementById('modalPrev');
-    var nextBtn = document.getElementById('modalNext');
-    if (currentAnnouncementImages.length > 1) {
-        prevBtn.style.display = 'flex';
-        nextBtn.style.display = 'flex';
-    } else {
-        prevBtn.style.display = 'none';
-        nextBtn.style.display = 'none';
-    }
-}
-
-function zoomIn() { if (currentZoom < 5) { currentZoom += 0.25; applyZoom(); } }
-function zoomOut() { if (currentZoom > 0.5) { currentZoom -= 0.25; applyZoom(); } }
-function resetZoom() { currentZoom = 1; translateX = 0; translateY = 0; applyZoom(); }
-
-function applyZoom() {
-    var modalImg = document.getElementById('modalImage');
-    if (currentZoom === 1) {
-        fitImageToScreen();
-        modalImg.classList.remove('zoomed');
-    } else {
-        modalImg.style.transform = 'translate(calc(-50% + ' + translateX + 'px), calc(-50% + ' + translateY + 'px)) scale(' + currentZoom + ')';
-        modalImg.classList.add('zoomed');
-    }
-    showZoomIndicator();
-}
-
-function fitImageToScreen() {
-    var modalImg = document.getElementById('modalImage');
-    var scaleX = (window.innerWidth * 0.9) / modalImg.naturalWidth;
-    var scaleY = (window.innerHeight * 0.85) / modalImg.naturalHeight;
-    var scale = Math.min(scaleX, scaleY, 1);
-    modalImg.style.width = (modalImg.naturalWidth * scale) + 'px';
-    modalImg.style.height = (modalImg.naturalHeight * scale) + 'px';
-    modalImg.style.transform = 'translate(-50%, -50%) scale(1)';
-    translateX = 0;
-    translateY = 0;
-}
-
-function showZoomIndicator() {
-    var indicator = document.getElementById('zoomIndicator');
-    indicator.textContent = Math.round(currentZoom * 100) + '%';
-    indicator.classList.add('show');
-    clearTimeout(zoomIndicatorTimeout);
-    zoomIndicatorTimeout = setTimeout(function() { indicator.classList.remove('show'); }, 1000);
-}
-
-function setupImageDragging() {
-    var modalImg = document.getElementById('modalImage');
-    modalImg.addEventListener('mousedown', startDrag);
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('mouseup', endDrag);
-    modalImg.addEventListener('touchstart', startDrag);
-    document.addEventListener('touchmove', drag);
-    document.addEventListener('touchend', endDrag);
-}
-
-function startDrag(e) {
-    if (currentZoom <= 1) return;
-    isDragging = true;
-    if (e.type === 'touchstart') {
-        startX = e.touches[0].clientX - translateX;
-        startY = e.touches[0].clientY - translateY;
-    } else {
-        startX = e.clientX - translateX;
-        startY = e.clientY - translateY;
-        e.preventDefault();
-    }
-}
-
-function drag(e) {
-    if (!isDragging) return;
-    var modalImg = document.getElementById('modalImage');
-    if (e.type === 'touchmove') {
-        translateX = e.touches[0].clientX - startX;
-        translateY = e.touches[0].clientY - startY;
-    } else {
-        translateX = e.clientX - startX;
-        translateY = e.clientY - startY;
-    }
-    modalImg.style.transform = 'translate(calc(-50% + ' + translateX + 'px), calc(-50% + ' + translateY + 'px)) scale(' + currentZoom + ')';
-}
-
-function endDrag() { isDragging = false; }
-
-window.onclick = function(event) {
-    var modal = document.getElementById('imageModal');
-    if (event.target === modal) closeModal();
-};
-
-function toggleImage(linkId, contentId) {
-    var link = document.getElementById(linkId);
-    var content = document.getElementById(contentId);
-    if (!link || !content) return;
-    var isOpen = content.classList.contains('show');
-    if (isOpen) {
-        content.classList.remove('show');
-        link.classList.remove('active');
-    } else {
-        content.classList.add('show');
-        link.classList.add('active');
-    }
-}
-
+<script>
 function normalize(txt) {
     return txt
         .toLocaleLowerCase('tr-TR')
@@ -839,7 +572,6 @@ function normalize(txt) {
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^\w\s]/g, '');
 }
-
 function debounce(fn, delay) {
     var t;
     return function() {
@@ -935,10 +667,313 @@ function searchAnnouncements() {
 document.addEventListener('DOMContentLoaded', function() {
     var searchBar = document.getElementById('search-bar');
     if (searchBar) {
-        searchBar.addEventListener('keyup', debounce(searchAnnouncements, 200));
-        searchBar.addEventListener('input', debounce(searchAnnouncements, 200));
+        searchBar.addEventListener('keyup', debounce(searchAnnouncements, 300));
+        searchBar.addEventListener('input', debounce(searchAnnouncements, 300));
     }
 });
+</script>
+
+<script>
+var currentImageIndex = 0;
+var currentAnnouncementImages = [];
+var currentZoom = 1;
+var isDragging = false;
+var startX, startY;
+var translateX = 0, translateY = 0;
+var zoomIndicatorTimeout;
+
+document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(function() {
+        attachImageModalEvents();
+    }, 500);
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        var modal = document.getElementById('imageModal');
+        if (modal && modal.style.display === 'block') {
+            if (e.key === 'ArrowLeft') {
+                changeImage(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeImage(1);
+            } else if (e.key === '+' || e.key === '=') {
+                zoomIn();
+            } else if (e.key === '-' || e.key === '_') {
+                zoomOut();
+            } else if (e.key === '0') {
+                resetZoom();
+            }
+        }
+    });
+
+    document.addEventListener('wheel', function(e) {
+        var modal = document.getElementById('imageModal');
+        if (modal && modal.style.display === 'block') {
+            e.preventDefault();
+            if (e.deltaY < 0) {
+                zoomIn();
+            } else {
+                zoomOut();
+            }
+        }
+    }, { passive: false });
+});
+
+function attachImageModalEvents() {
+    var announcements = document.querySelectorAll('.duyuru-icerik');
+    
+    announcements.forEach(function(announcement) {
+        var images = announcement.querySelectorAll('img');
+        
+        if (images.length === 0) return;
+        
+        var announcementImages = Array.from(images);
+        
+        images.forEach(function(img, localIndex) {
+            if (!img.parentElement.classList.contains('image-wrapper')) {
+                var wrapper = document.createElement('div');
+                wrapper.className = 'image-wrapper';
+                img.parentNode.insertBefore(wrapper, img);
+                wrapper.appendChild(img);
+                
+                var tooltip = document.createElement('div');
+                tooltip.className = 'image-tooltip';
+                var svgIcon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="10" cy="10" r="7"/><path d="M15 15L21 21"/></svg>';
+                tooltip.innerHTML = svgIcon + '<span>Detaylı Görüntüle</span>';
+                wrapper.appendChild(tooltip);
+            }
+            
+            img.onclick = function() {
+                currentAnnouncementImages = announcementImages;
+                openModal(localIndex);
+            };
+        });
+    });
+}
+
+function openModal(index) {
+    if (currentAnnouncementImages.length === 0) return;
+    
+    currentImageIndex = index;
+    resetZoom();
+    
+    var modal = document.getElementById('imageModal');
+    var modalImg = document.getElementById('modalImage');
+    var zoomControls = document.getElementById('zoomControls');
+    
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
+    
+    setTimeout(function() {
+        modal.classList.add('show');
+    }, 10);
+    
+    modalImg.src = currentAnnouncementImages[index].src;
+    
+    modalImg.onload = function() {
+        fitImageToScreen();
+        zoomControls.style.display = 'flex';
+    };
+    
+    updateNavigationButtons();
+    setupImageDragging();
+}
+
+function closeModal() {
+    var modal = document.getElementById('imageModal');
+    var zoomControls = document.getElementById('zoomControls');
+    
+    modal.classList.remove('show');
+    zoomControls.style.display = 'none';
+    
+    setTimeout(function() {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+        resetZoom();
+    }, 300);
+}
+
+function changeImage(direction) {
+    currentImageIndex += direction;
+    
+    if (currentImageIndex >= currentAnnouncementImages.length) {
+        currentImageIndex = 0;
+    } else if (currentImageIndex < 0) {
+        currentImageIndex = currentAnnouncementImages.length - 1;
+    }
+    
+    var modalImg = document.getElementById('modalImage');
+    var modal = document.getElementById('imageModal');
+    
+    modal.classList.remove('show');
+    resetZoom();
+    
+    setTimeout(function() {
+        modalImg.src = currentAnnouncementImages[currentImageIndex].src;
+        modalImg.onload = function() {
+            fitImageToScreen();
+        };
+        modal.classList.add('show');
+    }, 200);
+}
+
+function updateNavigationButtons() {
+    var prevBtn = document.getElementById('modalPrev');
+    var nextBtn = document.getElementById('modalNext');
+    
+    if (currentAnnouncementImages.length > 1) {
+        prevBtn.style.display = 'flex';
+        nextBtn.style.display = 'flex';
+    } else {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+    }
+}
+
+function zoomIn() {
+    if (currentZoom < 5) {
+        currentZoom += 0.25;
+        applyZoom();
+    }
+}
+
+function zoomOut() {
+    if (currentZoom > 0.5) {
+        currentZoom -= 0.25;
+        applyZoom();
+    }
+}
+
+function resetZoom() {
+    currentZoom = 1;
+    translateX = 0;
+    translateY = 0;
+    applyZoom();
+}
+
+function applyZoom() {
+    var modalImg = document.getElementById('modalImage');
+    
+    if (currentZoom === 1) {
+        fitImageToScreen();
+        modalImg.classList.remove('zoomed');
+    } else {
+        modalImg.style.transform = 'translate(calc(-50% + ' + translateX + 'px), calc(-50% + ' + translateY + 'px)) scale(' + currentZoom + ')';
+        modalImg.classList.add('zoomed');
+    }
+    
+    showZoomIndicator();
+}
+
+function fitImageToScreen() {
+    var modalImg = document.getElementById('modalImage');
+    var windowWidth = window.innerWidth;
+    var windowHeight = window.innerHeight;
+    
+    var imgWidth = modalImg.naturalWidth;
+    var imgHeight = modalImg.naturalHeight;
+    
+    var scaleX = (windowWidth * 0.9) / imgWidth;
+    var scaleY = (windowHeight * 0.85) / imgHeight;
+    var scale = Math.min(scaleX, scaleY, 1);
+    
+    modalImg.style.width = (imgWidth * scale) + 'px';
+    modalImg.style.height = (imgHeight * scale) + 'px';
+    modalImg.style.transform = 'translate(-50%, -50%) scale(1)';
+    
+    translateX = 0;
+    translateY = 0;
+}
+
+function showZoomIndicator() {
+    var indicator = document.getElementById('zoomIndicator');
+    indicator.textContent = Math.round(currentZoom * 100) + '%';
+    indicator.classList.add('show');
+    
+    clearTimeout(zoomIndicatorTimeout);
+    zoomIndicatorTimeout = setTimeout(function() {
+        indicator.classList.remove('show');
+    }, 1000);
+}
+
+function setupImageDragging() {
+    var modalImg = document.getElementById('modalImage');
+    
+    modalImg.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', endDrag);
+    
+    modalImg.addEventListener('touchstart', startDrag);
+    document.addEventListener('touchmove', drag);
+    document.addEventListener('touchend', endDrag);
+}
+
+function startDrag(e) {
+    if (currentZoom <= 1) return;
+    
+    isDragging = true;
+    var modalImg = document.getElementById('modalImage');
+    
+    if (e.type === 'touchstart') {
+        startX = e.touches[0].clientX - translateX;
+        startY = e.touches[0].clientY - translateY;
+    } else {
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        e.preventDefault();
+    }
+}
+
+function drag(e) {
+    if (!isDragging) return;
+    
+    var modalImg = document.getElementById('modalImage');
+    
+    if (e.type === 'touchmove') {
+        translateX = e.touches[0].clientX - startX;
+        translateY = e.touches[0].clientY - startY;
+    } else {
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+    }
+    
+    modalImg.style.transform = 'translate(calc(-50% + ' + translateX + 'px), calc(-50% + ' + translateY + 'px)) scale(' + currentZoom + ')';
+}
+
+function endDrag() {
+    isDragging = false;
+}
+
+window.onclick = function(event) {
+    var modal = document.getElementById('imageModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+</script>
+<script>
+// Resim aç / kapa butonu
+function toggleImage(linkId, contentId) {
+    var link = document.getElementById(linkId);
+    var content = document.getElementById(contentId);
+    if (!link || !content) return;
+
+    var isOpen = content.classList.contains('show');
+
+    if (isOpen) {
+        // Kapat
+        content.classList.remove('show');
+        link.classList.remove('active');
+    } else {
+        // Aç
+        content.classList.add('show');
+        link.classList.add('active');
+    }
+}
 </script>
 </head>
 
@@ -946,6 +981,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div id="imageModal" class="image-modal">
     <span class="modal-close" onclick="closeModal()">&times;</span>
+    
     <div id="zoomControls" class="zoom-controls">
         <button class="zoom-btn zoom-out" onclick="zoomOut()" title="Uzaklaştır (-)">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -979,24 +1015,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <div align="center" class="golgeliKutu">
     <table id="Table_01" width="900" border="0" cellpadding="0" cellspacing="0">
         <tr>
-            <td colspan="3" style="padding:0;line-height:0;font-size:0;">
-                <img border="0" src="images/muhst_06.png" width="900" height="165" alt="">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                <div class="navbar">
-                    <ul>
-                        <li><a href="https://dys.saglik.gov.tr/">DYS</a></li>
-                        <li><a href="http://10.201.64.42:8077">PAGO</a></li>
-                        <li><a href="https://eposta.saglik.gov.tr/owakontrol/">SB E-Posta</a></li>
-                        <li><a href="http://10.201.64.71:8040">Pendik HBYS Kur</a></li>
-                        <li><a href="http://10.231.96.71:8040">Bsb HBYS Kur</a></li>
-                        <li><a href="https://marmaraeah.saglik.gov.tr/">MÜ Pendik E.A.H.</a></li>
-                        <li><a href="http://10.210.122.20/default.php">HES Eğitim</a></li>
-                    </ul>
-                </div>
-            </td>
+            <td colspan="3"><img src="images/muhst_06.png" width="900" height="165" alt=""></td>
         </tr>
         <tr>
             <td bgcolor="#FFFFFF" width="166" height="604" valign="top">
@@ -1079,106 +1098,166 @@ document.addEventListener('DOMContentLoaded', function() {
                             baslik = rsDuy("strd_baslik") & ""
                             icerik = rsDuy("strd_duyuru") & ""
 
-                            If Not IsNull(rsDuy("strd_tarih")) Then tarihVal = rsDuy("strd_tarih") Else tarihVal = ""
+                            If Not IsNull(rsDuy("strd_tarih")) Then
+                                tarihVal = rsDuy("strd_tarih")
+                            Else
+                                tarihVal = ""
+                            End If
 
                             Response.Write "<tbody class=""announcement-group"">"
 
                             If Trim(baslik) <> "" Then
-                                Response.Write "<tr><td class='duyuru-baslik'>" & baslik & "</td></tr>"
+                                Response.Write "<tr>"
+                                Response.Write " <td class='duyuru-baslik'>" & baslik & "</td>"
+                                Response.Write "</tr>"
                             Else
                                 Response.Write "<tr><td style='height:5px;'></td></tr>"
                             End If
+                            
+' Link içeriği varsa, ana içerikle birleştir
+Dim linkIcerikVal, listeStiliVal, tumIcerik
+linkIcerikVal = rsDuy("strd_link_icerik") & ""
+listeStiliVal = rsDuy("strd_liste_stili") & ""
 
-                            Dim linkIcerikVal, listeStiliVal, tumIcerik, linkSatirlar, linkHtml, satir, parcalar, metin, url, tekUrl
-                            linkIcerikVal = rsDuy("strd_link_icerik") & ""
-                            listeStiliVal = rsDuy("strd_liste_stili") & ""
-                            If Len(listeStiliVal) = 0 Then listeStiliVal = "disc"
-                            tumIcerik = icerik
+If Len(listeStiliVal) = 0 Then listeStiliVal = "disc"
 
-                            If Len(Trim(linkIcerikVal)) > 0 Then
-                                linkSatirlar = Split(linkIcerikVal, vbCrLf)
-                                linkHtml = "<ul style='list-style-type: " & listeStiliVal & "; padding-left: 25px; margin: 10px 0;'>"
-                                For Each satir In linkSatirlar
-                                    satir = Trim(satir)
-                                    If Len(satir) > 0 Then
-                                        If InStr(satir, "|") > 0 Then
-                                            parcalar = Split(satir, "|")
-                                            metin = Trim(parcalar(0))
-                                            url = Trim(parcalar(1))
-                                            If Left(LCase(url), 4) <> "http" And Left(LCase(url), 4) <> "pdf/" Then url = "pdf/" & url
-                                            linkHtml = linkHtml & "<li><a target='_blank' href='" & url & "'>" & metin & "</a></li>"
-                                        Else
-                                            If Left(LCase(satir), 4) = "http" Or Left(LCase(satir), 4) = "pdf/" Or InStr(satir, ".") > 0 Then
-                                                tekUrl = satir
-                                                If Left(LCase(tekUrl), 4) <> "http" And Left(LCase(tekUrl), 4) <> "pdf/" Then tekUrl = "pdf/" & tekUrl
-                                                linkHtml = linkHtml & "<li><a target='_blank' href='" & tekUrl & "'>" & satir & "</a></li>"
-                                            Else
-                                                linkHtml = linkHtml & "<li>" & satir & "</li>"
-                                            End If
-                                        End If
-                                    End If
-                                Next
-                                linkHtml = linkHtml & "</ul>"
-                                tumIcerik = tumIcerik & linkHtml
-                            End If
-                            icerik = tumIcerik
+tumIcerik = icerik
 
-                            Dim yayinTarihi, gunFarki, gorselleriGoster, ozelGunMu, gorsellerKapaliMi
-                            gunFarki = 999
-                            ozelGunMu = False
-                            gorsellerKapaliMi = False
-                            If Not IsNull(rsDuy("strd_tarih")) Then
-                                yayinTarihi = rsDuy("strd_tarih")
-                                gunFarki = DateDiff("d", yayinTarihi, Now())
-                            End If
-                            If Not IsNull(rsDuy("strd_ozel_gun")) Then ozelGunMu = rsDuy("strd_ozel_gun")
-                            If Not IsNull(rsDuy("strd_gorsel_kapali")) Then gorsellerKapaliMi = rsDuy("strd_gorsel_kapali")
+If Len(Trim(linkIcerikVal)) > 0 Then
+  Dim linkSatirlar, linkHtml, satir
+  linkSatirlar = Split(linkIcerikVal, vbCrLf)
+  
+  linkHtml = "<ul style='list-style-type: " & listeStiliVal & "; padding-left: 25px; margin: 10px 0;'>"
+  
+  For Each satir In linkSatirlar
+    satir = Trim(satir)
+    If Len(satir) > 0 Then
+      If InStr(satir, "|") > 0 Then
+        Dim parcalar
+        parcalar = Split(satir, "|")
+        Dim metin, url
+        metin = Trim(parcalar(0))
+        url = Trim(parcalar(1))
+        
+        ' Eğer http/https ile başlamıyorsa ve pdf/ ile başlamıyorsa, otomatik pdf/ ekle
+        If Left(LCase(url), 4) <> "http" And Left(LCase(url), 4) <> "pdf/" Then
+          url = "pdf/" & url
+        End If
+        
+        linkHtml = linkHtml & "<li><a target='_blank' href='" & url & "'>" & metin & "</a></li>"
+      Else
+        ' Link gibi görünüyorsa
+        If Left(LCase(satir), 4) = "http" Or Left(LCase(satir), 4) = "pdf/" Or InStr(satir, ".") > 0 Then
+          Dim tekUrl
+          tekUrl = satir
+          
+          If Left(LCase(tekUrl), 4) <> "http" And Left(LCase(tekUrl), 4) <> "pdf/" Then
+            tekUrl = "pdf/" & tekUrl
+          End If
+          
+          linkHtml = linkHtml & "<li><a target='_blank' href='" & tekUrl & "'>" & satir & "</a></li>"
+        Else
+          ' Sadece metin (HTML etiketleri olduğu gibi)
+          linkHtml = linkHtml & "<li>" & satir & "</li>"
+        End If
+      End If
+    End If
+  Next
+  
+  linkHtml = linkHtml & "</ul>"
+  tumIcerik = tumIcerik & linkHtml
+End If
 
-                            If gorsellerKapaliMi Then
-                                gorselleriGoster = False
-                            ElseIf ozelGunMu Then
-                                gorselleriGoster = True
-                            Else
-                                gorselleriGoster = (gunFarki < 3)
-                            End If
+' Artık icerik yerine tumIcerik kullanacağız
+icerik = tumIcerik
 
-                            If Trim(icerik) <> "" Then
-                                Dim icerikHtml, linkId, contentId, imgPos
-                                icerikHtml = icerik
-                                icerikHtml = Replace(icerikHtml, "&lt;table", "<table", 1, -1, vbTextCompare)
-                                icerikHtml = Replace(icerikHtml, "&lt;/table>", "</table>", 1, -1, vbTextCompare)
-                                icerikHtml = Replace(icerikHtml, "&lt;tr", "<tr", 1, -1, vbTextCompare)
-                                icerikHtml = Replace(icerikHtml, "&lt;td", "<td", 1, -1, vbTextCompare)
-                                icerikHtml = Replace(icerikHtml, "&lt;th", "<th", 1, -1, vbTextCompare)
+' ========== 3 GÜN + ÖZEL GÜN + GÖRSELLER KAPALI KONTROLÜ ==========
+Dim yayinTarihi, gunFarki, gorselleriGoster, ozelGunMu, gorsellerKapaliMi
+gunFarki = 999
+ozelGunMu = False
+gorsellerKapaliMi = False
 
-                                Response.Write "<tr><td class='duyuru-icerik'>"
+If Not IsNull(rsDuy("strd_tarih")) Then
+    yayinTarihi = rsDuy("strd_tarih")
+    gunFarki = DateDiff("d", yayinTarihi, Now())
+End If
 
-                                If InStr(LCase(icerikHtml), "<img") > 0 Then
-                                    imgPos = InStr(LCase(icerikHtml), "<img")
-                                    If imgPos > 1 Then Response.Write Left(icerikHtml, imgPos - 1)
-                                    Call WriteIcerikTablolariAcik(Mid(icerikHtml, imgPos), gorselleriGoster)
-                                ElseIf gorsellerKapaliMi And InStr(LCase(icerikHtml), "<table") = 0 Then
-                                    imageCounter = imageCounter + 1
-                                    linkId = "imgLink" & imageCounter
-                                    contentId = "imgContent" & imageCounter
-                                    Response.Write "<div class='image-toggle-link' id='" & linkId & "' onclick=""toggleImage('" & linkId & "', '" & contentId & "')"">"
-                                    Response.Write "İçeriği Açmak İçin Tıklayınız"
-                                    Response.Write "</div>"
-                                    Response.Write "<div class='image-content' id='" & contentId & "'>" & icerikHtml & "</div>"
-                                Else
-                                    Call WriteIcerikTablolariAcik(icerikHtml, gorselleriGoster)
-                                End If
+' Özel gün kontrolü
+If Not IsNull(rsDuy("strd_ozel_gun")) Then
+    ozelGunMu = rsDuy("strd_ozel_gun")
+End If
 
-                                Response.Write "</td></tr>"
-                            Else
-                                Response.Write "<tr><td style='height:5px;'></td></tr>"
-                            End If
+' Görseller kapalı kontrolü
+If Not IsNull(rsDuy("strd_gorsel_kapali")) Then
+    gorsellerKapaliMi = rsDuy("strd_gorsel_kapali")
+End If
+
+' Görseller gösterilecek mi? 
+' 1) "Görseller Kapalı Başlasın" işaretliyse › DİREKT BUTON
+' 2) Özel günse › HER ZAMAN AÇIK
+' 3) Normal duyuru › İlk 3 gün açık
+If gorsellerKapaliMi Then
+    gorselleriGoster = False
+ElseIf ozelGunMu Then
+    gorselleriGoster = True
+Else
+    gorselleriGoster = (gunFarki < 3)
+End If
+' ================================================================                    
+                            
+If Trim(icerik) <> "" Then
+    Dim icerikHtml, linkId, contentId, imgPos
+    icerikHtml = icerik
+    icerikHtml = Replace(icerikHtml, "&lt;table", "<table", 1, -1, vbTextCompare)
+    icerikHtml = Replace(icerikHtml, "&lt;/table>", "</table>", 1, -1, vbTextCompare)
+    icerikHtml = Replace(icerikHtml, "&lt;tr", "<tr", 1, -1, vbTextCompare)
+    icerikHtml = Replace(icerikHtml, "&lt;td", "<td", 1, -1, vbTextCompare)
+    icerikHtml = Replace(icerikHtml, "&lt;th", "<th", 1, -1, vbTextCompare)
+
+    ' İçerikte resim var mı? 
+    If InStr(LCase(icerikHtml), "<img") > 0 Then
+        linkId = "imgLink" & imageCounter
+        contentId = "imgContent" & imageCounter
+        imgPos = InStr(LCase(icerikHtml), "<img")
+
+        Response.Write "<tr>"
+        Response.Write " <td class='duyuru-icerik'>"
+
+        If imgPos > 1 Then
+            Response.Write Left(icerikHtml, imgPos - 1)
+        End If
+
+        Call WriteIcerikTablolariAcik(Mid(icerikHtml, imgPos), gorselleriGoster)
+
+        Response.Write " </td>"
+        Response.Write "</tr>"
+Else
+        Response.Write "<tr><td class='duyuru-icerik'>"
+        If gorsellerKapaliMi And InStr(LCase(icerikHtml), "<table") = 0 Then
+            imageCounter = imageCounter + 1
+            Dim linkId2, contentId2
+            linkId2 = "imgLink" & imageCounter
+            contentId2 = "imgContent" & imageCounter
+            Response.Write "<div class='image-toggle-link' id='" & linkId2 & "' onclick=""toggleImage('" & linkId2 & "', '" & contentId2 & "')"">"
+            Response.Write "İçeriği Açmak İçin Tıklayınız"
+            Response.Write "</div>"
+            Response.Write "<div class='image-content' id='" & contentId2 & "'>" & icerikHtml & "</div>"
+        Else
+            Call WriteIcerikTablolariAcik(icerikHtml, gorselleriGoster)
+        End If
+        Response.Write "</td></tr>"
+    End If
+Else
+    Response.Write "<tr><td style='height:5px;'></td></tr>"
+End If
 
                             If Len(tarihVal) > 0 Then
-                                Response.Write "<tr><td class='duyuru-tarih'>" & _
-                                    Right("0" & Day(tarihVal), 2) & "/" & _
-                                    Right("0" & Month(tarihVal), 2) & "/" & _
-                                    Year(tarihVal) & "</td></tr>"
+                                Response.Write "<tr>"
+                                Response.Write " <td class='duyuru-tarih'>" & _
+                                  Right("0" & Day(tarihVal), 2) & "/" & _
+                                  Right("0" & Month(tarihVal), 2) & "/" & _
+                                  Year(tarihVal) & "</td>"
+                                Response.Write "</tr>"
                             Else
                                 Response.Write "<tr><td style='height:5px;'></td></tr>"
                             End If
@@ -1204,21 +1283,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div id="apDiv1">
 <%
-Dim ArrayIPLocalStart(2), ArrayIPLocalEnd(2), ArrayIPClient, IPClient, blnLocal, i
+Dim ArrayIPLocalStart(2)
+Dim ArrayIPLocalEnd(2)
+Dim ArrayIPClient, IPClient 
+Dim blnLocal, i
+
 Ipclient = Request.ServerVariables("REMOTE_ADDR")
 Response.Write "Lokal IP <br>Adresiniz:<br>  " & Ipclient & "<BR>"
+
 blnLocal = False
-ArrayIPLocalStart(0) = "010.000.000.000"
+ArrayIPLocalStart(0) = "010.000.000.000" 
 ArrayIPLocalEnd(0)   = "010.255.255.255"
-ArrayIPLocalStart(1) = "172.016.000.000"
+ArrayIPLocalStart(1) = "172.016.000.000" 
 ArrayIPLocalEnd(1)   = "172.031.000.000"
-ArrayIPLocalStart(2) = "192.168.000.000"
+ArrayIPLocalStart(2) = "192.168.000.000" 
 ArrayIPLocalEnd(2)   = "192.168.255.000"
+
 ArrayIPClient = Split(Ipclient,".")
 For i = LBound(ArrayIPClient) To UBound(ArrayIPClient)
     ArrayIPClient(i) = String(3 - Len(ArrayIPClient(i)), "0") & ArrayIPClient(i)
 Next
 IPClient = Join(ArrayIPClient, "")
+
 If Trim(Ipclient) <> "" Then
     For i = LBound(ArrayIPLocalStart) To UBound(ArrayIPLocalStart)
         ArrayIPLocalStart(i) = Replace(ArrayIPLocalStart(i),".","")
@@ -1229,7 +1315,12 @@ If Trim(Ipclient) <> "" Then
         End If
     Next
 End If
-Response.Write "**********"
+
+If blnLocal Then
+    Response.Write "**********"
+Else
+    Response.Write "**********"
+End If
 %>
 </div>
 </body>
