@@ -1,7 +1,8 @@
-<%@ Language=VBScript CodePage=1254 %>
+<%@ Language=VBScript CodePage=65001 %>
 <%
-Response.CodePage = 1254
-Response.CharSet = "windows-1254"
+Response.CodePage = 65001
+Response.CharSet = "utf-8"
+Response.ContentType = "text/html; charset=utf-8"
 %>
 <!-- #include file="../ayarlar.asp" -->
 <!-- #include file="../database/connection.asp" -->
@@ -74,7 +75,7 @@ qs = "bina=" & Server.URLEncode(binaKodu) & "&dosya=" & Server.URLEncode(dosyaAd
 <html lang="tr">
 <head>
   <meta http-equiv="Content-Language" content="tr">
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><% If islemTipi = "guncelle" Then %>Dosya Güncelle<% Else %>Dosya Yükle<% End If %></title>
   <link rel="stylesheet" href="../assets/style.css">

@@ -1,7 +1,8 @@
-<%@ Language=VBScript CodePage=1254 %>
+<%@ Language=VBScript CodePage=65001 %>
 <%
-Response.CodePage = 1254
-Response.CharSet = "windows-1254"
+Response.CodePage = 65001
+Response.CharSet = "utf-8"
+Response.ContentType = "text/html; charset=utf-8"
 %>
 <!-- #include file="../ayarlar.asp" -->
 <!-- #include file="../database/connection.asp" -->
