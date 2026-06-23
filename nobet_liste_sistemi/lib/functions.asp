@@ -144,4 +144,22 @@ Sub RenderNobetListeTablosu(binaKodu, listeDizisi, yil, ayKlasor)
         RenderNobetListeSatiri binaKodu, satir(0), satir(1), yil, ayKlasor
     Next
 End Sub
+
+Sub RenderTamListeGorunumu(yil, ayKlasor)
+    Dim donemBaslik
+    donemBaslik = AyBaslikFromKlasor(ayKlasor) & " " & yil
+
+    Response.Write "<div class=""section-title"">Pendik E.A.H. Nöbet Listeleri</div>"
+    Response.Write "<div class=""ay-baslik"">" & Server.HTMLEncode(donemBaslik) & "</div>"
+    Response.Write "<table class=""liste-tablo"">"
+    RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri, yil, ayKlasor
+    Response.Write "</table>"
+
+    Response.Write "<div class=""section-title"">Prof. Dr. Asaf Ataseven Ek Hizmet Binası</div>"
+    Response.Write "<div class=""ay-baslik"">" & Server.HTMLEncode(donemBaslik) & "</div>"
+    Response.Write "<table class=""liste-tablo"">"
+    RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri, yil, ayKlasor
+    Response.Write "<tr><td class=""yazi-stil no-icon""><span class=""duz-metn"">Pacs Destek (0531 682 44 36)</span></td></tr>"
+    Response.Write "</table>"
+End Sub
 %>

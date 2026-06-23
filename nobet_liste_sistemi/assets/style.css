@@ -38,6 +38,121 @@ a { color: var(--primary); }
     linear-gradient(180deg, #edf4f7 0%, #f8fbfc 100%);
 }
 
+.portal-body {
+  background-color: #e8eef2;
+  background-repeat: repeat;
+  background-position: top center;
+  background-size: auto;
+}
+
+.portal-kutu {
+  width: 980px;
+}
+
+.portal-banner {
+  width: 100%;
+  line-height: 0;
+  background: #fff;
+}
+
+.portal-banner img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.portal-toolbar {
+  padding: 14px 24px 0;
+  text-align: left;
+}
+
+.btn-back {
+  background: var(--accent);
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(133, 3, 3, 0.2);
+}
+
+.btn-back:hover {
+  background: var(--accent-soft);
+}
+
+.breadcrumb {
+  margin: 0 0 16px;
+  font-size: 14px;
+}
+
+.breadcrumb a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.empty-note {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  margin: 0;
+  padding: 12px 0;
+}
+
+.stat-meta {
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.istatistik-panel,
+.gecmis-panel {
+  margin-top: 8px;
+  padding: 0;
+}
+
+.panel-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.panel-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbfc 100%);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+}
+
+.panel-card-primary {
+  border-color: rgba(37, 171, 185, 0.35);
+  box-shadow: 0 8px 24px rgba(37, 171, 185, 0.1);
+}
+
+.panel-card-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.panel-card h2 {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.panel-card p {
+  margin: 0 0 20px;
+  color: var(--muted);
+  line-height: 1.6;
+  flex: 1;
+  font-size: 14px;
+}
+
+.panel-card .btn {
+  align-self: flex-start;
+}
+
 .admin-body {
   background:
     radial-gradient(circle at top left, rgba(133, 3, 3, 0.08), transparent 25%),
@@ -653,7 +768,8 @@ a { color: var(--primary); }
   .summary-grid,
   .info-grid,
   .dashboard-grid,
-  .form-row {
+  .form-row,
+  .panel-cards {
     grid-template-columns: 1fr;
   }
 

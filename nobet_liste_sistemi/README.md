@@ -4,10 +4,11 @@ Tek klasörde çalışan nöbet listesi modülü. Veritabanı: **Microsoft Acces
 
 ## Yönetim akışı
 
-1. **panel.asp** — Yıl/ay seçimi, ana menü
-2. **listeler.asp** — Seçilen dönem için yükleme/güncelleme/silme
-3. **istatistikler.asp** — Yıl → ay → yükleme/güncelleme istatistikleri
-4. **gecmis.asp** — Geçmiş dönem listelerini görüntüleme
+1. **panel.asp** — Üç kartlı ana panel (Yükleme/Güncelleme, İstatistikler, Geçmiş)
+2. **donem_sec.asp** — Yıl/ay seçimi, ardından liste yönetimi
+3. **listeler.asp** — Seçilen dönem için yükleme/güncelleme/silme
+4. **istatistikler.asp** — Yıl → yalnızca yüklenmiş aylar → index benzeri istatistik görünümü
+5. **gecmis.asp** — Geçmiş dönem (güncel ay hariç) yıl → ay → liste görünümü
 
 ## Klasör yapısı
 

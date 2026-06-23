@@ -32,24 +32,29 @@ EnsureTumAyKlasorleri
     }
   </script>
 </head>
-<body class="public-body">
+<body class="public-body portal-body" style="background-image: url('<%= PORTAL_IMAGES_YOLU & PORTAL_ARKAPLAN_RESIM %>');">
   <div id="scrollTopBtn" onclick="scrollToTop()">^</div>
 
   <div class="page-shell">
-    <div class="golgeliKutu">
-      <div class="hero-band">
-        <h1>Pendik Eğitim &amp; Araştırma Hastanesi</h1>
-        <p>Nöbet Listeleri &middot; <%= GetAyBaslikMetni() %></p>
+    <div class="golgeliKutu portal-kutu">
+      <div class="portal-banner">
+        <img src="<%= PORTAL_IMAGES_YOLU & PORTAL_BANNER_RESIM %>" alt="Marmara Üniversitesi Pendik Eğitim ve Araştırma Hastanesi">
+      </div>
+
+      <div class="portal-toolbar">
+        <a href="<%= PORTAL_ANA_SAYFA %>" class="btn btn-back">← Ana Sayfaya Dön</a>
       </div>
 
       <div class="content-panel">
+        <div class="section-title">Pendik Eğitim &amp; Araştırma Hastanesi Nöbet Listeleri</div>
+
         <div class="section-title">Pendik E.A.H. Nöbet Listeleri</div>
         <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
         <table class="liste-tablo">
             <% RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
         </table>
 
-        <div class="section-title">Prof. Dr. Asaf Ataseven Ek Hizmet Binası</div>
+        <div class="section-title">Prof. Dr. Asaf Ataseven Ek Hizmet Binası Nöbet Listeleri</div>
         <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
         <table class="liste-tablo">
             <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri, GuncelYil(), GuncelAyKlasor() %>

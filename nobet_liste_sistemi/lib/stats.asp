@@ -1,9 +1,43 @@
 <!-- #include file="period.asp" -->
 <%
+Function AyKlasordeDosyaVarMi(yil, ayKlasor)
+    Dim fso, binalar, i, klasorYolu, dosya
+    Set fso = Server.CreateObject("Scripting.FileSystemObject")
+    binalar = Array(BINA_PENDIK, BINA_BASIBUYUK)
+    AyKlasordeDosyaVarMi = False
+
+    For i = 0 To 1
+        klasorYolu = AyKlasorFizikselYolu(binalar(i), yil, ayKlasor)
+        If fso.FolderExists(klasorYolu) Then
+            For Each dosya In fso.GetFolder(klasorYolu).Files
+                AyKlasordeDosyaVarMi = True
+                Exit Function
+            Next
+        End If
+    Next
+End Function
+
+Function AyGecmisDonemMi(yil, ayKlasor)
+    Dim ayNo
+    ayNo = AyNumarasiFromKlasor(ayKlasor)
+    If ayNo = 0 Then
+        AyGecmisDonemMi = False
+        Exit Function
+    End If
+    If CInt(yil) > GuncelYil() Then
+        AyGecmisDonemMi = False
+        Exit Function
+    End If
+    If CInt(yil) < GuncelYil() Then
+        AyGecmisDonemMi = True
+        Exit Function
+    End If
+    AyGecmisDonemMi = (ayNo < Month(Now()))
+End Function
+
 Function IstatistikYillariDizisi()
-    Dim yillar, rs, sql, yilDeger, sonuc(), i, sayac
+    Dim yillar, rs, sql, yilDeger, sonuc(), i, fso, yilKlasor
     Set yillar = Server.CreateObject("Scripting.Dictionary")
-    yillar.Add CStr(GuncelYil()), True
 
     On Error Resume Next
     If IsObject(conn) Then
@@ -19,40 +53,93 @@ Function IstatistikYillariDizisi()
     End If
     On Error GoTo 0
 
-    ReDim sonuc(yillar.Count - 1)
-    i = 0
-    For Each yilDeger In yillar.Keys
-        sonuc(i) = CInt(yilDeger)
-        i = i + 1
-    Next
+    Set fso = Server.CreateObject("Scripting.FileSystemObject")
+    If fso.FolderExists(ListelerKokYolu()) Then
+        For Each yilKlasor In fso.GetFolder(ListelerKokYolu()).SubFolders
+            yilDeger = yilKlasor.Name
+            If IsNumeric(yilDeger) Then
+                If Not yillar.Exists(yilDeger) Then yillar.Add yilDeger, True
+            End If
+        Next
+    End If
+
+    If yillar.Count = 0 Then
+        ReDim sonuc(0)
+        sonuc(0) = GuncelYil()
+    Else
+        ReDim sonuc(yillar.Count - 1)
+        i = 0
+        For Each yilDeger In yillar.Keys
+            sonuc(i) = CInt(yilDeger)
+            i = i + 1
+        Next
+    End If
 
     IstatistikYillariDizisi = sonuc
 End Function
 
-Function AyIstatistikteVarMi(yil, ayKlasor)
-    Dim fso, yilKlasor, binaKlasor, ayKlasorObj, rs, sql
-    AyIstatistikteVarMi = False
+Function YukluAylarForYil(yil)
+    Dim sonuc(), i, sayac, ayKlasor
+    sayac = 0
+    ReDim sonuc(11)
 
-    On Error Resume Next
-    If IsObject(conn) Then
-        sql = "SELECT TOP 1 id FROM NobetListeIslemLog WHERE yil = " & CInt(yil) & " AND ay_klasor = '" & SqlEscape(ayKlasor) & "'"
-        Set rs = conn.Execute(sql)
-        AyIstatistikteVarMi = Not rs.EOF
-        rs.Close
-        Set rs = Nothing
-        If AyIstatistikteVarMi Then Exit Function
+    For i = 1 To 12
+        ayKlasor = AyKlasorFromNumara(i)
+        If AyKlasordeDosyaVarMi(yil, ayKlasor) Then
+            sonuc(sayac) = ayKlasor
+            sayac = sayac + 1
+        End If
+    Next
+
+    If sayac = 0 Then
+        ReDim YukluAylarForYil(-1)
+    Else
+        ReDim Preserve sonuc(sayac - 1)
+        YukluAylarForYil = sonuc
     End If
-    On Error GoTo 0
+End Function
 
-    Set fso = Server.CreateObject("Scripting.FileSystemObject")
-    yilKlasor = ListelerKokYolu() & "\" & yil
-    If fso.FolderExists(yilKlasor) Then
-        For Each binaKlasor In fso.GetFolder(yilKlasor).SubFolders
-            If fso.FolderExists(binaKlasor.Path & "\" & ayKlasor) Then
-                AyIstatistikteVarMi = True
-                Exit Function
-            End If
-        Next
+Function GecmisYillariDizisi()
+    Dim yillar, i, aylar, sonuc(), sayac, yilDeger
+    yillar = IstatistikYillariDizisi()
+    sayac = 0
+    ReDim sonuc(UBound(yillar))
+
+    For i = 0 To UBound(yillar)
+        yilDeger = yillar(i)
+        aylar = GecmisAylarForYil(yilDeger)
+        If UBound(aylar) >= 0 Then
+            sonuc(sayac) = yilDeger
+            sayac = sayac + 1
+        End If
+    Next
+
+    If sayac = 0 Then
+        ReDim GecmisYillariDizisi(-1)
+    Else
+        ReDim Preserve sonuc(sayac - 1)
+        GecmisYillariDizisi = sonuc
+    End If
+End Function
+
+Function GecmisAylarForYil(yil)
+    Dim sonuc(), i, sayac, ayKlasor
+    sayac = 0
+    ReDim sonuc(11)
+
+    For i = 1 To 12
+        ayKlasor = AyKlasorFromNumara(i)
+        If AyGecmisDonemMi(yil, ayKlasor) And AyKlasordeDosyaVarMi(yil, ayKlasor) Then
+            sonuc(sayac) = ayKlasor
+            sayac = sayac + 1
+        End If
+    Next
+
+    If sayac = 0 Then
+        ReDim GecmisAylarForYil(-1)
+    Else
+        ReDim Preserve sonuc(sayac - 1)
+        GecmisAylarForYil = sonuc
     End If
 End Function
 
@@ -92,4 +179,46 @@ Function TarihGoster(tarihDeger)
         TarihGoster = "-"
     End If
 End Function
+
+Sub RenderIstatistikTamListe(yil, ayKlasor)
+    Dim i, satir, baslik, dosyaAdi, bilgi, aktif, webYolu, donemBaslik
+    donemBaslik = AyBaslikFromKlasor(ayKlasor) & " " & yil
+
+    Response.Write "<div class=""section-title"">Pendik E.A.H. Nöbet Listeleri</div>"
+    Response.Write "<div class=""ay-baslik"">" & Server.HTMLEncode(donemBaslik) & "</div>"
+    Response.Write "<table class=""liste-tablo"">"
+    For i = 0 To UBound(pendikNobetListeleri)
+        satir = pendikNobetListeleri(i)
+        RenderIstatistikListeSatiri BINA_PENDIK, satir(0), satir(1), yil, ayKlasor
+    Next
+    Response.Write "</table>"
+
+    Response.Write "<div class=""section-title"">Prof. Dr. Asaf Ataseven Ek Hizmet Binası</div>"
+    Response.Write "<div class=""ay-baslik"">" & Server.HTMLEncode(donemBaslik) & "</div>"
+    Response.Write "<table class=""liste-tablo"">"
+    For i = 0 To UBound(basibuyukNobetListeleri)
+        satir = basibuyukNobetListeleri(i)
+        RenderIstatistikListeSatiri BINA_BASIBUYUK, satir(0), satir(1), yil, ayKlasor
+    Next
+    Response.Write "</table>"
+End Sub
+
+Sub RenderIstatistikListeSatiri(binaKodu, baslik, dosyaAdi, yil, ayKlasor)
+    Dim aktif, webYolu, bilgi
+    aktif = NobetDosyaAktif(binaKodu, dosyaAdi, yil, ayKlasor)
+    bilgi = DosyaKayitBilgisi(yil, binaKodu, ayKlasor, dosyaAdi)
+
+    Response.Write "<tr><td class=""yazi-stil"">"
+    If aktif Then
+        webYolu = NobetDosyaWebYolu(binaKodu, dosyaAdi, yil, ayKlasor)
+        Response.Write "<a class=""duyuru-link"" target=""_blank"" href=""" & webYolu & """>" & Server.HTMLEncode(baslik) & "</a>"
+    Else
+        Response.Write "<span class=""duyuru-link-pasif"">" & Server.HTMLEncode(baslik) & "</span>"
+    End If
+    Response.Write "<div class=""stat-meta"">"
+    Response.Write "İlk yükleme: " & TarihGoster(bilgi(0))
+    Response.Write " &nbsp;|&nbsp; Güncelleme: " & bilgi(1)
+    Response.Write " &nbsp;|&nbsp; Son: " & TarihGoster(bilgi(2))
+    Response.Write "</div></td></tr>"
+End Sub
 %>

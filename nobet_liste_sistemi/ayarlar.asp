@@ -13,6 +13,10 @@ Const ACCESS_DB_DOSYA = "nobet_liste.mdb"
 Const SESSION_ADMIN_KEY = "nobet_liste_admin"
 Const SESSION_SECILI_YIL = "nobet_secili_yil"
 Const SESSION_SECILI_AY = "nobet_secili_ay"
+Const PORTAL_IMAGES_YOLU = "/Admin/images/"
+Const PORTAL_BANNER_RESIM = "muhst_06.png"
+Const PORTAL_ARKAPLAN_RESIM = "arka-plan.png"
+Const PORTAL_ANA_SAYFA = "http://10.201.65.10/"
 
 Function ModulFizikselYol()
     ModulFizikselYol = Server.MapPath(MODUL_WEB_YOLU)

@@ -7,7 +7,6 @@
 <!-- #include file="../lib/ui.asp" -->
 <%
 AdminGirisGerekli
-DonemFormIsle
 EnsureSeciliDonemKlasorleri
 
 Dim seciliYil, seciliAy
@@ -64,11 +63,13 @@ End Sub
           <p class="eyebrow">Liste Yönetimi</p>
           <h1>Nöbet Listeleri</h1>
         </div>
-        <% AdminNavGoster "listeler" %>
+        <% AdminUstLinkler %>
       </div>
 
+      <p class="breadcrumb"><a href="donem_sec.asp">← Dönem Seçimine Dön</a></p>
+
       <% FlashMesajGoster %>
-      <% DonemOzetKartlariGoster %>
+      <% DonemOzetKartlariGoster seciliYil, seciliAy %>
 
       <div class="admin-section">
         <table class="admin-table">

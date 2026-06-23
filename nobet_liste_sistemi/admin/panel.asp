@@ -7,24 +7,6 @@
 <!-- #include file="../lib/ui.asp" -->
 <%
 AdminGirisGerekli
-DonemFormIsle
-
-If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
-    If Trim(Request.Form("git")) = "kaydet" Then
-        Response.Redirect "panel.asp?mesaj=donem"
-        Response.End
-    End If
-    If Trim(Request.Form("git")) = "listeler" Then
-        Response.Redirect "listeler.asp"
-        Response.End
-    End If
-    If Trim(Request.Form("git")) = "gecmis" Then
-        Response.Redirect "gecmis.asp"
-        Response.End
-    End If
-End If
-
-Dim yilSecenek, i
 %>
 <!DOCTYPE html>
 <html lang="tr">
@@ -43,47 +25,31 @@ Dim yilSecenek, i
           <p class="eyebrow">Ana Yönetim</p>
           <h1>Nöbet Liste Yönetimi</h1>
         </div>
-        <% AdminNavGoster "panel" %>
+        <% AdminUstLinkler %>
       </div>
 
       <% FlashMesajGoster %>
-      <% DonemOzetKartlariGoster %>
 
-      <div class="dashboard-grid">
-        <div class="dashboard-card">
-          <h2>Dönem Seçimi</h2>
-          <p>Yükleme ve liste yönetimi için yıl ve ay seçin.</p>
-          <form method="post" action="panel.asp" class="period-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="yil">Yıl</label>
-                <select id="yil" name="yil" required>
-                  <% For i = GuncelYil() + 1 To GuncelYil() - 5 Step -1 %>
-                    <option value="<%= i %>"<% If i = GetSeciliYil() Then %> selected<% End If %>><%= i %></option>
-                  <% Next %>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="ay">Ay</label>
-                <select id="ay" name="ay" required>
-                  <% For i = 1 To 12 %>
-                    <option value="<%= AyKlasorFromNumara(i) %>"<% If AyKlasorFromNumara(i) = GetSeciliAyKlasor() Then %> selected<% End If %>><%= TurkceAyAdi(i) %></option>
-                  <% Next %>
-                </select>
-              </div>
-            </div>
-            <div class="form-actions">
-              <button type="submit" name="git" value="kaydet" class="btn btn-secondary">Dönemi Kaydet</button>
-              <button type="submit" name="git" value="listeler" class="btn btn-primary">Listeleri Yönet</button>
-              <button type="submit" name="git" value="gecmis" class="btn btn-secondary">Geçmiş Dönemi Gör</button>
-            </div>
-          </form>
+      <div class="panel-cards">
+        <div class="panel-card panel-card-primary">
+          <div class="panel-card-icon">📤</div>
+          <h2>Nöbet Listesi Yükleme / Güncelleme</h2>
+          <p>Yıl ve ay seçerek ilgili dönemin listelerini yükleyin veya güncelleyin.</p>
+          <a href="donem_sec.asp" class="btn btn-primary">Devam Et</a>
         </div>
 
-        <div class="dashboard-card">
+        <div class="panel-card">
+          <div class="panel-card-icon">📊</div>
           <h2>İstatistikler</h2>
-          <p>Yıllık ve aylık yükleme, güncelleme kayıtlarını inceleyin.</p>
-          <a href="istatistikler.asp" class="btn btn-primary">İstatistiklere Git</a>
+          <p>Yüklenen listelerin yükleme ve güncelleme istatistiklerini görüntüleyin.</p>
+          <a href="istatistikler.asp" class="btn btn-primary">Devam Et</a>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-card-icon">📁</div>
+          <h2>Geçmiş Nöbet Listeleri</h2>
+          <p>Geçmiş dönemlere ait yüklenmiş nöbet listelerini inceleyin.</p>
+          <a href="gecmis.asp" class="btn btn-primary">Devam Et</a>
         </div>
       </div>
     </div>
