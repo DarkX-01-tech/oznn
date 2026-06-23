@@ -25,8 +25,7 @@ Else
 End If
 
 If binaKodu = "" Or dosyaAdi = "" Then
-    Response.Redirect "listeler.asp"
-    Response.End
+    Call NobetYonlendir("listeler.asp")
 End If
 
 If Not DosyaAdiGecerliMi(binaKodu, dosyaAdi) Then
@@ -44,5 +43,5 @@ End If
 Set fso = Nothing
 
 NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, Session(SESSION_ADMIN_KEY & "_ad"), False, seciliYil, seciliAy, "sil"
-Response.Redirect "listeler.asp?mesaj=silindi"
+Call NobetYonlendir("listeler.asp?mesaj=silindi")
 %>

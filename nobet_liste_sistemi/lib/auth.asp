@@ -1,6 +1,7 @@
 <%
 Sub AdminGirisGerekli()
     If Session(SESSION_ADMIN_KEY) <> "1" Then
+        Call PortalOturumKodSayfasiSifirla()
         Response.Redirect MODUL_WEB_YOLU & "admin/login.asp"
         Response.End
     End If
@@ -28,6 +29,7 @@ Function AdminGirisYap(kullaniciAdi, sifre)
             Session(SESSION_ADMIN_KEY & "_ad") = rs("kullanici_adi")
         End If
         AdminGirisYap = True
+        Call PortalOturumKodSayfasiSifirla()
     End If
 
     If IsObject(rs) Then
@@ -42,5 +44,6 @@ Sub AdminCikisYap()
     Session(SESSION_ADMIN_KEY & "_id") = ""
     Session(SESSION_ADMIN_KEY & "_kullanici") = ""
     Session(SESSION_ADMIN_KEY & "_ad") = ""
+    Call PortalOturumKodSayfasiSifirla()
 End Sub
 %>

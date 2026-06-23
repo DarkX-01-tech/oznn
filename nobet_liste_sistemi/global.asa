@@ -1,0 +1,6 @@
+<script language="VBScript" runat="Server">
+Sub Session_OnStart
+    Session.CodePage = 1254
+    Session.LCID = 1055
+End Sub
+</script>

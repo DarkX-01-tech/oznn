@@ -5,5 +5,5 @@
 <%
 Call PortalOturumKodSayfasiSifirla()
 AdminCikisYap
-Response.Redirect "login.asp"
+Call NobetYonlendir("login.asp")
 %>

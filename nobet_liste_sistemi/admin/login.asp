@@ -4,8 +4,7 @@
 <!-- #include file="../lib/auth.asp" -->
 <%
 If Session(SESSION_ADMIN_KEY) = "1" Then
-    Response.Redirect "panel.asp"
-    Response.End
+    Call NobetYonlendir("panel.asp")
 End If
 
 Dim hata, kullanici, sifre
@@ -19,8 +18,7 @@ If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
     If kullanici = "" Or sifre = "" Then
         hata = "Kullanıcı adı ve şifre zorunludur."
     ElseIf AdminGirisYap(kullanici, sifre) Then
-        Response.Redirect "panel.asp"
-        Response.End
+        Call NobetYonlendir("panel.asp")
     Else
         hata = "Geçersiz kullanıcı adı veya şifre."
     End If
@@ -63,7 +61,7 @@ End If
       <div class="login-footer">
         <a href="../index.asp">Liste Sayfasına Dön</a>
         <span class="login-footer-sep">|</span>
-        <a href="../portal_restore.asp">Portal Ana Sayfa</a>
+        <a href="../portal_restore.asp" class="no-transition">Portal Ana Sayfa</a>
       </div>
     </div>
   </div>

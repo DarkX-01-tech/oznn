@@ -106,6 +106,7 @@ Sub DonemKaydet(yil, ayKlasor)
     ay = DonemAySinirla(y, ayKlasor)
     Session(SESSION_SECILI_YIL) = y
     Session(SESSION_SECILI_AY) = ay
+    Call PortalOturumKodSayfasiSifirla()
 End Sub
 
 Sub DonemFormIsle()

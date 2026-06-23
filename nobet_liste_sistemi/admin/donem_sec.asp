@@ -16,8 +16,7 @@ If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
     ayKlasor = LCase(Trim(Request.Form("ay")))
     If DonemSecimGecerliMi(yil, ayKlasor) Then
         DonemKaydet yil, ayKlasor
-        Response.Redirect "listeler.asp"
-        Response.End
+        Call NobetYonlendir("listeler.asp")
     End If
 End If
 
@@ -45,7 +44,7 @@ minAy = ProjeMinAyForYil(seciliYil)
       </div>
 
       <div class="dashboard-card">
-        <p>Listeleri yönetmek için yıl ve ay seçin. Proje dönemi: Haziran 2026 — 2040.</p>
+        <p>Listeleri yönetmek için yıl ve ay seçin.</p>
         <form method="post" action="donem_sec.asp" class="period-form">
           <div class="form-row">
             <div class="form-group">

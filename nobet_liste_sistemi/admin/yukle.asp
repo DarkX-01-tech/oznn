@@ -27,8 +27,7 @@ Else
 End If
 
 If binaKodu = "" Or dosyaAdi = "" Then
-    Response.Redirect "listeler.asp"
-    Response.End
+    Call NobetYonlendir("listeler.asp")
 End If
 
 If Not DosyaAdiGecerliMi(binaKodu, dosyaAdi) Then
@@ -53,11 +52,10 @@ If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
         yukleyen = Session(SESSION_ADMIN_KEY & "_ad")
         NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, yukleyen, True, seciliYil, seciliAy, islemTipi
         If islemTipi = "guncelle" Then
-            Response.Redirect "listeler.asp?mesaj=guncellendi"
+            Call NobetYonlendir("listeler.asp?mesaj=guncellendi")
         Else
-            Response.Redirect "listeler.asp?mesaj=yuklendi"
+            Call NobetYonlendir("listeler.asp?mesaj=yuklendi")
         End If
-        Response.End
     Else
         hata = yuklemeHatasi
     End If

@@ -53,7 +53,7 @@ EnsureTumAyKlasorleri
       <tr>
         <td bgcolor="#FFFFFF" width="900" valign="top" align="center" class="portal-icerik">
           <div class="baslik-row">
-            <a href="portal_restore.asp" class="home-icon-btn" title="Ana Sayfaya Dön" aria-label="Ana Sayfaya Dön">
+            <a href="portal_restore.asp" class="home-icon-btn no-transition" title="Ana Sayfaya Dön" aria-label="Ana Sayfaya Dön">
               <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
                 <path fill="currentColor" d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"/>
               </svg>
@@ -87,6 +87,6 @@ EnsureTumAyKlasorleri
       </tr>
     </table>
   </div>
-  <!-- #include file="includes/page_footer.asp" -->
+  <!-- #include file="includes/session_restore.asp" -->
 </body>
 </html>
