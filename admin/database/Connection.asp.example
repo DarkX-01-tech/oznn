@@ -1,0 +1,8 @@
+<%
+' Örnek bağlantı dosyası - sunucudaki mevcut Connection.asp ile değiştirilebilir.
+' conn nesnesi global olarak tanımlı olmalıdır.
+
+' Dim conn
+' Set conn = Server.CreateObject("ADODB.Connection")
+' conn.Open "Provider=SQLOLEDB;Data Source=SUNUCU;Initial Catalog=VERITABANI;User ID=KULLANICI;Password=SIFRE;"
+%>
