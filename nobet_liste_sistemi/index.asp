@@ -19,7 +19,7 @@ EnsureTumAyKlasorleri
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nöbet Listeleri - MÜ Pendik E.A.H.</title>
   <link rel="icon" href="<%= PORTAL_IMAGES_YOLU %>hastane_portal_logo.png">
-  <link rel="stylesheet" href="assets/style.css?v=20260624">
+  <link rel="stylesheet" href="assets/style.css?v=20260625">
   <script>
     document.addEventListener('copy', function(e) { e.preventDefault(); });
     document.addEventListener('selectstart', function(e) { e.preventDefault(); });
