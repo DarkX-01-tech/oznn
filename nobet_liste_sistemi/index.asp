@@ -21,6 +21,9 @@ EnsureTumAyKlasorleri
   <link rel="icon" href="<%= PORTAL_IMAGES_YOLU %>hastane_portal_logo.png">
   <link rel="stylesheet" href="assets/style.css">
   <script>
+    document.addEventListener('copy', function(e) { e.preventDefault(); });
+    document.addEventListener('selectstart', function(e) { e.preventDefault(); });
+
     document.addEventListener('DOMContentLoaded', function() {
       var btn = document.getElementById('scrollTopBtn');
       if (!btn) return;
