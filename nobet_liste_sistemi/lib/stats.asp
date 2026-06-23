@@ -200,7 +200,7 @@ Sub RenderIstatistikTamListe(yil, ayKlasor)
     Dim i, satir, baslik, dosyaAdi, bilgi, aktif, webYolu, donemBaslik
     donemBaslik = AyBaslikFromKlasor(ayKlasor) & " " & yil
 
-    Response.Write "<div class=""section-title"">Pendik E.A.H. Nöbet Listeleri</div>"
+    Response.Write "<div class=""baslik"">PENDİK EĞİTİM &amp; ARAŞTIRMA HASTANESİ<br/>NÖBET LİSTELERİ</div>"
     Response.Write "<div class=""ay-baslik"">" & Server.HTMLEncode(donemBaslik) & "</div>"
     Response.Write "<table class=""liste-tablo"">"
     For i = 0 To UBound(pendikNobetListeleri)
@@ -209,7 +209,7 @@ Sub RenderIstatistikTamListe(yil, ayKlasor)
     Next
     Response.Write "</table>"
 
-    Response.Write "<div class=""section-title"">Prof. Dr. Asaf Ataseven Ek Hizmet Binası</div>"
+    Response.Write "<div class=""baslik"">PROF. DR. ASAF ATASEVEN EK HİZMET BİNASI<br/>NÖBET LİSTELERİ</div>"
     Response.Write "<div class=""ay-baslik"">" & Server.HTMLEncode(donemBaslik) & "</div>"
     Response.Write "<table class=""liste-tablo"">"
     For i = 0 To UBound(basibuyukNobetListeleri)

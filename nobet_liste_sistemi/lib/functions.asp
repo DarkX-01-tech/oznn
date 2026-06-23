@@ -149,13 +149,13 @@ Sub RenderTamListeGorunumu(yil, ayKlasor)
     Dim donemBaslik
     donemBaslik = AyBaslikFromKlasor(ayKlasor) & " " & yil
 
-    Response.Write "<div class=""section-title"">Pendik E.A.H. Nöbet Listeleri</div>"
+    Response.Write "<div class=""baslik"">PENDİK EĞİTİM &amp; ARAŞTIRMA HASTANESİ<br/>NÖBET LİSTELERİ</div>"
     Response.Write "<div class=""ay-baslik"">" & Server.HTMLEncode(donemBaslik) & "</div>"
     Response.Write "<table class=""liste-tablo"">"
     RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri, yil, ayKlasor
     Response.Write "</table>"
 
-    Response.Write "<div class=""section-title"">Prof. Dr. Asaf Ataseven Ek Hizmet Binası</div>"
+    Response.Write "<div class=""baslik"">PROF. DR. ASAF ATASEVEN EK HİZMET BİNASI<br/>NÖBET LİSTELERİ</div>"
     Response.Write "<div class=""ay-baslik"">" & Server.HTMLEncode(donemBaslik) & "</div>"
     Response.Write "<table class=""liste-tablo"">"
     RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri, yil, ayKlasor

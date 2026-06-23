@@ -8,18 +8,21 @@
 <%
 AdminGirisGerekli
 
-Dim i
+Dim i, seciliYil, minAy
 
 If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
     Dim yil, ayKlasor
     yil = Trim(Request.Form("yil"))
     ayKlasor = LCase(Trim(Request.Form("ay")))
-    If yil <> "" And AyKlasorGecerliMi(ayKlasor) Then
+    If DonemSecimGecerliMi(yil, ayKlasor) Then
         DonemKaydet yil, ayKlasor
         Response.Redirect "listeler.asp"
         Response.End
     End If
 End If
+
+seciliYil = GetSeciliYil()
+minAy = ProjeMinAyForYil(seciliYil)
 %>
 <!DOCTYPE html>
 <html lang="tr">
@@ -42,21 +45,21 @@ End If
       </div>
 
       <div class="dashboard-card">
-        <p>Listeleri yönetmek için yıl ve ay seçin.</p>
+        <p>Listeleri yönetmek için yıl ve ay seçin. Proje dönemi: Haziran 2026 — 2040.</p>
         <form method="post" action="donem_sec.asp" class="period-form">
           <div class="form-row">
             <div class="form-group">
               <label for="yil">Yıl</label>
               <select id="yil" name="yil" required>
-                <% For i = GuncelYil() + 1 To GuncelYil() - 5 Step -1 %>
-                  <option value="<%= i %>"<% If i = GetSeciliYil() Then %> selected<% End If %>><%= i %></option>
+                <% For i = PROJE_BITIS_YIL To PROJE_BASLANGIC_YIL Step -1 %>
+                  <option value="<%= i %>"<% If i = seciliYil Then %> selected<% End If %>><%= i %></option>
                 <% Next %>
               </select>
             </div>
             <div class="form-group">
               <label for="ay">Ay</label>
               <select id="ay" name="ay" required>
-                <% For i = 1 To 12 %>
+                <% For i = minAy To 12 %>
                   <option value="<%= AyKlasorFromNumara(i) %>"<% If AyKlasorFromNumara(i) = GetSeciliAyKlasor() Then %> selected<% End If %>><%= TurkceAyAdi(i) %></option>
                 <% Next %>
               </select>
@@ -70,5 +73,37 @@ End If
       </div>
     </div>
   </div>
+  <script>
+    (function() {
+      var ayAdlari = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+      var ayKlasorleri = ["ocak","subat","mart","nisan","mayis","haziran","temmuz","agustos","eylul","ekim","kasim","aralik"];
+      var baslangicYil = <%= PROJE_BASLANGIC_YIL %>;
+      var baslangicAy = <%= PROJE_BASLANGIC_AY %>;
+      var yilSelect = document.getElementById("yil");
+      var aySelect = document.getElementById("ay");
+
+      function guncelleAylar() {
+        var yil = parseInt(yilSelect.value, 10);
+        var minAy = (yil === baslangicYil) ? baslangicAy : 1;
+        var secili = aySelect.value;
+        aySelect.innerHTML = "";
+        for (var i = minAy; i <= 12; i++) {
+          var opt = document.createElement("option");
+          opt.value = ayKlasorleri[i - 1];
+          opt.textContent = ayAdlari[i - 1];
+          aySelect.appendChild(opt);
+        }
+        for (var j = 0; j < aySelect.options.length; j++) {
+          if (aySelect.options[j].value === secili) {
+            aySelect.selectedIndex = j;
+            return;
+          }
+        }
+        aySelect.selectedIndex = 0;
+      }
+
+      yilSelect.addEventListener("change", guncelleAylar);
+    })();
+  </script>
 </body>
 </html>

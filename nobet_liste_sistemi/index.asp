@@ -13,8 +13,15 @@ EnsureTumAyKlasorleri
   <meta http-equiv="Content-Language" content="tr">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nöbet Listeleri - MÜ Pendik E.A.H.</title>
+  <link rel="icon" href="<%= PORTAL_IMAGES_YOLU %>hastane_portal_logo.png">
   <link rel="stylesheet" href="assets/style.css">
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 15000);
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
       var btn = document.getElementById('scrollTopBtn');
       window.addEventListener('scroll', function() {
@@ -27,45 +34,58 @@ EnsureTumAyKlasorleri
         }
       });
     });
+
     function scrollToTop() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
 </head>
-<body class="public-body portal-body" style="background-image: url('<%= PORTAL_IMAGES_YOLU & PORTAL_ARKAPLAN_RESIM %>');">
+<body class="portal-body" style="background-image: url('<%= PORTAL_IMAGES_YOLU & PORTAL_ARKAPLAN_RESIM %>');">
   <div id="scrollTopBtn" onclick="scrollToTop()">^</div>
 
-  <div class="page-shell">
-    <div class="golgeliKutu portal-kutu">
-      <div class="portal-banner">
-        <img src="<%= PORTAL_IMAGES_YOLU & PORTAL_BANNER_RESIM %>" alt="Marmara Üniversitesi Pendik Eğitim ve Araştırma Hastanesi">
-      </div>
+  <div align="center" class="golgeliKutu portal-kutu">
+    <table class="portal-table" width="900" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td colspan="3">
+          <img src="<%= PORTAL_IMAGES_YOLU & PORTAL_BANNER_RESIM %>" width="900" height="165" alt="Marmara Üniversitesi Pendik Eğitim ve Araştırma Hastanesi">
+        </td>
+      </tr>
+      <tr>
+        <td bgcolor="#FFFFFF" width="900" valign="top" align="center" class="portal-icerik">
+          <div class="baslik-row">
+            <a href="<%= PORTAL_ANA_SAYFA %>" class="home-icon-btn" title="Ana Sayfaya Dön" aria-label="Ana Sayfaya Dön">
+              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                <path fill="currentColor" d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"/>
+              </svg>
+            </a>
+            <div class="baslik">
+              PENDİK EĞİTİM &amp; ARAŞTIRMA HASTANESİ<br/>
+              NÖBET LİSTELERİ
+            </div>
+          </div>
 
-      <div class="portal-toolbar">
-        <a href="<%= PORTAL_ANA_SAYFA %>" class="btn btn-back">← Ana Sayfaya Dön</a>
-      </div>
-
-      <div class="content-panel">
-        <div class="section-title">Pendik Eğitim &amp; Araştırma Hastanesi Nöbet Listeleri</div>
-
-        <div class="section-title">Pendik E.A.H. Nöbet Listeleri</div>
-        <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
-        <table class="liste-tablo">
+          <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
+          <table border="0" width="100%" class="liste-tablo" style="border-collapse: collapse">
             <% RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
-        </table>
+          </table>
 
-        <div class="section-title">Prof. Dr. Asaf Ataseven Ek Hizmet Binası Nöbet Listeleri</div>
-        <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
-        <table class="liste-tablo">
+          <div class="baslik">
+            PROF. DR. ASAF ATASEVEN EK HİZMET BİNASI<br/>
+            NÖBET LİSTELERİ
+          </div>
+
+          <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
+          <table border="0" width="100%" class="liste-tablo" style="border-collapse: collapse">
             <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
-          <tr>
-            <td class="yazi-stil no-icon">
-              <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
+            <tr>
+              <td class="yazi-stil no-icon">
+                <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
   </div>
 </body>
 </html>

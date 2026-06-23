@@ -17,6 +17,9 @@ Const PORTAL_IMAGES_YOLU = "/Admin/images/"
 Const PORTAL_BANNER_RESIM = "muhst_06.png"
 Const PORTAL_ARKAPLAN_RESIM = "arka-plan.png"
 Const PORTAL_ANA_SAYFA = "http://10.201.65.10/"
+Const PROJE_BASLANGIC_YIL = 2026
+Const PROJE_BITIS_YIL = 2040
+Const PROJE_BASLANGIC_AY = 6
 
 Function ModulFizikselYol()
     ModulFizikselYol = Server.MapPath(MODUL_WEB_YOLU)
