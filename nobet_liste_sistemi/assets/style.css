@@ -1,0 +1,267 @@
+body {
+  background: #eef3f6 url('../assets/arka-plan.png') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Segoe UI', 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.golgeliKutu {
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  width: 900px;
+  max-width: 95%;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.baslik {
+  font-size: 24px;
+  font-weight: 600;
+  color: #850303;
+  text-align: center;
+  margin: 25px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.baslik::after {
+  content: "";
+  display: block;
+  width: 80%;
+  max-width: 725px;
+  height: 2px;
+  background: #343a40;
+  margin: 15px auto 0;
+}
+
+.ay-baslik {
+  font-size: 18px;
+  font-weight: 600;
+  color: #25abb9;
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+.yazi-stil {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  position: relative;
+  padding-left: 40px;
+  font-weight: 600;
+}
+
+.yazi-stil::before {
+  content: '\1F4CB';
+  color: #d9534f;
+  position: absolute;
+  left: 15px;
+  top: 0;
+  font-size: 14px;
+}
+
+.duyuru-link {
+  color: #25abb9 !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  text-decoration: none !important;
+}
+
+.duyuru-link:hover {
+  color: #1e8c99 !important;
+}
+
+.duyuru-link-pasif {
+  color: #b0b0b0 !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  cursor: not-allowed;
+}
+
+.no-icon::before {
+  content: '\1F4DE' !important;
+  color: #000 !important;
+}
+
+.no-icon .duz-metn {
+  color: #000 !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+}
+
+.duz-metn::before {
+  content: none !important;
+}
+
+#scrollTopBtn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: #25abb9;
+  color: #fff;
+  font-size: 24px;
+  text-align: center;
+  line-height: 50px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 999;
+}
+
+.admin-wrap {
+  width: 1100px;
+  max-width: 95%;
+  margin: 30px auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  padding: 24px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #850303;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+
+.admin-header h1 {
+  margin: 0;
+  color: #850303;
+  font-size: 22px;
+}
+
+.admin-nav a {
+  color: #25abb9;
+  margin-left: 16px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.admin-nav a:hover {
+  color: #1e8c99;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.admin-table th,
+.admin-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.admin-table th {
+  background: #f5f5f5;
+  color: #850303;
+}
+
+.durum-aktif {
+  color: #198754;
+  font-weight: 700;
+}
+
+.durum-pasif {
+  color: #b0b0b0;
+  font-weight: 700;
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.btn-primary {
+  background: #25abb9;
+  color: #fff !important;
+}
+
+.btn-primary:hover {
+  background: #1e8c99;
+}
+
+.btn-danger {
+  background: #d9534f;
+  color: #fff !important;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: #fff !important;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.alert {
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.alert-success {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.alert-error {
+  background: #f8d7da;
+  color: #842029;
+}
+
+.login-box {
+  max-width: 420px;
+  margin: 80px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.login-box h1 {
+  color: #850303;
+  text-align: center;
+  margin-top: 0;
+}
+
+.bina-baslik {
+  background: #f8f9fa;
+  color: #850303;
+  font-weight: 700;
+  padding: 10px;
+}

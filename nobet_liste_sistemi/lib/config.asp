@@ -1,6 +1,4 @@
 <%
-' Pendik E.A.H. nöbet listesi tanımları: baslik + dosya adi
-
 Dim pendikNobetListeleri
 pendikNobetListeleri = Array( _
     Array("Hekim Çalışma Listeleri", "hekim_calisma_listeleri.pdf"), _
@@ -20,8 +18,8 @@ pendikNobetListeleri = Array( _
     Array("Santral Nöbet Listesi", "pendik_santral_nobet_listesi.pdf") _
 )
 
-Dim asafAtasevenNobetListeleri
-asafAtasevenNobetListeleri = Array( _
+Dim basibuyukNobetListeleri
+basibuyukNobetListeleri = Array( _
     Array("İdari Hekim Nöbet Listesi", "asaf_ataseven_idari_hekim_nobet_listesi.pdf"), _
     Array("Hemşire Süpervizör Nöbet Listesi", "asaf_ataseven_hemsire_supervizor_nobet_listesi.pdf"), _
     Array("Destek Kalite Süpervizör Nöbet Listesi", "asaf_ataseven_destek_kalite_supervizor_nobet_listesi.pdf"), _
@@ -30,11 +28,53 @@ asafAtasevenNobetListeleri = Array( _
     Array("Memur Nöbet Listesi", "asaf_ataseven_memur_nobet_listesi.pdf") _
 )
 
-Sub RenderNobetListeTablosu(listeDizisi)
-    Dim i, satir
-    For i = 0 To UBound(listeDizisi)
-        satir = listeDizisi(i)
-        RenderNobetListeSatiri satir(0), satir(1)
+Function BinaAdiGoster(binaKodu)
+    Select Case LCase(binaKodu)
+        Case BINA_PENDIK
+            BinaAdiGoster = "Pendik E.A.H."
+        Case BINA_BASIBUYUK
+            BinaAdiGoster = "Prof. Dr. Asaf Ataseven Ek Hizmet Binası"
+        Case Else
+            BinaAdiGoster = binaKodu
+    End Select
+End Function
+
+Function ListeDizisiGetir(binaKodu)
+    Select Case LCase(binaKodu)
+        Case BINA_PENDIK
+            ListeDizisiGetir = pendikNobetListeleri
+        Case BINA_BASIBUYUK
+            ListeDizisiGetir = basibuyukNobetListeleri
+        Case Else
+            ListeDizisiGetir = Array()
+    End Select
+End Function
+
+Function DosyaAdiGecerliMi(binaKodu, dosyaAdi)
+    Dim liste, i, satir
+    DosyaAdiGecerliMi = False
+    liste = ListeDizisiGetir(binaKodu)
+
+    For i = 0 To UBound(liste)
+        satir = liste(i)
+        If LCase(satir(1)) = LCase(dosyaAdi) Then
+            DosyaAdiGecerliMi = True
+            Exit Function
+        End If
     Next
-End Sub
+End Function
+
+Function BaslikGetir(binaKodu, dosyaAdi)
+    Dim liste, i, satir
+    BaslikGetir = dosyaAdi
+    liste = ListeDizisiGetir(binaKodu)
+
+    For i = 0 To UBound(liste)
+        satir = liste(i)
+        If LCase(satir(1)) = LCase(dosyaAdi) Then
+            BaslikGetir = satir(0)
+            Exit Function
+        End If
+    Next
+End Function
 %>
