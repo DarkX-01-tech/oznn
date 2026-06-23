@@ -1,67 +1,40 @@
 # Nöbet Liste Sistemi
 
-Tek klasörde çalışan, ay/yıl/bina bazlı nöbet listesi yönetim modülü.
+Tek klasörde çalışan, ay/yıl/bina bazlı nöbet listesi yönetim modülü.  
+Veritabanı: **Microsoft Access** (`database/nobet_liste.mdb`) — otomatik oluşturulur.
 
 ## Klasör yapısı
 
 ```
 nobet_liste_sistemi/
   index.asp                 → Halka açık liste sayfası
+  kurulum.asp               → İlk kurulum (veritabanı oluşturur)
   ayarlar.asp               → Modül ayarları
-  admin/
-    login.asp               → Yönetici girişi
-    panel.asp               → Dosya durumu ve yönetim
-    yukle.asp               → Dosya yükleme
-    dosya_sil.asp           → Dosya silme
+  admin/                    → Yönetici paneli
   database/
-    connection.asp          → Veritabanı bağlantısı
-    schema.sql              → Tablo kurulum scripti
-  lib/                      → Ortak fonksiyonlar
-  listeler/                 → Yüklenen dosyalar
-    2026/
-      pendik/
-        haziran/
-          pendik_acil_radyoloji_nobet_listesi.pdf
-      basibuyuk/
-        haziran/
-          asaf_ataseven_idari_hekim_nobet_listesi.pdf
+    nobet_liste.mdb         → Otomatik oluşur
+  listeler/
+    2026/pendik/haziran/    → Dosyalar
+    2026/basibuyuk/haziran/
 ```
 
 ## Kurulum
 
-1. `nobet_liste_sistemi` klasörünü sunucuya kopyalayın:
-   `inetpub/wwwroot/Admin/nobet_liste_sistemi/`
+1. `nobet_liste_sistemi` klasörünü sunucuya kopyalayın
+2. IIS'e `database`, `listeler`, `tmp` klasörlerinde yazma izni verin
+3. Tarayıcıda `/Admin/nobet_liste_sistemi/kurulum.asp` adresini açın
+4. Yönetici girişi: `admin` / `admin123`
 
-2. `database/connection.asp` içindeki SQL Server bilgilerini güncelleyin.
-
-3. `database/schema.sql` scriptini veritabanında çalıştırın.
-
-4. `ayarlar.asp` içindeki `MODUL_WEB_YOLU` değerini kontrol edin:
-   `/Admin/nobet_liste_sistemi/`
-
-5. IIS uygulama havuzuna `nobet_liste_sistemi`, `listeler` ve `tmp` klasörlerinde **okuma/yazma** izni verin.
-
-6. Dosya yükleme için sunucuda **Persits.Upload** veya **ABCUpload** bileşenlerinden biri kurulu olmalıdır.
-
-## Kullanım
+## Sayfalar
 
 | Sayfa | Adres |
 |-------|-------|
-| Liste sayfası | `/Admin/nobet_liste_sistemi/index.asp` |
-| Yönetici paneli | `/Admin/nobet_liste_sistemi/admin/login.asp` |
+| Kurulum | `/Admin/nobet_liste_sistemi/kurulum.asp` |
+| Liste | `/Admin/nobet_liste_sistemi/index.asp` |
+| Yönetim | `/Admin/nobet_liste_sistemi/admin/login.asp` |
 
-**Varsayılan giriş:** `admin` / `admin123` (kurulumdan sonra değiştirin)
+## Gereksinimler
 
-## Mantık
-
-- Sistem yılı → `listeler/2026/`
-- Bina → `pendik` veya `basibuyuk`
-- Ay → `haziran`, `temmuz` vb. (otomatik oluşur)
-- Dosya varsa link **aktif**, yoksa **pasif**
-- Yönetici panelinden dosya yüklenince link otomatik aktif olur
-
-## Portal entegrasyonu
-
-Mevcut portal menüsündeki nöbet listeleri linkini şu adrese yönlendirin:
-
-`/Admin/nobet_liste_sistemi/index.asp`
+- IIS + Classic ASP
+- Microsoft Jet OLEDB 4.0 veya Access Database Engine (ACE)
+- Dosya yükleme: Persits.Upload veya ABCUpload

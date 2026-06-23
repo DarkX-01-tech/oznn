@@ -78,25 +78,36 @@ Sub NobetDosyaDbKaydet(binaKodu, dosyaAdi, baslik, yukleyen, aktif)
     On Error Resume Next
     If Not IsObject(conn) Then Exit Sub
 
-    Dim sql, aktifDeger
+    Dim rs, sql, aktifDeger
     If aktif Then
-        aktifDeger = "1"
+        aktifDeger = "True"
     Else
-        aktifDeger = "0"
+        aktifDeger = "False"
     End If
 
-    sql = "IF EXISTS (SELECT 1 FROM NobetListeDosyalar WHERE yil = " & GetYil() & _
+    sql = "SELECT id FROM NobetListeDosyalar WHERE yil = " & GetYil() & _
           " AND bina = '" & SqlEscape(binaKodu) & "' AND ay_klasor = '" & SqlEscape(GetAyKlasorAdi()) & _
-          "' AND dosya_adi = '" & SqlEscape(dosyaAdi) & "') " & _
-          "UPDATE NobetListeDosyalar SET aktif = " & aktifDeger & ", baslik = '" & SqlEscape(baslik) & _
-          "', yukleyen = '" & SqlEscape(yukleyen) & "', guncelleme_tarihi = GETDATE() " & _
-          "WHERE yil = " & GetYil() & " AND bina = '" & SqlEscape(binaKodu) & "' AND ay_klasor = '" & SqlEscape(GetAyKlasorAdi()) & _
-          "' AND dosya_adi = '" & SqlEscape(dosyaAdi) & "' " & _
-          "ELSE INSERT INTO NobetListeDosyalar (yil, bina, ay_klasor, dosya_adi, baslik, aktif, yukleyen) VALUES (" & _
-          GetYil() & ", '" & SqlEscape(binaKodu) & "', '" & SqlEscape(GetAyKlasorAdi()) & "', '" & SqlEscape(dosyaAdi) & _
-          "', '" & SqlEscape(baslik) & "', " & aktifDeger & ", '" & SqlEscape(yukleyen) & "')"
+          "' AND dosya_adi = '" & SqlEscape(dosyaAdi) & "'"
 
-    conn.Execute sql
+    Set rs = conn.Execute(sql)
+
+    If Not rs.EOF Then
+        sql = "UPDATE NobetListeDosyalar SET aktif = " & aktifDeger & ", baslik = '" & SqlEscape(baslik) & _
+              "', yukleyen = '" & SqlEscape(yukleyen) & "', guncelleme_tarihi = Now() " & _
+              "WHERE yil = " & GetYil() & " AND bina = '" & SqlEscape(binaKodu) & "' AND ay_klasor = '" & SqlEscape(GetAyKlasorAdi()) & _
+              "' AND dosya_adi = '" & SqlEscape(dosyaAdi) & "'"
+        conn.Execute sql
+    Else
+        sql = "INSERT INTO NobetListeDosyalar (yil, bina, ay_klasor, dosya_adi, baslik, aktif, yukleyen, olusturma_tarihi) VALUES (" & _
+              GetYil() & ", '" & SqlEscape(binaKodu) & "', '" & SqlEscape(GetAyKlasorAdi()) & "', '" & SqlEscape(dosyaAdi) & _
+              "', '" & SqlEscape(baslik) & "', " & aktifDeger & ", '" & SqlEscape(yukleyen) & "', Now())"
+        conn.Execute sql
+    End If
+
+    If IsObject(rs) Then
+        rs.Close
+        Set rs = Nothing
+    End If
     On Error GoTo 0
 End Sub
 

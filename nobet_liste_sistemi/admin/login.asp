@@ -1,5 +1,5 @@
-<!-- #include file="../database/connection.asp" -->
 <!-- #include file="../ayarlar.asp" -->
+<!-- #include file="../database/connection.asp" -->
 <!-- #include file="../lib/auth.asp" -->
 <%
 If Session(SESSION_ADMIN_KEY) = "1" Then

@@ -15,7 +15,7 @@ Function AdminGirisYap(kullaniciAdi, sifre)
     Dim rs, sql
     sql = "SELECT TOP 1 id, kullanici_adi, ad_soyad FROM NobetAdminKullanicilar " & _
           "WHERE kullanici_adi = '" & SqlEscape(kullaniciAdi) & "' " & _
-          "AND sifre = '" & SqlEscape(sifre) & "' AND aktif = 1"
+          "AND sifre = '" & SqlEscape(sifre) & "' AND aktif = True"
 
     Set rs = conn.Execute(sql)
     If Not rs.EOF Then

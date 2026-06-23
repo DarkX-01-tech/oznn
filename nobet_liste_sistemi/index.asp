@@ -1,5 +1,5 @@
-<!-- #include file="database/connection.asp" -->
 <!-- #include file="ayarlar.asp" -->
+<!-- #include file="database/connection.asp" -->
 <!-- #include file="lib/config.asp" -->
 <!-- #include file="lib/functions.asp" -->
 <%
