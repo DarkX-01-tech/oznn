@@ -62,8 +62,11 @@ End If
 
       <div class="login-footer">
         <a href="../index.asp">Liste Sayfasına Dön</a>
+        <span class="login-footer-sep">|</span>
+        <a href="../portal_restore.asp">Portal Ana Sayfa</a>
       </div>
     </div>
   </div>
+  <!-- #include file="../includes/page_footer.asp" -->
 </body>
 </html>

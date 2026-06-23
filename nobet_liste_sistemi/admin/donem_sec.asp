@@ -105,5 +105,6 @@ minAy = ProjeMinAyForYil(seciliYil)
       yilSelect.addEventListener("change", guncelleAylar);
     })();
   </script>
+  <!-- #include file="../includes/page_footer.asp" -->
 </body>
 </html>

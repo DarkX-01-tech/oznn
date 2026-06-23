@@ -89,5 +89,6 @@ End If
       <% End If %>
     </div>
   </div>
+  <!-- #include file="../includes/page_footer.asp" -->
 </body>
 </html>

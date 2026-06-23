@@ -1,8 +1,9 @@
-<%@ Language=VBScript CodePage=65001 %>
-<!-- #include file="../ayarlar.asp" -->
+<%@ Language=VBScript CodePage=1254 %>
+<!-- #include file="../lib/constants.asp" -->
+<!-- #include file="../lib/encoding.asp" -->
 <!-- #include file="../lib/auth.asp" -->
 <%
-Session.CodePage = 1254
+Call PortalOturumKodSayfasiSifirla()
 AdminCikisYap
 Response.Redirect "login.asp"
 %>

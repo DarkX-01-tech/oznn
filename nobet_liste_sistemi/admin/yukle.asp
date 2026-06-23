@@ -129,5 +129,6 @@ qs = "bina=" & Server.URLEncode(binaKodu) & "&dosya=" & Server.URLEncode(dosyaAd
       </form>
     </div>
   </div>
+  <!-- #include file="../includes/page_footer.asp" -->
 </body>
 </html>

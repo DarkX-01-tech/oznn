@@ -18,6 +18,41 @@
 
 * { box-sizing: border-box; }
 
+html {
+  scroll-behavior: smooth;
+}
+
+html.page-ready body {
+  animation: pageFadeIn 0.42s ease both;
+}
+
+body.page-leave {
+  animation: pageFadeOut 0.22s ease both;
+  pointer-events: none;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", "Open Sans", Tahoma, sans-serif;
@@ -30,6 +65,36 @@ a { color: var(--primary); }
 
 .page-shell {
   padding: 32px 16px 48px;
+  animation: contentRise 0.48s ease 0.05s both;
+}
+
+@keyframes contentRise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.golgeliKutu.portal-kutu,
+.admin-wrap,
+.login-box,
+.upload-card {
+  animation: cardEnter 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .public-body {
@@ -197,6 +262,13 @@ a { color: var(--primary); }
   display: flex;
   flex-direction: column;
   min-height: 260px;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.panel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(37, 171, 185, 0.14);
+  border-color: rgba(37, 171, 185, 0.35);
 }
 
 .panel-card-primary {
@@ -584,11 +656,15 @@ a { color: var(--primary); }
   font-weight: 700;
   text-decoration: none !important;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease, opacity 0.22s ease;
 }
 
 .btn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .btn-sm {
@@ -712,6 +788,11 @@ a { color: var(--primary); }
   margin-top: 18px;
 }
 
+.login-footer-sep {
+  margin: 0 8px;
+  color: var(--muted);
+}
+
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -782,6 +863,7 @@ a { color: var(--primary); }
   font-weight: 600;
   font-size: 12px;
   border: 1px solid var(--border);
+  transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
 }
 
 .admin-menu a:hover,
@@ -789,6 +871,7 @@ a { color: var(--primary); }
   background: var(--primary);
   color: #fff !important;
   border-color: var(--primary);
+  transform: translateY(-1px);
 }
 
 .dashboard-grid {
@@ -849,14 +932,15 @@ a { color: var(--primary); }
   color: var(--accent) !important;
   font-weight: 700;
   font-size: 18px;
-  transition: all 0.2s ease;
+  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .link-card:hover {
   background: var(--primary);
   color: #fff !important;
   border-color: var(--primary);
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(37, 171, 185, 0.22);
 }
 
 .gecmis-panel {

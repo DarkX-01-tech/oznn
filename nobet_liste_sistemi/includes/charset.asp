@@ -1,6 +1,6 @@
+<!-- #include file="../lib/encoding.asp" -->
 <%
-' Session.CodePage KULLANILMAZ - portal sayfalarini bozar!
-Response.CodePage = 65001
-Response.CharSet = "utf-8"
-Response.ContentType = "text/html; charset=utf-8"
+' Portal Windows-1254 kullanir. Session.CodePage ASLA UTF-8 yapilmaz!
+' Sadece bu HTTP yanitinin cikis kodlamasi UTF-8'dir.
+Call NobetYanitKodSayfasiAyarla()
 %>
