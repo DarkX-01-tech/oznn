@@ -1,8 +1,0 @@
--- Bu proje artık Microsoft Access (.mdb) kullanır.
--- Tablolar otomatik oluşturulur; bu dosyayı çalıştırmanıza gerek yoktur.
---
--- Kurulum için tarayıcıda şu adresi açın:
--- /Admin/nobet_liste_sistemi/kurulum.asp
---
--- Oluşan dosya:
--- database/nobet_liste.mdb

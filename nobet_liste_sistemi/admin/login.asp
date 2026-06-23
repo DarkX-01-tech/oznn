@@ -9,6 +9,7 @@ End If
 
 Dim hata, kullanici, sifre
 hata = ""
+kullanici = ""
 
 If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
     kullanici = Trim(Request.Form("kullanici"))
@@ -28,12 +29,12 @@ End If
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
-  <title>Nöbet Liste Yönetimi - Giriş</title>
+  <title>Yönetici Girişi</title>
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
   <div class="login-box">
-    <h1>Yönetici Girişi</h1>
+    <h1>Nöbet Liste Yönetimi</h1>
     <% If hata <> "" Then %>
       <div class="alert alert-error"><%= Server.HTMLEncode(hata) %></div>
     <% End If %>

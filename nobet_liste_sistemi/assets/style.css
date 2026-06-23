@@ -1,6 +1,5 @@
 body {
-  background: #eef3f6 url('../assets/arka-plan.png') no-repeat center center fixed;
-  background-size: cover;
+  background: #eef3f6;
   font-family: 'Segoe UI', 'Open Sans', sans-serif;
   margin: 0;
   padding: 0;
@@ -147,10 +146,6 @@ body {
   font-weight: 600;
 }
 
-.admin-nav a:hover {
-  color: #1e8c99;
-}
-
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -169,15 +164,8 @@ body {
   color: #850303;
 }
 
-.durum-aktif {
-  color: #198754;
-  font-weight: 700;
-}
-
-.durum-pasif {
-  color: #b0b0b0;
-  font-weight: 700;
-}
+.durum-aktif { color: #198754; font-weight: 700; }
+.durum-pasif { color: #b0b0b0; font-weight: 700; }
 
 .btn {
   display: inline-block;
@@ -190,37 +178,13 @@ body {
   font-size: 12px;
 }
 
-.btn-primary {
-  background: #25abb9;
-  color: #fff !important;
-}
+.btn-primary { background: #25abb9; color: #fff !important; }
+.btn-secondary { background: #6c757d; color: #fff !important; }
+.btn-danger { background: #d9534f; color: #fff !important; }
 
-.btn-primary:hover {
-  background: #1e8c99;
-}
-
-.btn-danger {
-  background: #d9534f;
-  color: #fff !important;
-}
-
-.btn-secondary {
-  background: #6c757d;
-  color: #fff !important;
-}
-
-.form-group {
-  margin-bottom: 14px;
-}
-
-.form-group label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.form-group input,
-.form-group select {
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 6px; }
+.form-group input, .form-group select {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
@@ -228,21 +192,9 @@ body {
   box-sizing: border-box;
 }
 
-.alert {
-  padding: 12px;
-  border-radius: 4px;
-  margin-bottom: 16px;
-}
-
-.alert-success {
-  background: #d1e7dd;
-  color: #0f5132;
-}
-
-.alert-error {
-  background: #f8d7da;
-  color: #842029;
-}
+.alert { padding: 12px; border-radius: 4px; margin-bottom: 16px; }
+.alert-success { background: #d1e7dd; color: #0f5132; }
+.alert-error { background: #f8d7da; color: #842029; }
 
 .login-box {
   max-width: 420px;
@@ -253,15 +205,7 @@ body {
   box-shadow: 0 8px 16px rgba(0,0,0,0.15);
 }
 
-.login-box h1 {
-  color: #850303;
-  text-align: center;
-  margin-top: 0;
-}
+.login-box h1 { color: #850303; text-align: center; margin-top: 0; }
+.bina-baslik { background: #f8f9fa; color: #850303; font-weight: 700; padding: 10px; }
 
-.bina-baslik {
-  background: #f8f9fa;
-  color: #850303;
-  font-weight: 700;
-  padding: 10px;
-}
+.kurulum-list { line-height: 1.8; }

@@ -23,9 +23,11 @@ Sub RenderAdminTablo(binaKodu, listeDizisi)
         If aktif Then
             webYolu = NobetDosyaWebYolu(binaKodu, dosyaAdi)
             Response.Write "<td class=""durum-aktif"">Aktif</td>"
-            Response.Write "<td><a class=""btn btn-secondary"" href=""" & webYolu & """ target=""_blank"">Görüntüle</a> "
+            Response.Write "<td>"
+            Response.Write "<a class=""btn btn-secondary"" href=""" & webYolu & """ target=""_blank"">Görüntüle</a> "
             Response.Write "<a class=""btn btn-primary"" href=""yukle.asp?bina=" & Server.URLEncode(binaKodu) & "&dosya=" & Server.URLEncode(dosyaAdi) & """>Güncelle</a> "
-            Response.Write "<a class=""btn btn-danger"" href=""dosya_sil.asp?bina=" & Server.URLEncode(binaKodu) & "&dosya=" & Server.URLEncode(dosyaAdi) & """ onclick=""return confirm('Dosya silinsin mi?');"">Sil</a></td>"
+            Response.Write "<a class=""btn btn-danger"" href=""dosya_sil.asp?bina=" & Server.URLEncode(binaKodu) & "&dosya=" & Server.URLEncode(dosyaAdi) & """ onclick=""return confirm('Dosya silinsin mi?');"">Sil</a>"
+            Response.Write "</td>"
         Else
             Response.Write "<td class=""durum-pasif"">Pasif</td>"
             Response.Write "<td><a class=""btn btn-primary"" href=""yukle.asp?bina=" & Server.URLEncode(binaKodu) & "&dosya=" & Server.URLEncode(dosyaAdi) & """>Yükle</a></td>"
@@ -54,12 +56,10 @@ End Sub
     </div>
 
     <p><strong>Dönem:</strong> <%= GetAyBaslikMetni() %></p>
-    <p><strong>Klasör:</strong> listeler/<%= GetYil() %>/<em>bina</em>/<%= GetAyKlasorAdi() %>/</p>
+    <p><strong>Klasör yapısı:</strong> listeler/<%= GetYil() %>/pendik|basibuyuk/<%= GetAyKlasorAdi() %>/</p>
 
     <table class="admin-table">
-      <tr>
-        <th colspan="4" class="bina-baslik"><%= BinaAdiGoster(BINA_PENDIK) %></th>
-      </tr>
+      <tr><th colspan="4" class="bina-baslik"><%= BinaAdiGoster(BINA_PENDIK) %></th></tr>
       <tr>
         <th>Liste Adı</th>
         <th>Dosya Adı</th>
@@ -72,9 +72,7 @@ End Sub
     <br>
 
     <table class="admin-table">
-      <tr>
-        <th colspan="4" class="bina-baslik"><%= BinaAdiGoster(BINA_BASIBUYUK) %></th>
-      </tr>
+      <tr><th colspan="4" class="bina-baslik"><%= BinaAdiGoster(BINA_BASIBUYUK) %></th></tr>
       <tr>
         <th>Liste Adı</th>
         <th>Dosya Adı</th>

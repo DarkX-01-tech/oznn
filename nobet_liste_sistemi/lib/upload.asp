@@ -1,11 +1,11 @@
 <%
-' Basit dosya yükleme yardımcısı (Persits.Upload veya ABCUpload varsa kullanır)
 Function DosyaYukleVeKaydet(hedefTamYol, ByRef hataMesaji)
-    Dim upload, dosya, bilesenAdi, basarili
+    Dim upload, dosya, bilesenAdi, basarili, tmpKlasor
     basarili = False
     hataMesaji = ""
+    tmpKlasor = ModulFizikselYol() & "\tmp"
 
-  On Error Resume Next
+    On Error Resume Next
 
     Set upload = Server.CreateObject("Persits.Upload")
     bilesenAdi = "Persits.Upload"
@@ -18,7 +18,7 @@ Function DosyaYukleVeKaydet(hedefTamYol, ByRef hataMesaji)
     If Err.Number = 0 And Not upload Is Nothing Then
         If bilesenAdi = "Persits.Upload" Then
             upload.OverwriteFiles = True
-            upload.Save ModulFizikselYol() & "\tmp"
+            upload.Save tmpKlasor
             Set dosya = upload.Files("dosya")
             If dosya Is Nothing Then
                 If upload.Files.Count > 0 Then

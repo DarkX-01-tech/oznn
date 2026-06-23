@@ -4,21 +4,21 @@
 Dim dbPath, fso, mesajlar
 Set fso = Server.CreateObject("Scripting.FileSystemObject")
 dbPath = AccessDbFizikselYol()
-
 mesajlar = ""
+
 If fso.FileExists(dbPath) Then
-    mesajlar = mesajlar & "<li>Access veritabanı oluşturuldu: database/nobet_liste.mdb</li>"
+    mesajlar = mesajlar & "<li>Access veritabanı hazır: database/nobet_liste.mdb</li>"
 Else
-    mesajlar = mesajlar & "<li style='color:red;'>Veritabanı dosyası oluşturulamadı.</li>"
+    mesajlar = mesajlar & "<li class='alert-error'>Veritabanı oluşturulamadı. IIS yazma iznini kontrol edin.</li>"
 End If
 
 If AccessTabloVarMi("NobetListeDosyalar") Then
-    mesajlar = mesajlar & "<li>NobetListeDosyalar tablosu hazır</li>"
+    mesajlar = mesajlar & "<li>NobetListeDosyalar tablosu oluşturuldu</li>"
 End If
 
 If AccessTabloVarMi("NobetAdminKullanicilar") Then
-    mesajlar = mesajlar & "<li>NobetAdminKullanicilar tablosu hazır</li>"
-    mesajlar = mesajlar & "<li>Varsayılan giriş: admin / admin123</li>"
+    mesajlar = mesajlar & "<li>NobetAdminKullanicilar tablosu oluşturuldu</li>"
+    mesajlar = mesajlar & "<li>Varsayılan giriş: <strong>admin</strong> / <strong>admin123</strong></li>"
 End If
 
 Set fso = Nothing
@@ -33,7 +33,7 @@ Set fso = Nothing
 <body>
   <div class="admin-wrap">
     <h1 style="color:#850303;">Kurulum Tamamlandı</h1>
-    <ul><%= mesajlar %></ul>
+    <ul class="kurulum-list"><%= mesajlar %></ul>
     <p>
       <a class="btn btn-primary" href="admin/login.asp">Yönetici Girişi</a>
       <a class="btn btn-secondary" href="index.asp">Liste Sayfası</a>

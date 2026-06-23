@@ -115,10 +115,8 @@ Sub NobetDosyaDbSenkronize(binaKodu, dosyaAdi, baslik)
     Dim mevcut, yukleyen
     mevcut = NobetDosyaMevcut(binaKodu, dosyaAdi)
     yukleyen = ""
-    If IsObject(Session) Then
-        If Session(SESSION_ADMIN_KEY & "_ad") <> "" Then
-            yukleyen = Session(SESSION_ADMIN_KEY & "_ad")
-        End If
+    If Session(SESSION_ADMIN_KEY & "_ad") <> "" Then
+        yukleyen = Session(SESSION_ADMIN_KEY & "_ad")
     End If
     NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, yukleyen, mevcut
 End Sub
@@ -153,22 +151,4 @@ Sub RenderNobetListeTablosu(binaKodu, listeDizisi)
         RenderNobetListeSatiri binaKodu, satir(0), satir(1)
     Next
 End Sub
-
-Function IzinVerilenUzantilar()
-    IzinVerilenUzantilar = Array(".pdf", ".xls", ".xlsx")
-End Function
-
-Function DosyaUzantisiGecerliMi(dosyaAdi)
-    Dim uzantilar, i, uzanti
-    uzanti = LCase(Right(dosyaAdi, Len(dosyaAdi) - InStrRev(dosyaAdi, ".")))
-    uzantilar = IzinVerilenUzantilar()
-
-    DosyaUzantisiGecerliMi = False
-    For i = 0 To UBound(uzantilar)
-        If "." & uzanti = LCase(uzantilar(i)) Then
-            DosyaUzantisiGecerliMi = True
-            Exit Function
-        End If
-    Next
-End Function
 %>

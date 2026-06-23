@@ -1,9 +1,7 @@
 # oznn
 
-Bu depo, MÜ Pendik E.A.H. nöbet listesi modülünü içerir.
+MÜ Pendik E.A.H. nöbet listesi modülü.
 
-Tüm sistem tek klasörde kurulur:
+Tüm sistem tek klasörde: **`nobet_liste_sistemi/`**
 
-**`nobet_liste_sistemi/`**
-
-Kurulum ve kullanım için: [nobet_liste_sistemi/README.md](nobet_liste_sistemi/README.md)
+Kurulum: [nobet_liste_sistemi/README.md](nobet_liste_sistemi/README.md)

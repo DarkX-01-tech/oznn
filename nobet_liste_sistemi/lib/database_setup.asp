@@ -1,14 +1,4 @@
 <%
-Const ACCESS_DB_DOSYA = "nobet_liste.mdb"
-
-Function AccessDbFizikselYol()
-    AccessDbFizikselYol = ModulFizikselYol() & "\database\" & ACCESS_DB_DOSYA
-End Function
-
-Function AccessBaglantiMetni()
-    AccessBaglantiMetni = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & AccessDbFizikselYol() & ";"
-End Function
-
 Sub EnsureAccessDatabase()
     Dim fso, dbPath, dbKlasor, cat
 
@@ -64,7 +54,7 @@ Sub EnsureAccessTables()
 
     If Not AccessTabloVarMi("NobetListeDosyalar") Then
         dbConn.Execute "CREATE TABLE NobetListeDosyalar (" & _
-            "id COUNTER CONSTRAINT PK_NobetListeDosyalar PRIMARY KEY, " & _
+            "id COUNTER PRIMARY KEY, " & _
             "yil INTEGER NOT NULL, " & _
             "bina TEXT(50) NOT NULL, " & _
             "ay_klasor TEXT(20) NOT NULL, " & _
@@ -78,7 +68,7 @@ Sub EnsureAccessTables()
 
     If Not AccessTabloVarMi("NobetAdminKullanicilar") Then
         dbConn.Execute "CREATE TABLE NobetAdminKullanicilar (" & _
-            "id COUNTER CONSTRAINT PK_NobetAdminKullanicilar PRIMARY KEY, " & _
+            "id COUNTER PRIMARY KEY, " & _
             "kullanici_adi TEXT(50) NOT NULL, " & _
             "sifre TEXT(255) NOT NULL, " & _
             "ad_soyad TEXT(100), " & _

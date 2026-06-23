@@ -50,9 +50,7 @@ End If
   <div class="admin-wrap">
     <div class="admin-header">
       <h1>Dosya Yükle</h1>
-      <div class="admin-nav">
-        <a href="panel.asp">Panele Dön</a>
-      </div>
+      <div class="admin-nav"><a href="panel.asp">Panele Dön</a></div>
     </div>
 
     <% If mesaj <> "" Then %>
@@ -60,7 +58,7 @@ End If
     <% End If %>
     <% If hata <> "" Then %>
       <div class="alert alert-error"><%= Server.HTMLEncode(hata) %></div>
-    End If %>
+    <% End If %>
 
     <p><strong>Bina:</strong> <%= Server.HTMLEncode(BinaAdiGoster(binaKodu)) %></p>
     <p><strong>Liste:</strong> <%= Server.HTMLEncode(baslik) %></p>

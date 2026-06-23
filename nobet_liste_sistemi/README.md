@@ -1,29 +1,31 @@
 # Nöbet Liste Sistemi
 
-Tek klasörde çalışan, ay/yıl/bina bazlı nöbet listesi yönetim modülü.  
-Veritabanı: **Microsoft Access** (`database/nobet_liste.mdb`) — otomatik oluşturulur.
+Tek klasörde çalışan nöbet listesi modülü. Veritabanı: **Microsoft Access** (otomatik oluşur).
 
 ## Klasör yapısı
 
 ```
 nobet_liste_sistemi/
-  index.asp                 → Halka açık liste sayfası
-  kurulum.asp               → İlk kurulum (veritabanı oluşturur)
-  ayarlar.asp               → Modül ayarları
-  admin/                    → Yönetici paneli
-  database/
-    nobet_liste.mdb         → Otomatik oluşur
-  listeler/
-    2026/pendik/haziran/    → Dosyalar
-    2026/basibuyuk/haziran/
+├── index.asp              Liste sayfası (halka açık)
+├── kurulum.asp            İlk kurulum
+├── ayarlar.asp            Ayarlar
+├── web.config             IIS yükleme limiti
+├── admin/                 Yönetici paneli
+├── assets/                CSS
+├── database/              Access veritabanı (otomatik oluşur)
+├── lib/                   Ortak kodlar
+├── listeler/              PDF/XLS dosyaları
+│   └── 2026/
+│       ├── pendik/haziran/
+│       └── basibuyuk/haziran/
+└── tmp/                   Geçici yükleme klasörü
 ```
 
-## Kurulum
+## Kurulum (3 adım)
 
-1. `nobet_liste_sistemi` klasörünü sunucuya kopyalayın
-2. IIS'e `database`, `listeler`, `tmp` klasörlerinde yazma izni verin
-3. Tarayıcıda `/Admin/nobet_liste_sistemi/kurulum.asp` adresini açın
-4. Yönetici girişi: `admin` / `admin123`
+1. Bu klasörü sunucuya kopyala: `C:\inetpub\wwwroot\Admin\nobet_liste_sistemi\`
+2. IIS'e `database`, `listeler`, `tmp` klasörlerinde yazma izni ver
+3. Tarayıcıda aç: `http://SUNUCU/Admin/nobet_liste_sistemi/kurulum.asp`
 
 ## Sayfalar
 
@@ -33,8 +35,10 @@ nobet_liste_sistemi/
 | Liste | `/Admin/nobet_liste_sistemi/index.asp` |
 | Yönetim | `/Admin/nobet_liste_sistemi/admin/login.asp` |
 
+**Giriş:** admin / admin123
+
 ## Gereksinimler
 
 - IIS + Classic ASP
-- Microsoft Jet OLEDB 4.0 veya Access Database Engine (ACE)
+- Microsoft Jet OLEDB 4.0 veya Access Database Engine
 - Dosya yükleme: Persits.Upload veya ABCUpload
