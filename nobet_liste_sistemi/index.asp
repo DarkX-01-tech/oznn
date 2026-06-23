@@ -19,7 +19,7 @@ EnsureTumAyKlasorleri
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nöbet Listeleri - MÜ Pendik E.A.H.</title>
   <link rel="icon" href="<%= PORTAL_IMAGES_YOLU %>hastane_portal_logo.png">
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/style.css?v=20260623">
   <script>
     document.addEventListener('copy', function(e) { e.preventDefault(); });
     document.addEventListener('selectstart', function(e) { e.preventDefault(); });
@@ -49,25 +49,25 @@ EnsureTumAyKlasorleri
     <table class="portal-table" width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td class="banner-cell">
-          <img src="<%= PORTAL_IMAGES_YOLU & PORTAL_BANNER_RESIM %>" width="100%" height="165" alt="Marmara Üniversitesi Pendik Eğitim ve Araştırma Hastanesi">
+          <img src="<%= PORTAL_IMAGES_YOLU & PORTAL_BANNER_RESIM %>" alt="Marmara Üniversitesi Pendik Eğitim ve Araştırma Hastanesi">
         </td>
       </tr>
       <tr>
         <td bgcolor="#FFFFFF" valign="top" align="center" class="portal-icerik">
 
-          <div class="baslik">
-            <div class="left-side">
+          <div class="portal-baslik">
+            <div class="portal-baslik-sol">
               <button type="button" class="back-button ghost-btn" onclick="window.location.href='<%= PORTAL_ANA_SAYFA %>'" title="Ana Sayfa">
                 <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
                 </svg>
               </button>
             </div>
-            <div class="center-title">
+            <div class="portal-baslik-orta">
               PENDİK EĞİTİM &amp; ARAŞTIRMA HASTANESİ<br/>
               NÖBET LİSTELERİ
             </div>
-            <div class="right-side"></div>
+            <div class="portal-baslik-sag"></div>
           </div>
 
           <div class="donem-etiket"><%= GetAyBaslikMetni() %></div>
@@ -81,13 +81,13 @@ EnsureTumAyKlasorleri
             </div>
           </div>
 
-          <div class="baslik bolum-baslik">
-            <div class="left-side"></div>
-            <div class="center-title center-title-sm">
+          <div class="portal-baslik portal-baslik-alt">
+            <div class="portal-baslik-sol"></div>
+            <div class="portal-baslik-orta portal-baslik-orta-kucuk">
               PROF. DR. ASAF ATASEVEN EK HİZMET BİNASI<br/>
               NÖBET LİSTELERİ
             </div>
-            <div class="right-side"></div>
+            <div class="portal-baslik-sag"></div>
           </div>
 
           <div class="donem-etiket"><%= GetAyBaslikMetni() %></div>
@@ -99,8 +99,10 @@ EnsureTumAyKlasorleri
                 <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
                 <tr class="nobet-liste-row">
                   <td class="nobet-liste-cell nobet-liste-cell-phone">
-                    <span class="liste-icon liste-icon-phone" aria-hidden="true"></span>
-                    <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
+                    <span class="liste-satir-icerik">
+                      <span class="liste-icon liste-icon-phone" aria-hidden="true"></span>
+                      <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
+                    </span>
                   </td>
                 </tr>
               </table>

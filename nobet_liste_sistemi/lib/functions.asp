@@ -129,6 +129,7 @@ Sub RenderNobetListeSatiri(binaKodu, baslik, dosyaAdi, yil, ayKlasor)
 
     Response.Write "<tr class=""nobet-liste-row"">"
     Response.Write "<td class=""nobet-liste-cell"">"
+    Response.Write "<span class=""liste-satir-icerik"">"
     Response.Write "<span class=""liste-icon"" aria-hidden=""true""></span>"
     If aktif Then
         webYolu = NobetDosyaWebYolu(binaKodu, dosyaAdi, yil, ayKlasor)
@@ -136,7 +137,7 @@ Sub RenderNobetListeSatiri(binaKodu, baslik, dosyaAdi, yil, ayKlasor)
     Else
         Response.Write "<span class=""duyuru-link-pasif"" title=""Bu ay için dosya henüz yüklenmedi."">" & Server.HTMLEncode(baslik) & "</span>"
     End If
-    Response.Write "</td></tr>"
+    Response.Write "</span></td></tr>"
 End Sub
 
 Sub RenderNobetListeTablosu(binaKodu, listeDizisi, yil, ayKlasor)
