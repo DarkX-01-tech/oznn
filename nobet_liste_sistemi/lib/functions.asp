@@ -127,7 +127,9 @@ Sub RenderNobetListeSatiri(binaKodu, baslik, dosyaAdi, yil, ayKlasor)
     Dim aktif, webYolu
     aktif = NobetDosyaAktif(binaKodu, dosyaAdi, yil, ayKlasor)
 
-    Response.Write "<tr><td class=""yazi-stil"">"
+    Response.Write "<tr class=""nobet-liste-row"">"
+    Response.Write "<td class=""nobet-liste-cell"">"
+    Response.Write "<span class=""liste-icon"" aria-hidden=""true""></span>"
     If aktif Then
         webYolu = NobetDosyaWebYolu(binaKodu, dosyaAdi, yil, ayKlasor)
         Response.Write "<a class=""duyuru-link"" target=""_blank"" href=""" & webYolu & """>" & Server.HTMLEncode(baslik) & "</a>"

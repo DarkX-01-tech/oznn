@@ -35,53 +35,75 @@ EnsureTumAyKlasorleri
       });
     });
     function scrollToTop() {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
 </head>
 <body class="portal-body" style="background-image: url('<%= PORTAL_IMAGES_YOLU & PORTAL_ARKAPLAN_RESIM %>');">
-  <div id="scrollTopBtn" onclick="scrollToTop()">^</div>
+  <div id="scrollTopBtn" class="ghost-btn scroll-top-btn" onclick="scrollToTop()" title="Yukarı Çık">^</div>
 
   <div align="center" class="golgeliKutu portal-kutu">
-    <table class="portal-table" width="900" border="0" cellpadding="0" cellspacing="0">
+    <table class="portal-table" width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
-        <td colspan="3">
-          <img src="<%= PORTAL_IMAGES_YOLU & PORTAL_BANNER_RESIM %>" width="900" height="165" alt="">
+        <td class="banner-cell">
+          <img src="<%= PORTAL_IMAGES_YOLU & PORTAL_BANNER_RESIM %>" width="100%" height="165" alt="Marmara Üniversitesi Pendik Eğitim ve Araştırma Hastanesi">
         </td>
       </tr>
       <tr>
-        <td bgcolor="#FFFFFF" width="900" valign="top" align="center" class="portal-icerik">
-          <div class="baslik-row">
-            <a href="<%= PORTAL_ANA_SAYFA %>" class="home-icon-btn" title="Ana Sayfaya Dön" aria-label="Ana Sayfaya Dön">
-              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-                <path fill="currentColor" d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"/>
-              </svg>
-            </a>
-            <div class="baslik">
+        <td bgcolor="#FFFFFF" valign="top" align="center" class="portal-icerik">
+
+          <div class="baslik">
+            <div class="left-side">
+              <button type="button" class="back-button ghost-btn" onclick="window.location.href='<%= PORTAL_ANA_SAYFA %>'" title="Ana Sayfa">
+                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="center-title">
               PENDİK EĞİTİM &amp; ARAŞTIRMA HASTANESİ<br/>
               NÖBET LİSTELERİ
             </div>
+            <div class="right-side"></div>
           </div>
 
-          <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
-          <table border="0" width="100%" class="liste-tablo" style="border-collapse: collapse">
-            <% RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
-          </table>
+          <div class="donem-etiket"><%= GetAyBaslikMetni() %></div>
 
-          <div class="baslik">
-            PROF. DR. ASAF ATASEVEN EK HİZMET BİNASI<br/>
-            NÖBET LİSTELERİ
+          <div class="liste-wrapper">
+            <div class="liste-container">
+              <div class="liste-bolum-baslik">Pendik E.A.H. Nöbet Listeleri</div>
+              <table class="nobet-liste-tablo" border="0" cellpadding="0" cellspacing="0">
+                <% RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
+              </table>
+            </div>
           </div>
 
-          <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
-          <table border="0" width="100%" class="liste-tablo" style="border-collapse: collapse">
-            <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
-            <tr>
-              <td class="yazi-stil no-icon">
-                <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
-              </td>
-            </tr>
-          </table>
+          <div class="baslik bolum-baslik">
+            <div class="left-side"></div>
+            <div class="center-title center-title-sm">
+              PROF. DR. ASAF ATASEVEN EK HİZMET BİNASI<br/>
+              NÖBET LİSTELERİ
+            </div>
+            <div class="right-side"></div>
+          </div>
+
+          <div class="donem-etiket"><%= GetAyBaslikMetni() %></div>
+
+          <div class="liste-wrapper">
+            <div class="liste-container">
+              <div class="liste-bolum-baslik">Asaf Ataseven Ek Hizmet Binası</div>
+              <table class="nobet-liste-tablo" border="0" cellpadding="0" cellspacing="0">
+                <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
+                <tr class="nobet-liste-row">
+                  <td class="nobet-liste-cell nobet-liste-cell-phone">
+                    <span class="liste-icon liste-icon-phone" aria-hidden="true"></span>
+                    <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
         </td>
       </tr>
     </table>
