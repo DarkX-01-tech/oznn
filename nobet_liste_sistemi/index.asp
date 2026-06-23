@@ -7,10 +7,11 @@
 EnsureTumAyKlasorleri
 %>
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Language" content="tr">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nöbet Listeleri - MÜ Pendik E.A.H.</title>
   <link rel="stylesheet" href="assets/style.css">
   <script>
@@ -31,43 +32,35 @@ EnsureTumAyKlasorleri
     }
   </script>
 </head>
-<body>
+<body class="public-body">
   <div id="scrollTopBtn" onclick="scrollToTop()">^</div>
 
-  <div align="center" class="golgeliKutu">
-    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-      <tr>
-        <td align="center" style="padding: 20px 0 0;">
-          <div class="baslik">
-            PENDİK Eğitim &amp; Araştırma Hastanesi<br/>
-            NÖBET LİSTELERİ
-          </div>
-          <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
-        </td>
-      </tr>
-      <tr>
-        <td style="padding: 0 30px 30px;">
-          <table border="0" width="100%" style="border-collapse: collapse">
-            <% RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri %>
-          </table>
+  <div class="page-shell">
+    <div class="golgeliKutu">
+      <div class="hero-band">
+        <h1>Pendik Eğitim &amp; Araştırma Hastanesi</h1>
+        <p>Nöbet Listeleri &middot; <%= GetAyBaslikMetni() %></p>
+      </div>
 
-          <div class="baslik">
-            PROF. DR. ASAF ATASEVEN EK HİZMET BİNASI<br/>
-            NÖBET LİSTELERİ
-          </div>
-          <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
+      <div class="content-panel">
+        <div class="section-title">Pendik E.A.H. Nöbet Listeleri</div>
+        <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
+        <table class="liste-tablo">
+          <% RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri %>
+        </table>
 
-          <table border="0" width="100%" style="border-collapse: collapse">
-            <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri %>
-            <tr>
-              <td class="yazi-stil no-icon">
-                <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
+        <div class="section-title">Prof. Dr. Asaf Ataseven Ek Hizmet Binası</div>
+        <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
+        <table class="liste-tablo">
+          <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri %>
+          <tr>
+            <td class="yazi-stil no-icon">
+              <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </div>
 </body>
 </html>

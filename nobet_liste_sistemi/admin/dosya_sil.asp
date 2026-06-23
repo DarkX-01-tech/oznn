@@ -31,5 +31,5 @@ End If
 Set fso = Nothing
 
 NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, Session(SESSION_ADMIN_KEY & "_ad"), False
-Response.Redirect "panel.asp"
+Response.Redirect "panel.asp?mesaj=silindi"
 %>
