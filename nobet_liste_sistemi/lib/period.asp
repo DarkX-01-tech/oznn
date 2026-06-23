@@ -172,4 +172,21 @@ End Function
 Function GetAyBaslikMetni()
     GetAyBaslikMetni = TurkceAyAdi(Month(Now())) & " " & GuncelYil()
 End Function
+
+Sub RenderDonemEtiketi()
+    Dim ayAdi, yil
+    ayAdi = TurkceAyAdi(Month(Now()))
+    yil = GuncelYil()
+
+    Response.Write "<div class=""donem-etiket"">"
+    Response.Write "<span class=""donem-parantez"">(</span>"
+    Response.Write "<span class=""donem-ay"">" & Server.HTMLEncode(ayAdi) & "</span>"
+    Response.Write "<span class=""donem-ayrac"" aria-hidden=""true"">"
+    Response.Write "<svg viewBox=""0 0 10 18"" xmlns=""http://www.w3.org/2000/svg"">"
+    Response.Write "<rect x=""4"" y=""2"" width=""2"" height=""14"" rx=""1"" fill=""currentColor""/>"
+    Response.Write "</svg></span>"
+    Response.Write "<span class=""donem-yil"">" & yil & "</span>"
+    Response.Write "<span class=""donem-parantez"">)</span>"
+    Response.Write "</div>"
+End Sub
 %>

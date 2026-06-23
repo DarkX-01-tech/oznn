@@ -124,17 +124,29 @@ a { color: var(--primary); }
   --transition-speed: 0.25s;
 }
 
+.portal-body .portal-baslik-blok {
+  margin: 15px 0 6px;
+  width: 100%;
+}
+
+.portal-body .portal-baslik-blok-alt {
+  margin-top: 22px;
+}
+
 .portal-body .portal-baslik {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 15px 0 5px;
   padding: 0;
   width: 100%;
 }
 
-.portal-body .portal-baslik-alt {
-  margin-top: 22px;
+.portal-body .portal-baslik-cizgi {
+  width: 725px;
+  max-width: 90%;
+  height: 2px;
+  background: #343a40;
+  margin: 12px auto 0;
 }
 
 .portal-body .portal-baslik-sol {
@@ -156,21 +168,17 @@ a { color: var(--primary); }
 .portal-body .portal-baslik-orta {
   flex: 1;
   text-align: center;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.3;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
+  white-space: nowrap;
   background: linear-gradient(45deg, var(--secondary-color), var(--primary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
-}
-
-.portal-body .portal-baslik-orta-kucuk {
-  font-size: 17px;
-  letter-spacing: 0.6px;
 }
 
 .portal-body .ghost-btn {
@@ -237,12 +245,41 @@ a { color: var(--primary); }
 }
 
 .donem-etiket {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   color: var(--primary);
   font-size: 16px;
   font-weight: 600;
-  margin: 4px 0 16px;
+  margin: 6px 0 16px;
   letter-spacing: 0.3px;
+}
+
+.donem-parantez {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.donem-ay,
+.donem-yil {
+  color: var(--primary);
+}
+
+.donem-ayrac {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 18px;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.donem-ayrac svg {
+  display: block;
+  width: 10px;
+  height: 18px;
 }
 
 .liste-wrapper {
@@ -274,8 +311,11 @@ a { color: var(--primary); }
 
 .nobet-liste-tablo {
   width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
   border-collapse: collapse;
   background: #fff;
+  table-layout: fixed;
 }
 
 .nobet-liste-row:nth-child(even) {
@@ -287,22 +327,23 @@ a { color: var(--primary); }
   transition: background-color 0.2s ease;
 }
 
-.nobet-liste-cell {
-  padding: 13px 20px;
+.nobet-liste-icon-hucre {
+  width: 56px;
+  padding: 13px 10px 13px 24px;
   border-bottom: 1px solid #e8ecef;
   text-align: center;
   vertical-align: middle;
 }
 
-.nobet-liste-cell .liste-satir-icerik {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  max-width: 100%;
+.nobet-liste-metin-hucre {
+  padding: 13px 24px 13px 6px;
+  border-bottom: 1px solid #e8ecef;
+  text-align: left;
+  vertical-align: middle;
 }
 
-.nobet-liste-row:last-child .nobet-liste-cell {
+.nobet-liste-row:last-child .nobet-liste-icon-hucre,
+.nobet-liste-row:last-child .nobet-liste-metin-hucre {
   border-bottom: none;
 }
 
@@ -1178,15 +1219,26 @@ a { color: var(--primary); }
   }
 
   .portal-body .portal-baslik-orta {
-    font-size: 16px;
+    font-size: 14px;
+    white-space: normal;
+    letter-spacing: 0.4px;
   }
 
-  .portal-body .portal-baslik-orta-kucuk {
-    font-size: 13px;
+  .portal-body .portal-baslik-cizgi {
+    width: 85%;
   }
 
   .liste-wrapper {
     padding: 0 12px 8px;
+  }
+
+  .nobet-liste-icon-hucre {
+    width: 48px;
+    padding-left: 14px;
+  }
+
+  .nobet-liste-metin-hucre {
+    padding-right: 14px;
   }
 
   .content-panel,

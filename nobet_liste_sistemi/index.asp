@@ -19,7 +19,7 @@ EnsureTumAyKlasorleri
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nöbet Listeleri - MÜ Pendik E.A.H.</title>
   <link rel="icon" href="<%= PORTAL_IMAGES_YOLU %>hastane_portal_logo.png">
-  <link rel="stylesheet" href="assets/style.css?v=20260623">
+  <link rel="stylesheet" href="assets/style.css?v=20260624">
   <script>
     document.addEventListener('copy', function(e) { e.preventDefault(); });
     document.addEventListener('selectstart', function(e) { e.preventDefault(); });
@@ -55,54 +55,54 @@ EnsureTumAyKlasorleri
       <tr>
         <td bgcolor="#FFFFFF" valign="top" align="center" class="portal-icerik">
 
-          <div class="portal-baslik">
-            <div class="portal-baslik-sol">
-              <button type="button" class="back-button ghost-btn" onclick="window.location.href='<%= PORTAL_ANA_SAYFA %>'" title="Ana Sayfa">
-                <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                </svg>
-              </button>
+          <div class="portal-baslik-blok">
+            <div class="portal-baslik">
+              <div class="portal-baslik-sol">
+                <button type="button" class="back-button ghost-btn" onclick="window.location.href='<%= PORTAL_ANA_SAYFA %>'" title="Ana Sayfa">
+                  <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="portal-baslik-orta">PENDİK EĞİTİM &amp; ARAŞTIRMA HASTANESİ</div>
+              <div class="portal-baslik-sag"></div>
             </div>
-            <div class="portal-baslik-orta">
-              PENDİK EĞİTİM &amp; ARAŞTIRMA HASTANESİ<br/>
-              NÖBET LİSTELERİ
-            </div>
-            <div class="portal-baslik-sag"></div>
+            <div class="portal-baslik-cizgi"></div>
           </div>
 
-          <div class="donem-etiket"><%= GetAyBaslikMetni() %></div>
+          <% RenderDonemEtiketi %>
 
           <div class="liste-wrapper">
             <div class="liste-container">
-              <div class="liste-bolum-baslik">Pendik E.A.H. Nöbet Listeleri</div>
+              <div class="liste-bolum-baslik">Nöbet Listeleri</div>
               <table class="nobet-liste-tablo" border="0" cellpadding="0" cellspacing="0">
                 <% RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
               </table>
             </div>
           </div>
 
-          <div class="portal-baslik portal-baslik-alt">
-            <div class="portal-baslik-sol"></div>
-            <div class="portal-baslik-orta portal-baslik-orta-kucuk">
-              PROF. DR. ASAF ATASEVEN EK HİZMET BİNASI<br/>
-              NÖBET LİSTELERİ
+          <div class="portal-baslik-blok portal-baslik-blok-alt">
+            <div class="portal-baslik">
+              <div class="portal-baslik-sol"></div>
+              <div class="portal-baslik-orta">PROF. DR. ASAF ATASEVEN EK HİZMET BİNASI</div>
+              <div class="portal-baslik-sag"></div>
             </div>
-            <div class="portal-baslik-sag"></div>
+            <div class="portal-baslik-cizgi"></div>
           </div>
 
-          <div class="donem-etiket"><%= GetAyBaslikMetni() %></div>
+          <% RenderDonemEtiketi %>
 
           <div class="liste-wrapper">
             <div class="liste-container">
-              <div class="liste-bolum-baslik">Asaf Ataseven Ek Hizmet Binası</div>
+              <div class="liste-bolum-baslik">Nöbet Listeleri</div>
               <table class="nobet-liste-tablo" border="0" cellpadding="0" cellspacing="0">
                 <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
                 <tr class="nobet-liste-row">
-                  <td class="nobet-liste-cell nobet-liste-cell-phone">
-                    <span class="liste-satir-icerik">
-                      <span class="liste-icon liste-icon-phone" aria-hidden="true"></span>
-                      <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
-                    </span>
+                  <td class="nobet-liste-icon-hucre">
+                    <span class="liste-icon liste-icon-phone" aria-hidden="true"></span>
+                  </td>
+                  <td class="nobet-liste-metin-hucre nobet-liste-cell-phone">
+                    <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
                   </td>
                 </tr>
               </table>
