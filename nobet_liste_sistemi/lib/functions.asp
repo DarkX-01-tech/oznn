@@ -1,154 +1,147 @@
+<!-- #include file="period.asp" -->
 <%
-Function TurkceAyAdi(ayNumarasi)
-    Dim aylar(12)
-    aylar(1)  = "Ocak"
-    aylar(2)  = "Şubat"
-    aylar(3)  = "Mart"
-    aylar(4)  = "Nisan"
-    aylar(5)  = "Mayıs"
-    aylar(6)  = "Haziran"
-    aylar(7)  = "Temmuz"
-    aylar(8)  = "Ağustos"
-    aylar(9)  = "Eylül"
-    aylar(10) = "Ekim"
-    aylar(11) = "Kasım"
-    aylar(12) = "Aralık"
-    TurkceAyAdi = aylar(ayNumarasi)
-End Function
-
-Function GetYil()
-    GetYil = Year(Now())
-End Function
-
-Function GetAyKlasorAdi()
-    GetAyKlasorAdi = LCase(TurkceAyAdi(Month(Now())))
-End Function
-
-Function GetAyBaslikMetni()
-    GetAyBaslikMetni = TurkceAyAdi(Month(Now())) & " " & GetYil()
-End Function
-
 Sub KlasorOlustur(fso, yol)
     If Not fso.FolderExists(yol) Then
         fso.CreateFolder yol
     End If
 End Sub
 
-Function AyKlasorFizikselYolu(binaKodu)
-    AyKlasorFizikselYolu = ListelerKokYolu() & "\" & GetYil() & "\" & binaKodu & "\" & GetAyKlasorAdi()
+Function AyKlasorFizikselYolu(binaKodu, yil, ayKlasor)
+    AyKlasorFizikselYolu = ListelerKokYolu() & "\" & yil & "\" & binaKodu & "\" & ayKlasor
 End Function
 
-Sub EnsureAyKlasoru(binaKodu)
+Sub EnsureAyKlasoru(binaKodu, yil, ayKlasor)
     Dim fso, yol
     Set fso = Server.CreateObject("Scripting.FileSystemObject")
 
     yol = ListelerKokYolu()
     KlasorOlustur fso, yol
-    yol = yol & "\" & GetYil()
+    yol = yol & "\" & yil
     KlasorOlustur fso, yol
     yol = yol & "\" & binaKodu
     KlasorOlustur fso, yol
-    yol = yol & "\" & GetAyKlasorAdi()
+    yol = yol & "\" & ayKlasor
     KlasorOlustur fso, yol
 
     Set fso = Nothing
 End Sub
 
 Sub EnsureTumAyKlasorleri()
-    EnsureAyKlasoru BINA_PENDIK
-    EnsureAyKlasoru BINA_BASIBUYUK
+    EnsureAyKlasoru BINA_PENDIK, GuncelYil(), GuncelAyKlasor()
+    EnsureAyKlasoru BINA_BASIBUYUK, GuncelYil(), GuncelAyKlasor()
 End Sub
 
-Function NobetDosyaFizikselYolu(binaKodu, dosyaAdi)
-    NobetDosyaFizikselYolu = AyKlasorFizikselYolu(binaKodu) & "\" & dosyaAdi
+Sub EnsureSeciliDonemKlasorleri()
+    EnsureAyKlasoru BINA_PENDIK, GetSeciliYil(), GetSeciliAyKlasor()
+    EnsureAyKlasoru BINA_BASIBUYUK, GetSeciliYil(), GetSeciliAyKlasor()
+End Sub
+
+Function NobetDosyaFizikselYolu(binaKodu, dosyaAdi, yil, ayKlasor)
+    NobetDosyaFizikselYolu = AyKlasorFizikselYolu(binaKodu, yil, ayKlasor) & "\" & dosyaAdi
 End Function
 
-Function NobetDosyaMevcut(binaKodu, dosyaAdi)
+Function NobetDosyaMevcut(binaKodu, dosyaAdi, yil, ayKlasor)
     Dim fso
     Set fso = Server.CreateObject("Scripting.FileSystemObject")
-    NobetDosyaMevcut = fso.FileExists(NobetDosyaFizikselYolu(binaKodu, dosyaAdi))
+    NobetDosyaMevcut = fso.FileExists(NobetDosyaFizikselYolu(binaKodu, dosyaAdi, yil, ayKlasor))
     Set fso = Nothing
 End Function
 
-Function NobetDosyaWebYolu(binaKodu, dosyaAdi)
-    NobetDosyaWebYolu = MODUL_WEB_YOLU & LISTELER_KLASORU & "/" & GetYil() & "/" & binaKodu & "/" & GetAyKlasorAdi() & "/" & Server.URLEncode(dosyaAdi)
+Function NobetDosyaWebYolu(binaKodu, dosyaAdi, yil, ayKlasor)
+    NobetDosyaWebYolu = MODUL_WEB_YOLU & LISTELER_KLASORU & "/" & yil & "/" & binaKodu & "/" & ayKlasor & "/" & Server.URLEncode(dosyaAdi)
 End Function
 
-Sub NobetDosyaDbKaydet(binaKodu, dosyaAdi, baslik, yukleyen, aktif)
+Function SqlBool(deger)
+    If deger Then
+        SqlBool = "True"
+    Else
+        SqlBool = "False"
+    End If
+End Function
+
+Sub NobetDosyaDbKaydet(binaKodu, dosyaAdi, baslik, yukleyen, aktif, yil, ayKlasor, islemTipi)
     On Error Resume Next
     If Not IsObject(conn) Then Exit Sub
 
-    Dim rs, sql, aktifDeger
-    If aktif Then
-        aktifDeger = "True"
-    Else
-        aktifDeger = "False"
-    End If
+    Dim rs, sql, mevcutKayit, yeniSayi
+    Set rs = conn.Execute("SELECT id, guncelleme_sayisi FROM NobetListeDosyalar WHERE yil = " & CInt(yil) & _
+          " AND bina = '" & SqlEscape(binaKodu) & "' AND ay_klasor = '" & SqlEscape(ayKlasor) & _
+          "' AND dosya_adi = '" & SqlEscape(dosyaAdi) & "'")
 
-    sql = "SELECT id FROM NobetListeDosyalar WHERE yil = " & GetYil() & _
-          " AND bina = '" & SqlEscape(binaKodu) & "' AND ay_klasor = '" & SqlEscape(GetAyKlasorAdi()) & _
-          "' AND dosya_adi = '" & SqlEscape(dosyaAdi) & "'"
+    mevcutKayit = Not rs.EOF
 
-    Set rs = conn.Execute(sql)
-
-    If Not rs.EOF Then
-        sql = "UPDATE NobetListeDosyalar SET aktif = " & aktifDeger & ", baslik = '" & SqlEscape(baslik) & _
-              "', yukleyen = '" & SqlEscape(yukleyen) & "', guncelleme_tarihi = Now() " & _
-              "WHERE yil = " & GetYil() & " AND bina = '" & SqlEscape(binaKodu) & "' AND ay_klasor = '" & SqlEscape(GetAyKlasorAdi()) & _
-              "' AND dosya_adi = '" & SqlEscape(dosyaAdi) & "'"
+    If mevcutKayit Then
+        If islemTipi = "guncelle" And aktif Then
+            yeniSayi = 1
+            If Not IsNull(rs("guncelleme_sayisi")) Then
+                yeniSayi = CLng(rs("guncelleme_sayisi")) + 1
+            End If
+            sql = "UPDATE NobetListeDosyalar SET aktif = True, baslik = '" & SqlEscape(baslik) & _
+                  "', yukleyen = '" & SqlEscape(yukleyen) & "', guncelleme_tarihi = Now(), guncelleme_sayisi = " & yeniSayi & _
+                  " WHERE yil = " & CInt(yil) & " AND bina = '" & SqlEscape(binaKodu) & "' AND ay_klasor = '" & SqlEscape(ayKlasor) & _
+                  "' AND dosya_adi = '" & SqlEscape(dosyaAdi) & "'"
+            conn.Execute sql
+        ElseIf islemTipi = "sil" Then
+            sql = "UPDATE NobetListeDosyalar SET aktif = False, yukleyen = '" & SqlEscape(yukleyen) & _
+                  "', guncelleme_tarihi = Now() WHERE yil = " & CInt(yil) & " AND bina = '" & SqlEscape(binaKodu) & _
+                  "' AND ay_klasor = '" & SqlEscape(ayKlasor) & "' AND dosya_adi = '" & SqlEscape(dosyaAdi) & "'"
+            conn.Execute sql
+        Else
+            sql = "UPDATE NobetListeDosyalar SET aktif = " & SqlBool(aktif) & ", baslik = '" & SqlEscape(baslik) & _
+                  "', yukleyen = '" & SqlEscape(yukleyen) & "', guncelleme_tarihi = Now() " & _
+                  "WHERE yil = " & CInt(yil) & " AND bina = '" & SqlEscape(binaKodu) & "' AND ay_klasor = '" & SqlEscape(ayKlasor) & _
+                  "' AND dosya_adi = '" & SqlEscape(dosyaAdi) & "'"
+            conn.Execute sql
+        End If
+    ElseIf aktif Then
+        sql = "INSERT INTO NobetListeDosyalar (yil, bina, ay_klasor, dosya_adi, baslik, aktif, yukleyen, olusturma_tarihi, guncelleme_sayisi) VALUES (" & _
+              CInt(yil) & ", '" & SqlEscape(binaKodu) & "', '" & SqlEscape(ayKlasor) & "', '" & SqlEscape(dosyaAdi) & _
+              "', '" & SqlEscape(baslik) & "', True, '" & SqlEscape(yukleyen) & "', Now(), 0)"
         conn.Execute sql
-    Else
-        sql = "INSERT INTO NobetListeDosyalar (yil, bina, ay_klasor, dosya_adi, baslik, aktif, yukleyen, olusturma_tarihi) VALUES (" & _
-              GetYil() & ", '" & SqlEscape(binaKodu) & "', '" & SqlEscape(GetAyKlasorAdi()) & "', '" & SqlEscape(dosyaAdi) & _
-              "', '" & SqlEscape(baslik) & "', " & aktifDeger & ", '" & SqlEscape(yukleyen) & "', Now())"
-        conn.Execute sql
     End If
 
-    If IsObject(rs) Then
-        rs.Close
-        Set rs = Nothing
+    If islemTipi <> "" Then
+        LogNobetIslem yil, binaKodu, ayKlasor, dosyaAdi, baslik, islemTipi, yukleyen
     End If
+
+    rs.Close
+    Set rs = Nothing
     On Error GoTo 0
 End Sub
 
-Sub NobetDosyaDbSenkronize(binaKodu, dosyaAdi, baslik)
+Sub NobetDosyaDbSenkronize(binaKodu, dosyaAdi, baslik, yil, ayKlasor)
     Dim mevcut, yukleyen
-    mevcut = NobetDosyaMevcut(binaKodu, dosyaAdi)
+    mevcut = NobetDosyaMevcut(binaKodu, dosyaAdi, yil, ayKlasor)
     yukleyen = ""
     If Session(SESSION_ADMIN_KEY & "_ad") <> "" Then
         yukleyen = Session(SESSION_ADMIN_KEY & "_ad")
     End If
-    NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, yukleyen, mevcut
+    NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, yukleyen, mevcut, yil, ayKlasor, ""
 End Sub
 
-Function NobetDosyaAktif(binaKodu, dosyaAdi)
-    NobetDosyaAktif = NobetDosyaMevcut(binaKodu, dosyaAdi)
+Function NobetDosyaAktif(binaKodu, dosyaAdi, yil, ayKlasor)
+    NobetDosyaAktif = NobetDosyaMevcut(binaKodu, dosyaAdi, yil, ayKlasor)
 End Function
 
-Sub RenderNobetListeSatiri(binaKodu, baslik, dosyaAdi)
+Sub RenderNobetListeSatiri(binaKodu, baslik, dosyaAdi, yil, ayKlasor)
     Dim aktif, webYolu
-    aktif = NobetDosyaAktif(binaKodu, dosyaAdi)
-    NobetDosyaDbSenkronize binaKodu, dosyaAdi, baslik
+    aktif = NobetDosyaAktif(binaKodu, dosyaAdi, yil, ayKlasor)
 
-    Response.Write "<tr>" & vbCrLf
-    Response.Write "  <td class=""yazi-stil"">" & vbCrLf
-
+    Response.Write "<tr><td class=""yazi-stil"">"
     If aktif Then
-        webYolu = NobetDosyaWebYolu(binaKodu, dosyaAdi)
-        Response.Write "    <a class=""duyuru-link"" target=""_blank"" href=""" & webYolu & """>" & Server.HTMLEncode(baslik) & "</a>" & vbCrLf
+        webYolu = NobetDosyaWebYolu(binaKodu, dosyaAdi, yil, ayKlasor)
+        Response.Write "<a class=""duyuru-link"" target=""_blank"" href=""" & webYolu & """>" & Server.HTMLEncode(baslik) & "</a>"
     Else
-        Response.Write "    <span class=""duyuru-link-pasif"" title=""Bu ay için dosya henüz yüklenmedi."">" & Server.HTMLEncode(baslik) & "</span>" & vbCrLf
+        Response.Write "<span class=""duyuru-link-pasif"" title=""Bu ay için dosya henüz yüklenmedi."">" & Server.HTMLEncode(baslik) & "</span>"
     End If
-
-    Response.Write "  </td>" & vbCrLf
-    Response.Write "</tr>" & vbCrLf
+    Response.Write "</td></tr>"
 End Sub
 
-Sub RenderNobetListeTablosu(binaKodu, listeDizisi)
+Sub RenderNobetListeTablosu(binaKodu, listeDizisi, yil, ayKlasor)
     Dim i, satir
     For i = 0 To UBound(listeDizisi)
         satir = listeDizisi(i)
-        RenderNobetListeSatiri binaKodu, satir(0), satir(1)
+        RenderNobetListeSatiri binaKodu, satir(0), satir(1), yil, ayKlasor
     Next
 End Sub
 %>

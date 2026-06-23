@@ -63,7 +63,8 @@ Sub EnsureAccessTables()
             "aktif YESNO NOT NULL, " & _
             "yukleyen TEXT(100), " & _
             "olusturma_tarihi DATETIME, " & _
-            "guncelleme_tarihi DATETIME)"
+            "guncelleme_tarihi DATETIME, " & _
+            "guncelleme_sayisi INTEGER)"
     End If
 
     If Not AccessTabloVarMi("NobetAdminKullanicilar") Then
@@ -76,10 +77,53 @@ Sub EnsureAccessTables()
             "olusturma_tarihi DATETIME)"
 
         dbConn.Execute "INSERT INTO NobetAdminKullanicilar (kullanici_adi, sifre, ad_soyad, aktif, olusturma_tarihi) " & _
-            "VALUES ('admin', 'admin123', 'Sistem Yöneticisi', True, Now())"
+            "VALUES ('admin', 'admin123', 'Sistem Yoneticisi', True, Now())"
     End If
 
     dbConn.Close
     Set dbConn = Nothing
+
+    EnsureAccessSchemaUpgrade
+End Sub
+
+Sub EnsureAccessSchemaUpgrade()
+    On Error Resume Next
+    Dim dbConn
+
+    If Not AccessTabloVarMi("NobetListeDosyalar") Then Exit Sub
+
+    Set dbConn = Server.CreateObject("ADODB.Connection")
+    dbConn.Open AccessBaglantiMetni()
+    dbConn.Execute "ALTER TABLE NobetListeDosyalar ADD COLUMN guncelleme_sayisi INTEGER"
+    Err.Clear
+
+    If Not AccessTabloVarMi("NobetListeIslemLog") Then
+        dbConn.Execute "CREATE TABLE NobetListeIslemLog (" & _
+            "id COUNTER PRIMARY KEY, " & _
+            "yil INTEGER NOT NULL, " & _
+            "bina TEXT(50) NOT NULL, " & _
+            "ay_klasor TEXT(20) NOT NULL, " & _
+            "dosya_adi TEXT(255) NOT NULL, " & _
+            "baslik TEXT(255) NOT NULL, " & _
+            "islem_tipi TEXT(20) NOT NULL, " & _
+            "yukleyen TEXT(100), " & _
+            "islem_tarihi DATETIME)"
+    End If
+
+    dbConn.Close
+    Set dbConn = Nothing
+    On Error GoTo 0
+End Sub
+
+Sub LogNobetIslem(yil, binaKodu, ayKlasor, dosyaAdi, baslik, islemTipi, yukleyen)
+    On Error Resume Next
+    If Not IsObject(conn) Then Exit Sub
+
+    Dim sql
+    sql = "INSERT INTO NobetListeIslemLog (yil, bina, ay_klasor, dosya_adi, baslik, islem_tipi, yukleyen, islem_tarihi) VALUES (" & _
+          CInt(yil) & ", '" & SqlEscape(binaKodu) & "', '" & SqlEscape(ayKlasor) & "', '" & SqlEscape(dosyaAdi) & "', '" & _
+          SqlEscape(baslik) & "', '" & SqlEscape(islemTipi) & "', '" & SqlEscape(yukleyen) & "', Now())"
+    conn.Execute sql
+    On Error GoTo 0
 End Sub
 %>

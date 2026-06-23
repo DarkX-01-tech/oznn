@@ -7,12 +7,25 @@
 <%
 AdminGirisGerekli
 
-Dim binaKodu, dosyaAdi, baslik, fso, hedefYol
+Dim binaKodu, dosyaAdi, baslik, fso, hedefYol, seciliYil, seciliAy, yilParam, ayParam
 binaKodu = Trim(Request("bina"))
 dosyaAdi = Trim(Request("dosya"))
 
+yilParam = Trim(Request("yil"))
+ayParam = LCase(Trim(Request("ay")))
+If yilParam <> "" And IsNumeric(yilParam) Then
+    seciliYil = CInt(yilParam)
+Else
+    seciliYil = GetSeciliYil()
+End If
+If ayParam <> "" And AyKlasorGecerliMi(ayParam) Then
+    seciliAy = ayParam
+Else
+    seciliAy = GetSeciliAyKlasor()
+End If
+
 If binaKodu = "" Or dosyaAdi = "" Then
-    Response.Redirect "panel.asp"
+    Response.Redirect "listeler.asp"
     Response.End
 End If
 
@@ -22,7 +35,7 @@ If Not DosyaAdiGecerliMi(binaKodu, dosyaAdi) Then
 End If
 
 baslik = BaslikGetir(binaKodu, dosyaAdi)
-hedefYol = NobetDosyaFizikselYolu(binaKodu, dosyaAdi)
+hedefYol = NobetDosyaFizikselYolu(binaKodu, dosyaAdi, seciliYil, seciliAy)
 
 Set fso = Server.CreateObject("Scripting.FileSystemObject")
 If fso.FileExists(hedefYol) Then
@@ -30,6 +43,6 @@ If fso.FileExists(hedefYol) Then
 End If
 Set fso = Nothing
 
-NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, Session(SESSION_ADMIN_KEY & "_ad"), False
-Response.Redirect "panel.asp?mesaj=silindi"
+NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, Session(SESSION_ADMIN_KEY & "_ad"), False, seciliYil, seciliAy, "sil"
+Response.Redirect "listeler.asp?mesaj=silindi"
 %>

@@ -46,13 +46,13 @@ EnsureTumAyKlasorleri
         <div class="section-title">Pendik E.A.H. Nöbet Listeleri</div>
         <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
         <table class="liste-tablo">
-          <% RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri %>
+            <% RenderNobetListeTablosu BINA_PENDIK, pendikNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
         </table>
 
         <div class="section-title">Prof. Dr. Asaf Ataseven Ek Hizmet Binası</div>
         <div class="ay-baslik"><%= GetAyBaslikMetni() %></div>
         <table class="liste-tablo">
-          <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri %>
+            <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
           <tr>
             <td class="yazi-stil no-icon">
               <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>

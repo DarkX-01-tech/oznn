@@ -7,37 +7,24 @@
 <!-- #include file="../lib/ui.asp" -->
 <%
 AdminGirisGerekli
-EnsureTumAyKlasorleri
+DonemFormIsle
 
-Sub RenderAdminTablo(binaKodu, listeDizisi)
-    Dim i, satir, baslik, dosyaAdi, aktif, webYolu
-    For i = 0 To UBound(listeDizisi)
-        satir = listeDizisi(i)
-        baslik = satir(0)
-        dosyaAdi = satir(1)
-        aktif = NobetDosyaAktif(binaKodu, dosyaAdi)
-        NobetDosyaDbSenkronize binaKodu, dosyaAdi, baslik
+If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
+    If Trim(Request.Form("git")) = "kaydet" Then
+        Response.Redirect "panel.asp?mesaj=donem"
+        Response.End
+    End If
+    If Trim(Request.Form("git")) = "listeler" Then
+        Response.Redirect "listeler.asp"
+        Response.End
+    End If
+    If Trim(Request.Form("git")) = "gecmis" Then
+        Response.Redirect "gecmis.asp"
+        Response.End
+    End If
+End If
 
-        Response.Write "<tr>"
-        Response.Write "<td>" & Server.HTMLEncode(baslik) & "</td>"
-        Response.Write "<td><code>" & Server.HTMLEncode(dosyaAdi) & "</code></td>"
-
-        If aktif Then
-            webYolu = NobetDosyaWebYolu(binaKodu, dosyaAdi)
-            Response.Write "<td><span class=""badge badge-aktif"">Aktif</span></td>"
-            Response.Write "<td><div class=""action-group"">"
-            Response.Write "<a class=""btn btn-secondary btn-sm"" href=""" & webYolu & """ target=""_blank"">Görüntüle</a>"
-            Response.Write "<a class=""btn btn-primary btn-sm"" href=""yukle.asp?bina=" & Server.URLEncode(binaKodu) & "&dosya=" & Server.URLEncode(dosyaAdi) & """>Güncelle</a>"
-            Response.Write "<a class=""btn btn-danger btn-sm"" href=""dosya_sil.asp?bina=" & Server.URLEncode(binaKodu) & "&dosya=" & Server.URLEncode(dosyaAdi) & """ onclick=""return confirm('Dosya silinsin mi?');"">Sil</a>"
-            Response.Write "</div></td>"
-        Else
-            Response.Write "<td><span class=""badge badge-pasif"">Pasif</span></td>"
-            Response.Write "<td><a class=""btn btn-primary btn-sm"" href=""yukle.asp?bina=" & Server.URLEncode(binaKodu) & "&dosya=" & Server.URLEncode(dosyaAdi) & """>Yükle</a></td>"
-        End If
-
-        Response.Write "</tr>"
-    Next
-End Sub
+Dim yilSecenek, i
 %>
 <!DOCTYPE html>
 <html lang="tr">
@@ -45,7 +32,7 @@ End Sub
   <meta charset="utf-8">
   <meta http-equiv="Content-Language" content="tr">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nöbet Liste Yönetimi</title>
+  <title>Yönetim Paneli</title>
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body class="admin-body">
@@ -53,57 +40,51 @@ End Sub
     <div class="admin-wrap">
       <div class="admin-topbar">
         <div>
-          <p class="eyebrow">Yönetim Paneli</p>
+          <p class="eyebrow">Ana Yönetim</p>
           <h1>Nöbet Liste Yönetimi</h1>
         </div>
-        <div class="admin-nav">
-          <span class="user-chip"><%= Server.HTMLEncode(Session(SESSION_ADMIN_KEY & "_ad")) %></span>
-          <a href="../index.asp" target="_blank" class="btn btn-secondary btn-sm">Liste Sayfası</a>
-          <a href="logout.asp" class="btn btn-danger btn-sm">Çıkış</a>
-        </div>
+        <% AdminNavGoster "panel" %>
       </div>
 
       <% FlashMesajGoster %>
+      <% DonemOzetKartlariGoster %>
 
-      <div class="summary-grid">
-        <div class="summary-card">
-          <span class="label">Dönem</span>
-          <span class="value"><%= GetAyBaslikMetni() %></span>
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <h2>Dönem Seçimi</h2>
+          <p>Yükleme ve liste yönetimi için yıl ve ay seçin.</p>
+          <form method="post" action="panel.asp" class="period-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="yil">Yıl</label>
+                <select id="yil" name="yil" required>
+                  <% For i = GuncelYil() + 1 To GuncelYil() - 5 Step -1 %>
+                    <option value="<%= i %>"<% If i = GetSeciliYil() Then %> selected<% End If %>><%= i %></option>
+                  <% Next %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ay">Ay</label>
+                <select id="ay" name="ay" required>
+                  <% For i = 1 To 12 %>
+                    <option value="<%= AyKlasorFromNumara(i) %>"<% If AyKlasorFromNumara(i) = GetSeciliAyKlasor() Then %> selected<% End If %>><%= TurkceAyAdi(i) %></option>
+                  <% Next %>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" name="git" value="kaydet" class="btn btn-secondary">Dönemi Kaydet</button>
+              <button type="submit" name="git" value="listeler" class="btn btn-primary">Listeleri Yönet</button>
+              <button type="submit" name="git" value="gecmis" class="btn btn-secondary">Geçmiş Dönemi Gör</button>
+            </div>
+          </form>
         </div>
-        <div class="summary-card">
-          <span class="label">Yıl Klasörü</span>
-          <span class="value"><%= GetYil() %></span>
-        </div>
-        <div class="summary-card">
-          <span class="label">Ay Klasörü</span>
-          <span class="value path">listeler/<%= GetYil() %>/<%= GetAyKlasorAdi() %>/</span>
-        </div>
-      </div>
 
-      <div class="admin-section">
-        <table class="admin-table">
-          <tr><th colspan="4" class="bina-baslik"><%= BinaAdiGoster(BINA_PENDIK) %></th></tr>
-          <tr>
-            <th>Liste Adı</th>
-            <th>Dosya Adı</th>
-            <th>Durum</th>
-            <th>İşlem</th>
-          </tr>
-          <% RenderAdminTablo BINA_PENDIK, pendikNobetListeleri %>
-        </table>
-      </div>
-
-      <div class="admin-section">
-        <table class="admin-table">
-          <tr><th colspan="4" class="bina-baslik"><%= BinaAdiGoster(BINA_BASIBUYUK) %></th></tr>
-          <tr>
-            <th>Liste Adı</th>
-            <th>Dosya Adı</th>
-            <th>Durum</th>
-            <th>İşlem</th>
-          </tr>
-          <% RenderAdminTablo BINA_BASIBUYUK, basibuyukNobetListeleri %>
-        </table>
+        <div class="dashboard-card">
+          <h2>İstatistikler</h2>
+          <p>Yıllık ve aylık yükleme, güncelleme kayıtlarını inceleyin.</p>
+          <a href="istatistikler.asp" class="btn btn-primary">İstatistiklere Git</a>
+        </div>
       </div>
     </div>
   </div>

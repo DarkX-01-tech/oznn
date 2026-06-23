@@ -11,6 +11,8 @@ Const BINA_BASIBUYUK = "basibuyuk"
 Const LISTELER_KLASORU = "listeler"
 Const ACCESS_DB_DOSYA = "nobet_liste.mdb"
 Const SESSION_ADMIN_KEY = "nobet_liste_admin"
+Const SESSION_SECILI_YIL = "nobet_secili_yil"
+Const SESSION_SECILI_AY = "nobet_secili_ay"
 
 Function ModulFizikselYol()
     ModulFizikselYol = Server.MapPath(MODUL_WEB_YOLU)
