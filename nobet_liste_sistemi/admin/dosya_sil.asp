@@ -1,3 +1,4 @@
+<%@ Language=VBScript CodePage=65001 %>
 <!-- #include file="../ayarlar.asp" -->
 <!-- #include file="../database/connection.asp" -->
 <!-- #include file="../lib/config.asp" -->

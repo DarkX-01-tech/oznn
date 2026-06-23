@@ -1,3 +1,4 @@
+<%@ Language=VBScript CodePage=65001 %>
 <!-- #include file="../ayarlar.asp" -->
 <!-- #include file="../database/connection.asp" -->
 <!-- #include file="../lib/config.asp" -->
@@ -40,7 +41,7 @@ End Sub
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
+  <meta charset="utf-8">
   <title>Nöbet Liste Yönetimi</title>
   <link rel="stylesheet" href="../assets/style.css">
 </head>

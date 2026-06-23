@@ -1,3 +1,4 @@
+<%@ Language=VBScript CodePage=65001 %>
 <!-- #include file="ayarlar.asp" -->
 <!-- #include file="database/connection.asp" -->
 <!-- #include file="lib/config.asp" -->
@@ -8,8 +9,8 @@ EnsureTumAyKlasorleri
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
   <meta http-equiv="Content-Language" content="tr">
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
   <title>Nöbet Listeleri - MÜ Pendik E.A.H.</title>
   <link rel="stylesheet" href="assets/style.css">
   <script>

@@ -1,4 +1,7 @@
 <%
+Response.CodePage = 65001
+Response.CharSet = "utf-8"
+
 ' ============================================================
 ' Nöbet Liste Sistemi - Genel Ayarlar
 ' Kurulumda MODUL_WEB_YOLU değerini kontrol edin.

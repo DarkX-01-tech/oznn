@@ -1,3 +1,4 @@
+<%@ Language=VBScript CodePage=65001 %>
 <!-- #include file="ayarlar.asp" -->
 <!-- #include file="database/connection.asp" -->
 <%
@@ -26,7 +27,7 @@ Set fso = Nothing
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
+  <meta charset="utf-8">
   <title>Nöbet Liste Kurulum</title>
   <link rel="stylesheet" href="assets/style.css">
 </head>
