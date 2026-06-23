@@ -19,7 +19,7 @@ EnsureTumAyKlasorleri
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nöbet Listeleri - MÜ Pendik E.A.H.</title>
   <link rel="icon" href="<%= PORTAL_IMAGES_YOLU %>hastane_portal_logo.png">
-  <link rel="stylesheet" href="assets/style.css?v=20260625">
+  <link rel="stylesheet" href="assets/style.css?v=20260626">
   <script>
     document.addEventListener('copy', function(e) { e.preventDefault(); });
     document.addEventListener('selectstart', function(e) { e.preventDefault(); });
@@ -98,11 +98,11 @@ EnsureTumAyKlasorleri
               <table class="nobet-liste-tablo" border="0" cellpadding="0" cellspacing="0">
                 <% RenderNobetListeTablosu BINA_BASIBUYUK, basibuyukNobetListeleri, GuncelYil(), GuncelAyKlasor() %>
                 <tr class="nobet-liste-row">
-                  <td class="nobet-liste-icon-hucre">
-                    <span class="liste-icon liste-icon-phone" aria-hidden="true"></span>
-                  </td>
-                  <td class="nobet-liste-metin-hucre nobet-liste-cell-phone">
-                    <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
+                  <td class="nobet-liste-hucre nobet-liste-cell-phone">
+                    <span class="liste-satir-icerik">
+                      <span class="liste-icon liste-icon-phone" aria-hidden="true"></span>
+                      <span class="duz-metn">Pacs Destek (0531 682 44 36)</span>
+                    </span>
                   </td>
                 </tr>
               </table>

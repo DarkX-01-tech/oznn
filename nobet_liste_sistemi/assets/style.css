@@ -313,7 +313,6 @@ a { color: var(--primary); }
   width: 100%;
   border-collapse: collapse;
   background: #fff;
-  table-layout: fixed;
 }
 
 .nobet-liste-row:nth-child(even) {
@@ -325,23 +324,23 @@ a { color: var(--primary); }
   transition: background-color 0.2s ease;
 }
 
-.nobet-liste-icon-hucre {
-  width: 52px;
-  padding: 13px 8px 13px 16px;
+.nobet-liste-hucre {
+  padding: 13px 16px;
   border-bottom: 1px solid #e8ecef;
   text-align: center;
   vertical-align: middle;
 }
 
-.nobet-liste-metin-hucre {
-  padding: 13px 16px 13px 4px;
-  border-bottom: 1px solid #e8ecef;
+.liste-satir-icerik {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: min(540px, 92%);
   text-align: left;
-  vertical-align: middle;
 }
 
-.nobet-liste-row:last-child .nobet-liste-icon-hucre,
-.nobet-liste-row:last-child .nobet-liste-metin-hucre {
+.nobet-liste-row:last-child .nobet-liste-hucre {
   border-bottom: none;
 }
 
@@ -1230,13 +1229,8 @@ a { color: var(--primary); }
     padding: 0 12px 8px;
   }
 
-  .nobet-liste-icon-hucre {
-    width: 48px;
-    padding-left: 14px;
-  }
-
-  .nobet-liste-metin-hucre {
-    padding-right: 14px;
+  .liste-satir-icerik {
+    width: min(480px, 94%);
   }
 
   .content-panel,
