@@ -1,10 +1,16 @@
-<%@ Language=VBScript CodePage=65001 %>
+<%@ Language=VBScript CodePage=1254 %>
+<%
+Response.CodePage = 1254
+Response.CharSet = "windows-1254"
+%>
 <!-- #include file="../ayarlar.asp" -->
 <!-- #include file="../database/connection.asp" -->
+<!-- #include file="../lib/cookies.asp" -->
 <!-- #include file="../lib/auth.asp" -->
 <%
-If Session(SESSION_ADMIN_KEY) = "1" Then
-    Call NobetYonlendir("panel.asp")
+If NobetCookieOku(SESSION_ADMIN_KEY) = "1" Then
+    Response.Redirect "panel.asp"
+    Response.End
 End If
 
 Dim hata, kullanici, sifre
@@ -18,7 +24,8 @@ If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
     If kullanici = "" Or sifre = "" Then
         hata = "Kullanıcı adı ve şifre zorunludur."
     ElseIf AdminGirisYap(kullanici, sifre) Then
-        Call NobetYonlendir("panel.asp")
+        Response.Redirect "panel.asp"
+        Response.End
     Else
         hata = "Geçersiz kullanıcı adı veya şifre."
     End If
@@ -27,8 +34,8 @@ End If
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8">
   <meta http-equiv="Content-Language" content="tr">
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Yönetici Girişi</title>
   <link rel="stylesheet" href="../assets/style.css">
@@ -61,10 +68,9 @@ End If
       <div class="login-footer">
         <a href="../index.asp">Liste Sayfasına Dön</a>
         <span class="login-footer-sep">|</span>
-        <a href="../portal_restore.asp" class="no-transition">Portal Ana Sayfa</a>
+        <a href="<%= PORTAL_ANA_SAYFA %>">Portal Ana Sayfa</a>
       </div>
     </div>
   </div>
-  <!-- #include file="../includes/page_footer.asp" -->
 </body>
 </html>

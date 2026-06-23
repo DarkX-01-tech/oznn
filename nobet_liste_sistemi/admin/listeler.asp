@@ -1,4 +1,8 @@
-<%@ Language=VBScript CodePage=65001 %>
+<%@ Language=VBScript CodePage=1254 %>
+<%
+Response.CodePage = 1254
+Response.CharSet = "windows-1254"
+%>
 <!-- #include file="../ayarlar.asp" -->
 <!-- #include file="../database/connection.asp" -->
 <!-- #include file="../lib/config.asp" -->
@@ -49,8 +53,8 @@ End Sub
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8">
   <meta http-equiv="Content-Language" content="tr">
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Liste Yönetimi</title>
   <link rel="stylesheet" href="../assets/style.css">
@@ -88,6 +92,5 @@ End Sub
       </div>
     </div>
   </div>
-  <!-- #include file="../includes/page_footer.asp" -->
 </body>
 </html>

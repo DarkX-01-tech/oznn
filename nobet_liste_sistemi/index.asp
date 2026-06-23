@@ -1,4 +1,8 @@
-<%@ Language=VBScript CodePage=65001 %>
+<%@ Language=VBScript CodePage=1254 %>
+<%
+Response.CodePage = 1254
+Response.CharSet = "windows-1254"
+%>
 <!-- #include file="ayarlar.asp" -->
 <!-- #include file="database/connection.asp" -->
 <!-- #include file="lib/config.asp" -->
@@ -9,21 +13,16 @@ EnsureTumAyKlasorleri
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8">
   <meta http-equiv="Content-Language" content="tr">
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nöbet Listeleri - MÜ Pendik E.A.H.</title>
   <link rel="icon" href="<%= PORTAL_IMAGES_YOLU %>hastane_portal_logo.png">
   <link rel="stylesheet" href="assets/style.css">
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(function() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 15000);
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
       var btn = document.getElementById('scrollTopBtn');
+      if (!btn) return;
       window.addEventListener('scroll', function() {
         if (window.scrollY > 300) {
           btn.style.visibility = 'visible';
@@ -34,9 +33,8 @@ EnsureTumAyKlasorleri
         }
       });
     });
-
     function scrollToTop() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo(0, 0);
     }
   </script>
 </head>
@@ -47,13 +45,13 @@ EnsureTumAyKlasorleri
     <table class="portal-table" width="900" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td colspan="3">
-          <img src="<%= PORTAL_IMAGES_YOLU & PORTAL_BANNER_RESIM %>" width="900" height="165" alt="Marmara Üniversitesi Pendik Eğitim ve Araştırma Hastanesi">
+          <img src="<%= PORTAL_IMAGES_YOLU & PORTAL_BANNER_RESIM %>" width="900" height="165" alt="">
         </td>
       </tr>
       <tr>
         <td bgcolor="#FFFFFF" width="900" valign="top" align="center" class="portal-icerik">
           <div class="baslik-row">
-            <a href="portal_restore.asp" class="home-icon-btn no-transition" title="Ana Sayfaya Dön" aria-label="Ana Sayfaya Dön">
+            <a href="<%= PORTAL_ANA_SAYFA %>" class="home-icon-btn" title="Ana Sayfaya Dön" aria-label="Ana Sayfaya Dön">
               <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
                 <path fill="currentColor" d="M12 3l9 8h-3v9h-5v-6H11v6H6v-9H3l9-8z"/>
               </svg>
@@ -87,6 +85,5 @@ EnsureTumAyKlasorleri
       </tr>
     </table>
   </div>
-  <!-- #include file="includes/session_restore.asp" -->
 </body>
 </html>

@@ -1,4 +1,8 @@
-<%@ Language=VBScript CodePage=65001 %>
+<%@ Language=VBScript CodePage=1254 %>
+<%
+Response.CodePage = 1254
+Response.CharSet = "windows-1254"
+%>
 <!-- #include file="../ayarlar.asp" -->
 <!-- #include file="../database/connection.asp" -->
 <!-- #include file="../lib/config.asp" -->
@@ -16,7 +20,8 @@ If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
     ayKlasor = LCase(Trim(Request.Form("ay")))
     If DonemSecimGecerliMi(yil, ayKlasor) Then
         DonemKaydet yil, ayKlasor
-        Call NobetYonlendir("listeler.asp")
+        Response.Redirect "listeler.asp"
+        Response.End
     End If
 End If
 
@@ -26,8 +31,8 @@ minAy = ProjeMinAyForYil(seciliYil)
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8">
   <meta http-equiv="Content-Language" content="tr">
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dönem Seçimi</title>
   <link rel="stylesheet" href="../assets/style.css">
@@ -104,6 +109,5 @@ minAy = ProjeMinAyForYil(seciliYil)
       yilSelect.addEventListener("change", guncelleAylar);
     })();
   </script>
-  <!-- #include file="../includes/page_footer.asp" -->
 </body>
 </html>

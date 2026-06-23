@@ -1,7 +1,7 @@
+<!-- #include file="cookies.asp" -->
 <%
 Sub AdminGirisGerekli()
-    If Session(SESSION_ADMIN_KEY) <> "1" Then
-        Call PortalOturumKodSayfasiSifirla()
+    If NobetCookieOku(SESSION_ADMIN_KEY) <> "1" Then
         Response.Redirect MODUL_WEB_YOLU & "admin/login.asp"
         Response.End
     End If
@@ -20,16 +20,15 @@ Function AdminGirisYap(kullaniciAdi, sifre)
 
     Set rs = conn.Execute(sql)
     If Not rs.EOF Then
-        Session(SESSION_ADMIN_KEY) = "1"
-        Session(SESSION_ADMIN_KEY & "_id") = rs("id")
-        Session(SESSION_ADMIN_KEY & "_kullanici") = rs("kullanici_adi")
+        NobetCookieYaz SESSION_ADMIN_KEY, "1"
+        NobetCookieYaz SESSION_ADMIN_KEY & "_id", CStr(rs("id"))
+        NobetCookieYaz SESSION_ADMIN_KEY & "_kullanici", rs("kullanici_adi")
         If Not IsNull(rs("ad_soyad")) Then
-            Session(SESSION_ADMIN_KEY & "_ad") = rs("ad_soyad")
+            NobetCookieYaz SESSION_ADMIN_KEY & "_ad", rs("ad_soyad")
         Else
-            Session(SESSION_ADMIN_KEY & "_ad") = rs("kullanici_adi")
+            NobetCookieYaz SESSION_ADMIN_KEY & "_ad", rs("kullanici_adi")
         End If
         AdminGirisYap = True
-        Call PortalOturumKodSayfasiSifirla()
     End If
 
     If IsObject(rs) Then
@@ -40,10 +39,9 @@ Function AdminGirisYap(kullaniciAdi, sifre)
 End Function
 
 Sub AdminCikisYap()
-    Session(SESSION_ADMIN_KEY) = ""
-    Session(SESSION_ADMIN_KEY & "_id") = ""
-    Session(SESSION_ADMIN_KEY & "_kullanici") = ""
-    Session(SESSION_ADMIN_KEY & "_ad") = ""
-    Call PortalOturumKodSayfasiSifirla()
+    NobetCookieSil SESSION_ADMIN_KEY
+    NobetCookieSil SESSION_ADMIN_KEY & "_id"
+    NobetCookieSil SESSION_ADMIN_KEY & "_kullanici"
+    NobetCookieSil SESSION_ADMIN_KEY & "_ad"
 End Sub
 %>

@@ -1,4 +1,8 @@
-<%@ Language=VBScript CodePage=65001 %>
+<%@ Language=VBScript CodePage=1254 %>
+<%
+Response.CodePage = 1254
+Response.CharSet = "windows-1254"
+%>
 <!-- #include file="../ayarlar.asp" -->
 <!-- #include file="../database/connection.asp" -->
 <!-- #include file="../lib/config.asp" -->
@@ -25,7 +29,8 @@ Else
 End If
 
 If binaKodu = "" Or dosyaAdi = "" Then
-    Call NobetYonlendir("listeler.asp")
+    Response.Redirect "listeler.asp"
+    Response.End
 End If
 
 If Not DosyaAdiGecerliMi(binaKodu, dosyaAdi) Then
@@ -42,6 +47,6 @@ If fso.FileExists(hedefYol) Then
 End If
 Set fso = Nothing
 
-NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, Session(SESSION_ADMIN_KEY & "_ad"), False, seciliYil, seciliAy, "sil"
-Call NobetYonlendir("listeler.asp?mesaj=silindi")
+NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, NobetCookieOku(SESSION_ADMIN_KEY & "_ad"), False, seciliYil, seciliAy, "sil"
+Response.Redirect "listeler.asp?mesaj=silindi"
 %>

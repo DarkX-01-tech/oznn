@@ -113,8 +113,8 @@ Sub NobetDosyaDbSenkronize(binaKodu, dosyaAdi, baslik, yil, ayKlasor)
     Dim mevcut, yukleyen
     mevcut = NobetDosyaMevcut(binaKodu, dosyaAdi, yil, ayKlasor)
     yukleyen = ""
-    If Session(SESSION_ADMIN_KEY & "_ad") <> "" Then
-        yukleyen = Session(SESSION_ADMIN_KEY & "_ad")
+    If NobetCookieOku(SESSION_ADMIN_KEY & "_ad") <> "" Then
+        yukleyen = NobetCookieOku(SESSION_ADMIN_KEY & "_ad")
     End If
     NobetDosyaDbKaydet binaKodu, dosyaAdi, baslik, yukleyen, mevcut, yil, ayKlasor, ""
 End Sub

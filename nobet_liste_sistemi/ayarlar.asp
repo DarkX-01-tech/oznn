@@ -1,5 +1,4 @@
 <!-- #include file="lib/constants.asp" -->
-<!-- #include file="includes/charset.asp" -->
 <%
 Function ModulFizikselYol()
     ModulFizikselYol = Server.MapPath(MODUL_WEB_YOLU)

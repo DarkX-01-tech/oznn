@@ -1,3 +1,4 @@
+<!-- #include file="cookies.asp" -->
 <%
 Function TurkceAyAdi(ayNumarasi)
     Dim aylar(12)
@@ -104,9 +105,8 @@ Sub DonemKaydet(yil, ayKlasor)
     Dim y, ay
     y = DonemYilSinirla(yil)
     ay = DonemAySinirla(y, ayKlasor)
-    Session(SESSION_SECILI_YIL) = y
-    Session(SESSION_SECILI_AY) = ay
-    Call PortalOturumKodSayfasiSifirla()
+    NobetCookieYaz SESSION_SECILI_YIL, CStr(y)
+    NobetCookieYaz SESSION_SECILI_AY, ay
 End Sub
 
 Sub DonemFormIsle()
@@ -122,8 +122,8 @@ End Sub
 
 Function GetSeciliYil()
     Dim y
-    If Session(SESSION_SECILI_YIL) <> "" Then
-        y = CInt(Session(SESSION_SECILI_YIL))
+    If NobetCookieOku(SESSION_SECILI_YIL) <> "" Then
+        y = CInt(NobetCookieOku(SESSION_SECILI_YIL))
     Else
         y = GuncelYil()
     End If
@@ -133,8 +133,8 @@ End Function
 Function GetSeciliAyKlasor()
     Dim ayKlasor, yil
     yil = GetSeciliYil()
-    If Session(SESSION_SECILI_AY) <> "" And AyKlasorGecerliMi(Session(SESSION_SECILI_AY)) Then
-        ayKlasor = LCase(Session(SESSION_SECILI_AY))
+    If NobetCookieOku(SESSION_SECILI_AY) <> "" And AyKlasorGecerliMi(NobetCookieOku(SESSION_SECILI_AY)) Then
+        ayKlasor = LCase(NobetCookieOku(SESSION_SECILI_AY))
     Else
         ayKlasor = GuncelAyKlasor()
     End If
