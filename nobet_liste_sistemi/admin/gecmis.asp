@@ -52,7 +52,7 @@ End If
           <p>Geçmiş döneme ait yüklenmiş listeler. Bulunduğunuz ay burada görünmez.</p>
           <div class="link-grid">
             <% yillar = GecmisYillariDizisi()
-            If UBound(yillar) < 0 Then %>
+            If Not DiziDoluMu(yillar) Then %>
               <p class="empty-note">Henüz geçmiş dönem listesi bulunmuyor.</p>
             <% Else
               For i = 0 To UBound(yillar) %>
@@ -68,7 +68,7 @@ End If
           <p>Yalnızca geçmiş dönem ve dosya yüklenmiş aylar listelenir.</p>
           <div class="link-grid">
             <% aylar = GecmisAylarForYil(seciliYil)
-            If UBound(aylar) < 0 Then %>
+            If Not DiziDoluMu(aylar) Then %>
               <p class="empty-note">Bu yıl için geçmiş dönem listesi bulunamadı.</p>
             <% Else
               For i = 0 To UBound(aylar) %>

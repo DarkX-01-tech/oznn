@@ -1,5 +1,21 @@
 <!-- #include file="period.asp" -->
 <%
+Function BosDizi()
+    Dim d(0)
+    d(0) = vbNullString
+    BosDizi = d
+End Function
+
+Function DiziDoluMu(dizi)
+    If Not IsArray(dizi) Then
+        DiziDoluMu = False
+    ElseIf UBound(dizi) = 0 And dizi(0) = vbNullString Then
+        DiziDoluMu = False
+    Else
+        DiziDoluMu = True
+    End If
+End Function
+
 Function AyKlasordeDosyaVarMi(yil, ayKlasor)
     Dim fso, binalar, i, klasorYolu, dosya
     Set fso = Server.CreateObject("Scripting.FileSystemObject")
@@ -92,7 +108,7 @@ Function YukluAylarForYil(yil)
     Next
 
     If sayac = 0 Then
-        ReDim YukluAylarForYil(-1)
+        YukluAylarForYil = BosDizi()
     Else
         ReDim Preserve sonuc(sayac - 1)
         YukluAylarForYil = sonuc
@@ -108,14 +124,14 @@ Function GecmisYillariDizisi()
     For i = 0 To UBound(yillar)
         yilDeger = yillar(i)
         aylar = GecmisAylarForYil(yilDeger)
-        If UBound(aylar) >= 0 Then
+        If DiziDoluMu(aylar) Then
             sonuc(sayac) = yilDeger
             sayac = sayac + 1
         End If
     Next
 
     If sayac = 0 Then
-        ReDim GecmisYillariDizisi(-1)
+        GecmisYillariDizisi = BosDizi()
     Else
         ReDim Preserve sonuc(sayac - 1)
         GecmisYillariDizisi = sonuc
@@ -136,7 +152,7 @@ Function GecmisAylarForYil(yil)
     Next
 
     If sayac = 0 Then
-        ReDim GecmisAylarForYil(-1)
+        GecmisAylarForYil = BosDizi()
     Else
         ReDim Preserve sonuc(sayac - 1)
         GecmisAylarForYil = sonuc

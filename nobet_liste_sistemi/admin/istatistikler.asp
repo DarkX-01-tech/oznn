@@ -64,7 +64,7 @@ End If
           <p>Yalnızca dosya yüklenmiş aylar listelenir.</p>
           <div class="link-grid">
             <% aylar = YukluAylarForYil(seciliYil)
-            If UBound(aylar) < 0 Then %>
+            If Not DiziDoluMu(aylar) Then %>
               <p class="empty-note">Bu yıl için yüklenmiş liste bulunamadı.</p>
             <% Else
               For i = 0 To UBound(aylar) %>
