@@ -7,6 +7,21 @@ Sub AdminGirisGerekli()
     End If
 End Sub
 
+Sub AdminVeritabaniGerekli()
+    AdminGirisGerekli
+
+    If Not VeritabaniHazirMi() Then
+        Response.Write "<!DOCTYPE html><html lang=""tr""><head><meta charset=""utf-8""><title>Veritabani Hatasi</title>"
+        Response.Write "<link rel=""stylesheet"" href=""../assets/style.css""></head><body class=""admin-body"">"
+        Response.Write "<div class=""page-shell""><div class=""admin-wrap"">"
+        Response.Write "<div class=""alert alert-danger""><strong>Veritabani baglantisi kurulamadi.</strong><br>"
+        Response.Write Server.HTMLEncode(connHata) & "<br><br>"
+        Response.Write "IIS uygulama havuzu kullanicisina <code>database</code> ve <code>listeler</code> klasorleri icin Yazma izni verin, "
+        Response.Write "ardindan <a href=""../kurulum.asp"">kurulum.asp</a> sayfasini calistirin.</div></div></div></body></html>"
+        Response.End
+    End If
+End Sub
+
 Function AdminGirisYap(kullaniciAdi, sifre)
     On Error Resume Next
     AdminGirisYap = False

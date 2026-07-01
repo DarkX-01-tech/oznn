@@ -7,7 +7,10 @@ Sub EnsureAccessDatabase()
     dbKlasor = fso.GetParentFolderName(dbPath)
 
     If Not fso.FolderExists(dbKlasor) Then
+        On Error Resume Next
         fso.CreateFolder dbKlasor
+        Err.Clear
+        On Error GoTo 0
     End If
 
     If Not fso.FileExists(dbPath) Then

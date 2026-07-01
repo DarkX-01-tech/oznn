@@ -5,6 +5,7 @@ Response.CharSet = "utf-8"
 Response.ContentType = "text/html; charset=utf-8"
 %>
 <!-- #include file="ayarlar.asp" -->
+<!-- #include file="lib/functions.asp" -->
 <!-- #include file="database/connection.asp" -->
 <%
 Dim dbPath, fso, mesajlar
@@ -12,10 +13,23 @@ Set fso = Server.CreateObject("Scripting.FileSystemObject")
 dbPath = AccessDbFizikselYol()
 mesajlar = ""
 
-If fso.FileExists(dbPath) Then
+EnsureAyKlasoru BINA_PENDIK, GuncelYil(), GuncelAyKlasor()
+EnsureAyKlasoru BINA_BASIBUYUK, GuncelYil(), GuncelAyKlasor()
+
+If VeritabaniHazirMi() And fso.FileExists(dbPath) Then
     mesajlar = mesajlar & "<li>Access veritabanı hazır: <code>database/nobet_liste.mdb</code></li>"
 Else
-    mesajlar = mesajlar & "<li><strong>Hata:</strong> Veritabanı oluşturulamadı. IIS yazma iznini kontrol edin.</li>"
+    mesajlar = mesajlar & "<li><strong>Hata:</strong> Veritabanı oluşturulamadı. IIS yazma iznini kontrol edin."
+    If connHata <> "" Then
+        mesajlar = mesajlar & "<br><small>" & Server.HTMLEncode(connHata) & "</small>"
+    End If
+    mesajlar = mesajlar & "</li>"
+End If
+
+If AyKlasoruMevcut(BINA_PENDIK, GuncelYil(), GuncelAyKlasor()) Then
+    mesajlar = mesajlar & "<li>Liste klasörleri hazır: <code>listeler/" & GuncelYil() & "/...</code></li>"
+Else
+    mesajlar = mesajlar & "<li><strong>Uyarı:</strong> <code>listeler</code> klasörü oluşturulamadı. IIS yazma iznini kontrol edin.</li>"
 End If
 
 If AccessTabloVarMi("NobetListeDosyalar") Then

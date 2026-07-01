@@ -18,7 +18,11 @@ Dim hata, kullanici, sifre
 hata = ""
 kullanici = ""
 
-If Request.ServerVariables("REQUEST_METHOD") = "POST" Then
+If Not VeritabaniHazirMi() Then
+    hata = "Veritabani baglantisi kurulamadi. IIS yazma iznini kontrol edip kurulum.asp sayfasini calistirin."
+End If
+
+If Request.ServerVariables("REQUEST_METHOD") = "POST" And hata = "" Then
     kullanici = Trim(Request.Form("kullanici"))
     sifre = Trim(Request.Form("sifre"))
 

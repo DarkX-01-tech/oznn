@@ -1,25 +1,52 @@
 <!-- #include file="period.asp" -->
 <%
-Sub KlasorOlustur(fso, yol)
-    If Not fso.FolderExists(yol) Then
+Function KlasorOlustur(fso, yol)
+    KlasorOlustur = False
+
+    If yol = "" Then Exit Function
+    On Error Resume Next
+
+    If fso.FolderExists(yol) Then
+        KlasorOlustur = True
+    Else
         fso.CreateFolder yol
+        If Err.Number = 0 Then
+            KlasorOlustur = fso.FolderExists(yol)
+        End If
+        Err.Clear
     End If
-End Sub
+
+    On Error GoTo 0
+End Function
+
+Function AyKlasoruMevcut(binaKodu, yil, ayKlasor)
+    Dim fso
+    On Error Resume Next
+    Set fso = Server.CreateObject("Scripting.FileSystemObject")
+    AyKlasoruMevcut = fso.FolderExists(AyKlasorFizikselYolu(binaKodu, yil, ayKlasor))
+    Set fso = Nothing
+    On Error GoTo 0
+End Function
 
 Function AyKlasorFizikselYolu(binaKodu, yil, ayKlasor)
     AyKlasorFizikselYolu = ListelerKokYolu() & "\" & yil & "\" & binaKodu & "\" & ayKlasor
 End Function
 
 Sub EnsureAyKlasoru(binaKodu, yil, ayKlasor)
+    If AyKlasoruMevcut(binaKodu, yil, ayKlasor) Then Exit Sub
+
     Dim fso, yol
     Set fso = Server.CreateObject("Scripting.FileSystemObject")
 
     yol = ListelerKokYolu()
-    KlasorOlustur fso, yol
+    If Not KlasorOlustur(fso, yol) Then Exit Sub
+
     yol = yol & "\" & yil
-    KlasorOlustur fso, yol
+    If Not KlasorOlustur(fso, yol) Then Exit Sub
+
     yol = yol & "\" & binaKodu
-    KlasorOlustur fso, yol
+    If Not KlasorOlustur(fso, yol) Then Exit Sub
+
     yol = yol & "\" & ayKlasor
     KlasorOlustur fso, yol
 

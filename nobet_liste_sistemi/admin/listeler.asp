@@ -11,7 +11,7 @@ Response.ContentType = "text/html; charset=utf-8"
 <!-- #include file="../lib/auth.asp" -->
 <!-- #include file="../lib/ui.asp" -->
 <%
-AdminGirisGerekli
+AdminVeritabaniGerekli
 EnsureSeciliDonemKlasorleri
 
 Dim seciliYil, seciliAy

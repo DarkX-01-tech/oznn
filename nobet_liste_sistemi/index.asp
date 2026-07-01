@@ -5,12 +5,9 @@ Response.CharSet = "utf-8"
 Response.ContentType = "text/html; charset=utf-8"
 %>
 <!-- #include file="ayarlar.asp" -->
-<!-- #include file="database/connection.asp" -->
 <!-- #include file="lib/config.asp" -->
 <!-- #include file="lib/functions.asp" -->
 <%
-EnsureTumAyKlasorleri
-%>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
