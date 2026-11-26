@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Language" content="tr">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1254">
-<title>MÜ Pendik E.A.H. Portal</title>
+<title>MÃœ Pendik E.A.H. Portal</title>
 <link rel="icon" href="images/hastane_portal_logo.png"/>
 <style type="text/css">
 @font-face{font-family:'Open Sans';src:url('/webfonts/OpenSans-Regular.ttf') format('truetype');font-weight:400;font-style:normal}
@@ -102,11 +102,11 @@ function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
 <tr>
 <td bgcolor="#FFFFFF" width="166" height="604" valign="top"><!--#include file="sol.asp"--></td>
 <td bgcolor="#FFFFFF" width="734" height="604" valign="top" align="center">
-<div class="baslik">KLİNİK İDARİ SORUMLULAR</div>
+<div class="baslik">KLÄ°NÄ°K Ä°DARÄ° SORUMLULAR</div>
 <div class="tablo-toolbar">
 <div class="search-container">
 <form onsubmit="return false;">
-<input type="text" id="search-bar" placeholder="Bölüm Ara...">
+<input type="text" id="search-bar" placeholder="BÃ¶lÃ¼m Ara...">
 <button type="button" id="clearSearchBtn" class="clear-search-btn" title="Ara" aria-label="Ara">
 <span class="icon-search" aria-hidden="true"></span>
 <span class="icon-clear" aria-hidden="true">&times;</span>
@@ -118,56 +118,56 @@ function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'})}
 <table class="bolum-tablo">
 <thead>
 <tr>
-<th class="sira-no-th">Sıra</th>
-<th>Bölüm</th>
-<th>KLİNİK İDARİ SORUMLUSU</th>
+<th class="sira-no-th">SÄ±ra</th>
+<th>BÃ¶lÃ¼m</th>
+<th>KLÄ°NÄ°K Ä°DARÄ° SORUMLUSU</th>
 </tr>
 </thead>
 <tbody id="tabloGovde">
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>1</span></span></td><td class="bolum-adi-cell">Acil Tıp</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Dr. Öğrt. Üyesi</span> Erhan Altunbaş</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>2</span></span></td><td class="bolum-adi-cell">Adli Tıp</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Mehmet Akif İnanıcı</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>3</span></span></td><td class="bolum-adi-cell">Aile Hekimliği</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Gülru Pemra Cöbek Ünalan</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>1</span></span></td><td class="bolum-adi-cell">Acil TÄ±p</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Dr. Ã–ÄŸrt. Ãœyesi</span> Erhan AltunbaÅŸ</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>2</span></span></td><td class="bolum-adi-cell">Adli TÄ±p</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Mehmet Akif Ä°nanÄ±cÄ±</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>3</span></span></td><td class="bolum-adi-cell">Aile HekimliÄŸi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> GÃ¼lru Pemra CÃ¶bek Ãœnalan</td></tr>
 <tr><td class="sira-no-cell"><span class="sira-rozet"><span>4</span></span></td><td class="bolum-adi-cell">Anesteziyoloji ve Reanimasyon</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Alper Kararmaz</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>5</span></span></td><td class="bolum-adi-cell">Beyin ve Sinir Cerrahisi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Fatih Bayraklı</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>6</span></span></td><td class="bolum-adi-cell">Çocuk Cerrahisi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Gürsu Kıyan</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>7</span></span></td><td class="bolum-adi-cell">Çocuk ve Ergen Ruh Sağlığı ve Hastalıkları</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Ayşe Burcu Erdoğdu Yıldırım</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>8</span></span></td><td class="bolum-adi-cell">Çocuk Sağlığı ve Hastalıkları</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Serap Demircioğlu</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>9</span></span></td><td class="bolum-adi-cell">Deri ve Zührevi Hastalıklar</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Ayşe Deniz Yücelten</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>10</span></span></td><td class="bolum-adi-cell">Enfeksiyon Hastalıkları</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Elif Tigen</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>11</span></span></td><td class="bolum-adi-cell">Fiziksel Tıp ve Rehabilitasyon</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Mehmet Tuncay Duruöz</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>12</span></span></td><td class="bolum-adi-cell">Genel Cerrahi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Şevket Cumhur Yeğen</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>13</span></span></td><td class="bolum-adi-cell">Göğüs Cerrahisi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Korkut Bostancı</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>14</span></span></td><td class="bolum-adi-cell">Göğüs Hastalıkları</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Sait Karakurt</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>15</span></span></td><td class="bolum-adi-cell">Göz Hastalıkları</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Doç. Dr.</span> Volkan Dericioğlu</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>16</span></span></td><td class="bolum-adi-cell">İç Hastalıkları</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Mehmet Koç</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>17</span></span></td><td class="bolum-adi-cell">Kadın Hastalıkları ve Doğum</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Tanju Pekin</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>5</span></span></td><td class="bolum-adi-cell">Beyin ve Sinir Cerrahisi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Fatih BayraklÄ±</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>6</span></span></td><td class="bolum-adi-cell">Ã‡ocuk Cerrahisi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> GÃ¼rsu KÄ±yan</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>7</span></span></td><td class="bolum-adi-cell">Ã‡ocuk ve Ergen Ruh SaÄŸlÄ±ÄŸÄ± ve HastalÄ±klarÄ±</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> AyÅŸe Burcu ErdoÄŸdu YÄ±ldÄ±rÄ±m</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>8</span></span></td><td class="bolum-adi-cell">Ã‡ocuk SaÄŸlÄ±ÄŸÄ± ve HastalÄ±klarÄ±</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Serap DemircioÄŸlu</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>9</span></span></td><td class="bolum-adi-cell">Deri ve ZÃ¼hrevi HastalÄ±klar</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> AyÅŸe Deniz YÃ¼celten</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>10</span></span></td><td class="bolum-adi-cell">Enfeksiyon HastalÄ±klarÄ±</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Elif Tigen</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>11</span></span></td><td class="bolum-adi-cell">Fiziksel TÄ±p ve Rehabilitasyon</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Mehmet Tuncay DuruÃ¶z</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>12</span></span></td><td class="bolum-adi-cell">Genel Cerrahi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Åevket Cumhur YeÄŸen</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>13</span></span></td><td class="bolum-adi-cell">GÃ¶ÄŸÃ¼s Cerrahisi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Korkut BostancÄ±</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>14</span></span></td><td class="bolum-adi-cell">GÃ¶ÄŸÃ¼s HastalÄ±klarÄ±</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Sait Karakurt</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>15</span></span></td><td class="bolum-adi-cell">GÃ¶z HastalÄ±klarÄ±</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">DoÃ§. Dr.</span> Volkan DericioÄŸlu</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>16</span></span></td><td class="bolum-adi-cell">Ä°Ã§ HastalÄ±klarÄ±</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Mehmet KoÃ§</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>17</span></span></td><td class="bolum-adi-cell">KadÄ±n HastalÄ±klarÄ± ve DoÄŸum</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Tanju Pekin</td></tr>
 <tr><td class="sira-no-cell"><span class="sira-rozet"><span>18</span></span></td><td class="bolum-adi-cell">Kalp ve Damar Cerrahisi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Sinan Arsan</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>19</span></span></td><td class="bolum-adi-cell">Kardiyoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Ahmet Altuğ Çinçin</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>20</span></span></td><td class="bolum-adi-cell">Kulak, Burun ve Boğaz Hastalıkları</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Çağatay Oysu</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>21</span></span></td><td class="bolum-adi-cell">Merkez Laboratuvar - Biyokimya</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Goncagül Haklar</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>22</span></span></td><td class="bolum-adi-cell">Nöroloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> İpek Midi</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>23</span></span></td><td class="bolum-adi-cell">Nükleer Tıp</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Tanju Yusuf Erdil</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>24</span></span></td><td class="bolum-adi-cell">Ortopedi ve Travmatoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Doç. Dr.</span> Osman Mert Topkar</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>25</span></span></td><td class="bolum-adi-cell">Plastik ve Rekonstrüktif Cerrahi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Doç. Dr.</span> Zeynep Deniz Akdeniz Doğan</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>26</span></span></td><td class="bolum-adi-cell">Radyasyon Onkolojisi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Doç. Dr.</span> Zerrin Özgen</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>27</span></span></td><td class="bolum-adi-cell">Radyoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Nuri Çağatay Çimşit</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>28</span></span></td><td class="bolum-adi-cell">Ruh Sağlığı ve Hastalıkları</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Doç. Dr.</span> Ayşe Sakallı Kani</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>29</span></span></td><td class="bolum-adi-cell">Tıbbi Farmakoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Hasan Raci Yananlı</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>30</span></span></td><td class="bolum-adi-cell">Tıbbi Genetik</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Pınar Ata Usta</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>31</span></span></td><td class="bolum-adi-cell">Tıbbi Mikrobiyoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Zeynep Arzu İlki</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>32</span></span></td><td class="bolum-adi-cell">Tıbbi Patoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Hüseyin Kemal Türköz</td></tr>
-<tr><td class="sira-no-cell"><span class="sira-rozet"><span>33</span></span></td><td class="bolum-adi-cell">Üroloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Haydar Kamil Çam</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>19</span></span></td><td class="bolum-adi-cell">Kardiyoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Ahmet AltuÄŸ Ã‡inÃ§in</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>20</span></span></td><td class="bolum-adi-cell">Kulak, Burun ve BoÄŸaz HastalÄ±klarÄ±</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Ã‡aÄŸatay Oysu</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>21</span></span></td><td class="bolum-adi-cell">Merkez Laboratuvar - Biyokimya</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> GoncagÃ¼l Haklar</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>22</span></span></td><td class="bolum-adi-cell">NÃ¶roloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Ä°pek Midi</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>23</span></span></td><td class="bolum-adi-cell">NÃ¼kleer TÄ±p</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Tanju Yusuf Erdil</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>24</span></span></td><td class="bolum-adi-cell">Ortopedi ve Travmatoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">DoÃ§. Dr.</span> Osman Mert Topkar</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>25</span></span></td><td class="bolum-adi-cell">Plastik ve RekonstrÃ¼ktif Cerrahi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">DoÃ§. Dr.</span> Zeynep Deniz Akdeniz DoÄŸan</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>26</span></span></td><td class="bolum-adi-cell">Radyasyon Onkolojisi</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">DoÃ§. Dr.</span> Zerrin Ã–zgen</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>27</span></span></td><td class="bolum-adi-cell">Radyoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Nuri Ã‡aÄŸatay Ã‡imÅŸit</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>28</span></span></td><td class="bolum-adi-cell">Ruh SaÄŸlÄ±ÄŸÄ± ve HastalÄ±klarÄ±</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">DoÃ§. Dr.</span> AyÅŸe SakallÄ± Kani</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>29</span></span></td><td class="bolum-adi-cell">TÄ±bbi Farmakoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Hasan Raci YananlÄ±</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>30</span></span></td><td class="bolum-adi-cell">TÄ±bbi Genetik</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> PÄ±nar Ata Usta</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>31</span></span></td><td class="bolum-adi-cell">TÄ±bbi Mikrobiyoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Zeynep Arzu Ä°lki</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>32</span></span></td><td class="bolum-adi-cell">TÄ±bbi Patoloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> HÃ¼seyin Kemal TÃ¼rkÃ¶z</td></tr>
+<tr><td class="sira-no-cell"><span class="sira-rozet"><span>33</span></span></td><td class="bolum-adi-cell">Ãœroloji</td><td class="sorumlu-adi-cell"><span class="sorumlu-unvan">Prof. Dr.</span> Haydar Kamil Ã‡am</td></tr>
 </tbody>
 </table>
 </div>
 <div id="noMatchesWrap" style="padding:0 18px 14px;">
 <div id="noMatchesRow" style="display:none;">
 <div class="no-result-icon" aria-hidden="true"></div>
-<div class="no-result-title">"Aradığınız Bölüm Bulunamadı"</div>
+<div class="no-result-title">"AradÄ±ÄŸÄ±nÄ±z BÃ¶lÃ¼m BulunamadÄ±"</div>
 <div class="no-result-divider" aria-hidden="true"></div>
 <div class="no-result-text">
-Arama Kriterlerinize Uygun Bir Bölüm Veya Sorumlu Bulunamadı.<br>
-Farklı Bir Kelime Veya İfade İle Tekrar Deneyebilirsiniz.
+Arama Kriterlerinize Uygun Bir BÃ¶lÃ¼m Veya Sorumlu BulunamadÄ±.<br>
+FarklÄ± Bir Kelime Veya Ä°fade Ä°le Tekrar Deneyebilirsiniz.
 </div>
 </div>
 </div>
@@ -219,7 +219,7 @@ function updateClearButtonVisibility(){
   if(searchBar.value.trim().length>0){
     clearBtn.classList.add('has-text');
     clearBtn.title="Temizle";
-    clearBtn.setAttribute("aria-label","Aramayı temizle");
+    clearBtn.setAttribute("aria-label","AramayÄ± temizle");
   }else{
     clearBtn.classList.remove('has-text');
     clearBtn.title="Ara";
